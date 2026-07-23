@@ -1,47 +1,66 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { Check, Cloud, Globe, Lock, Server, Zap } from "lucide-react";
+import { ArrowRight, Check, Cloud, Globe, Lock, Server, Zap } from "lucide-react";
 
-const STEPS = [
-  {
-    icon: Globe,
-    pending: "Searching domain…",
-    done: "Domain available",
-    detail: "yourbrand.com",
-    duration: 1300,
-  },
-  {
-    icon: Cloud,
-    pending: "Configuring DNS…",
-    done: "DNS configured",
-    detail: "via Cloudflare",
-    duration: 1300,
-  },
-  {
-    icon: Server,
-    pending: "Provisioning hosting…",
-    done: "Hosting ready",
-    detail: "LiteSpeed · NVMe",
-    duration: 3000,
-    hasProgress: true,
-  },
-  {
-    icon: Lock,
-    pending: "Installing SSL…",
-    done: "SSL installed",
-    detail: "Let's Encrypt",
-    duration: 1300,
-  },
-];
+const DEFAULT_DOMAIN = "yourbrand.com";
+
+function buildSteps(domain: string) {
+  return [
+    {
+      icon: Globe,
+      pending: "Checking domain…",
+      done: "Domain available",
+      detail: domain,
+      duration: 1300,
+    },
+    {
+      icon: Cloud,
+      pending: "Configuring DNS…",
+      done: "DNS configured",
+      detail: "via Cloudflare",
+      duration: 1300,
+    },
+    {
+      icon: Server,
+      pending: "Provisioning hosting…",
+      done: "Hosting ready",
+      detail: "LiteSpeed · NVMe",
+      duration: 3000,
+      hasProgress: true,
+    },
+    {
+      icon: Lock,
+      pending: "Installing SSL…",
+      done: "SSL installed",
+      detail: "Let's Encrypt",
+      duration: 1300,
+    },
+  ];
+}
 
 const HOLD_DURATION = 2600;
 
+function sanitizeDomain(raw: string): string {
+  const cleaned = raw
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/\/.*$/, "")
+    .replace(/[^a-z0-9.-]/g, "");
+  if (!cleaned) return DEFAULT_DOMAIN;
+  return cleaned.includes(".") ? cleaned : `${cleaned}.com`;
+}
+
 export function HeroDeploy() {
+  const [domainInput, setDomainInput] = useState("");
+  const [activeDomain, setActiveDomain] = useState(DEFAULT_DOMAIN);
   const [activeStep, setActiveStep] = useState(0);
   const [elapsedMs, setElapsedMs] = useState(0);
-  const isLive = activeStep >= STEPS.length;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const steps = buildSteps(activeDomain);
+  const isLive = activeStep >= steps.length;
 
   useEffect(() => {
     if (isLive) {
@@ -53,15 +72,24 @@ export function HeroDeploy() {
     }
     const timer = setTimeout(() => {
       setActiveStep((s) => s + 1);
-    }, STEPS[activeStep].duration);
+    }, steps[activeStep].duration);
     return () => clearTimeout(timer);
-  }, [activeStep, isLive]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStep, isLive, activeDomain]);
 
   useEffect(() => {
     if (isLive) return;
     const interval = setInterval(() => setElapsedMs((ms) => ms + 60), 60);
     return () => clearInterval(interval);
   }, [activeStep, isLive]);
+
+  function handleDeploy(e: FormEvent) {
+    e.preventDefault();
+    setActiveDomain(sanitizeDomain(domainInput));
+    setActiveStep(0);
+    setElapsedMs(0);
+    inputRef.current?.blur();
+  }
 
   const seconds = Math.floor(elapsedMs / 1000);
   const millis = Math.floor((elapsedMs % 1000) / 10);
@@ -114,6 +142,28 @@ export function HeroDeploy() {
       </motion.div>
 
       <div className="overflow-hidden rounded-2xl border border-border-strong bg-card shadow-2xl">
+        <form onSubmit={handleDeploy} className="flex items-center gap-2 border-b border-border p-3">
+          <div className="flex flex-1 items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2">
+            <Globe size={13} className="shrink-0 text-text-muted" aria-hidden="true" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={domainInput}
+              onChange={(e) => setDomainInput(e.target.value)}
+              placeholder="type your domain…"
+              aria-label="Domain name"
+              className="w-full min-w-0 bg-transparent font-mono text-xs text-text-primary placeholder:text-text-muted focus:outline-none"
+            />
+          </div>
+          <button
+            type="submit"
+            aria-label="Deploy this domain"
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-purple text-white transition-transform duration-150 hover:scale-105 active:scale-95"
+          >
+            <ArrowRight size={14} aria-hidden="true" />
+          </button>
+        </form>
+
         <div className="flex items-center justify-between border-b border-border bg-surface-raised px-5 py-3">
           <div className="flex items-center gap-2">
             <span className={`h-2 w-2 rounded-full ${isLive ? "bg-success" : "bg-warning"}`} />
@@ -127,7 +177,7 @@ export function HeroDeploy() {
         </div>
 
         <div className="space-y-1 p-5">
-          {STEPS.map((step, i) => {
+          {steps.map((step, i) => {
             const done = i < activeStep || isLive;
             const active = i === activeStep && !isLive;
             return (
@@ -198,7 +248,7 @@ export function HeroDeploy() {
               >
                 Website live
               </p>
-              <p className="truncate font-mono text-xs text-text-muted">yourbrand.com</p>
+              <p className="truncate font-mono text-xs text-text-muted">{activeDomain}</p>
             </div>
           </div>
         </div>
@@ -206,7 +256,7 @@ export function HeroDeploy() {
         <div className="h-1 w-full bg-border">
           <motion.div
             className="h-full bg-gradient-to-r from-brand-purple to-brand-blue"
-            animate={{ width: `${(Math.min(activeStep, STEPS.length) / STEPS.length) * 100}%` }}
+            animate={{ width: `${(Math.min(activeStep, steps.length) / steps.length) * 100}%` }}
             transition={{ duration: 0.3 }}
           />
         </div>
