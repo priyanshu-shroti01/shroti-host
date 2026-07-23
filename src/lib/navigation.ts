@@ -89,7 +89,7 @@ export const footerNav = {
     { label: "Unlimited Hosting", href: "/unlimited-hosting" },
     { label: "Domains", href: "/domains" },
     { label: "Email Hosting", href: "/hosting#developer" },
-    { label: "VPS (coming soon)", href: "/hosting#roadmap" },
+    { label: "VPS (coming soon)", href: "/vps" },
     { label: "Cloud Hosting (coming soon)", href: "/hosting#roadmap" },
     { label: "Reseller Hosting (coming soon)", href: "/hosting#roadmap" },
   ],

@@ -72,7 +72,7 @@ const wide = {
 };
 
 const roadmap = [
-  { icon: Server, label: "VPS" },
+  { icon: Server, label: "VPS", href: "/vps" },
   { icon: Cloud, label: "Cloud Hosting" },
   { icon: Share2, label: "Reseller Hosting" },
   { icon: Zap, label: "API" },
@@ -153,15 +153,21 @@ export function ProductEcosystem() {
           <span className="text-xs font-medium uppercase tracking-wide text-text-muted">
             On the roadmap
           </span>
-          {roadmap.map((item) => (
-            <span
-              key={item.label}
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-text-secondary"
-            >
-              <item.icon size={13} aria-hidden="true" />
-              {item.label}
-            </span>
-          ))}
+          {roadmap.map((item) => {
+            const className =
+              "inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors";
+            return item.href ? (
+              <Link key={item.label} href={item.href} className={`${className} hover:border-brand-purple hover:text-brand-purple`}>
+                <item.icon size={13} aria-hidden="true" />
+                {item.label}
+              </Link>
+            ) : (
+              <span key={item.label} className={className}>
+                <item.icon size={13} aria-hidden="true" />
+                {item.label}
+              </span>
+            );
+          })}
         </div>
       </Reveal>
     </div>
