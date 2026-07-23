@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+/* Match Tailwind's dark: variant to our data-theme attribute (set by ThemeScript/ThemeToggle) instead of prefers-color-scheme */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ShrotiHost Design Tokens — see docs/planning/15_COLOR_SYSTEM.md, 16_TYPOGRAPHY.md */
+
+:root {
+  color-scheme: dark;
+
+  /* Surfaces (dark theme is the default brand theme) */
+  --color-bg: #0a0a0f;
+  --color-surface: #131318;
+  --color-surface-raised: #191921;
+  --color-card: #16161d;
+  --color-border: rgb(255 255 255 / 0.14);
+  --color-border-strong: rgb(255 255 255 / 0.22);
+
+  /* Text */
+  --color-text-primary: #f5f5f7;
+  --color-text-secondary: #a1a1ab;
+  --color-text-muted: #87878f;
+  --color-text-disabled: #4b4b52;
+  --color-text-inverse: #0a0a0f;
+
+  /* Brand — official ShrotiHost purple from logo assets */
+  --color-brand-purple: #a810c7;
+  --color-brand-purple-hover: #c817ea;
+  --color-brand-purple-active: #8b0da3;
+  --color-brand-blue: #3fa7ff;
+
+  /* Semantic */
+  --color-success: #22c55e;
+  --color-warning: #f5a524;
+  --color-error: #f0576b;
+  --color-info: #3fa7ff;
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #a810c7 0%, #3fa7ff 100%);
+  --gradient-glow: radial-gradient(circle at 50% 0%, rgb(168 16 199 / 0.25), transparent 60%);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --color-bg: #ffffff;
+  --color-surface: #f6f6f8;
+  --color-surface-raised: #ffffff;
+  --color-card: #ffffff;
+  --color-border: rgb(10 10 15 / 0.12);
+  --color-border-strong: rgb(10 10 15 / 0.18);
+
+  --color-text-primary: #0f0f14;
+  --color-text-secondary: #52525b;
+  --color-text-muted: #71717a;
+  --color-text-disabled: #a1a1aa;
+  --color-text-inverse: #ffffff;
+
+  --color-brand-purple: #a810c7;
+  --color-brand-purple-hover: #c817ea;
+  --color-brand-purple-active: #8b0da3;
+  --color-brand-blue: #1f87e8;
+
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-error: #dc2626;
+  --color-info: #1f87e8;
+
+  --gradient-glow: radial-gradient(circle at 50% 0%, rgb(168 16 199 / 0.12), transparent 60%);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-card: var(--color-card);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-disabled: var(--color-text-disabled);
+  --color-text-inverse: var(--color-text-inverse);
+
+  --color-brand-purple: var(--color-brand-purple);
+  --color-brand-purple-hover: var(--color-brand-purple-hover);
+  --color-brand-purple-active: var(--color-brand-purple-active);
+  --color-brand-blue: var(--color-brand-blue);
+
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --color-info: var(--color-info);
+
+  --animate-fade-up: fade-up 0.4s ease-out both;
+  --animate-fade-in: fade-in 0.3s ease-out both;
+  --animate-marquee: marquee var(--marquee-duration, 30s) linear infinite;
+  --animate-marquee-reverse: marquee-reverse var(--marquee-duration, 30s) linear infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes marquee-reverse {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+}
+
+@keyframes ripple {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.45;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(24);
+    opacity: 0;
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-14px) translateX(6px);
+  }
+}
+
+@keyframes drift-grid {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 56px 56px;
+  }
+}
+
+@keyframes packet-travel {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+::selection {
+  background: var(--color-brand-purple);
+  color: white;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-purple);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
