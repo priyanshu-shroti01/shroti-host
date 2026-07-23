@@ -33,7 +33,7 @@ export function FinalCta() {
                 href="/hosting"
                 variant="secondary"
                 size="lg"
-                className="border-white/40 bg-white text-brand-purple hover:bg-white/90"
+                className="!border-white/40 bg-white !text-brand-purple hover:bg-white/90"
               >
                 Launch Your Website
                 <ArrowRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
