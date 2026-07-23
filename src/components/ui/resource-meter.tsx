@@ -35,7 +35,7 @@ export function ResourceMeter({
             whileInView={{ width: "100%" }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.5, delay, ease: "easeOut" }}
-            className="h-full rounded-full bg-[repeating-linear-gradient(135deg,var(--color-brand-purple)_0px,var(--color-brand-purple)_6px,var(--color-brand-blue)_6px,var(--color-brand-blue)_12px)]"
+            className="h-full rounded-full bg-gradient-to-r from-brand-purple to-brand-blue"
           />
         ) : (
           <motion.div
