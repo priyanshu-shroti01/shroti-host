@@ -1,6 +1,7 @@
 import { Hero } from "@/components/home/hero";
 import { TrustedTech } from "@/components/home/trusted-tech";
 import { DomainSearch } from "@/components/home/domain-search";
+import { HostingAdvisor } from "@/components/home/hosting-advisor";
 import { ProductEcosystem } from "@/components/home/product-ecosystem";
 import { WhyChoose } from "@/components/home/why-choose";
 import { DeveloperFeatures } from "@/components/home/developer-features";
@@ -10,10 +11,7 @@ import { Migration } from "@/components/home/migration";
 import { StudentProgram } from "@/components/home/student-program";
 import { StartupProgram } from "@/components/home/startup-program";
 import { HostingPlans } from "@/components/home/hosting-plans";
-import { Trust } from "@/components/home/trust";
 import { Testimonials } from "@/components/home/testimonials";
-import { Faq } from "@/components/home/faq";
-import { LatestArticles } from "@/components/home/latest-articles";
 import { FinalCta } from "@/components/home/final-cta";
 import { Section } from "@/components/ui/section";
 
@@ -27,6 +25,11 @@ export default function Home() {
       {/* Domain Search — "Find your identity." */}
       <Section id="domains" className="py-8 sm:py-10">
         <DomainSearch />
+      </Section>
+
+      {/* Hosting Advisor — "Tell us what you're building, we'll pick for you." */}
+      <Section id="advisor" className="bg-surface/30">
+        <HostingAdvisor />
       </Section>
 
       {/* Products — "Here's everything we offer." */}
@@ -71,21 +74,8 @@ export default function Home() {
         <HostingPlans />
       </Section>
 
-      <Section id="trust">
-        <Trust />
-      </Section>
-
-      <Section id="testimonials" className="bg-surface/30">
+      <Section id="testimonials">
         <Testimonials />
-      </Section>
-
-      {/* FAQ — "Answer objections." */}
-      <Section id="faq">
-        <Faq />
-      </Section>
-
-      <Section id="blog" className="bg-surface/30">
-        <LatestArticles />
       </Section>
 
       {/* CTA — "Start now." */}
