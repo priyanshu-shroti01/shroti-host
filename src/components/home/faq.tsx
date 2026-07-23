@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
-const faqs = [
+export const faqs = [
   {
     question: "Is migration really free?",
     answer:

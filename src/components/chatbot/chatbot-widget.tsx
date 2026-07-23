@@ -2,10 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, Check, MessageCircle, Sparkles, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Bot,
+  Check,
+  Globe,
+  HelpCircle,
+  LifeBuoy,
+  MessageCircle,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
 import { plans } from "@/lib/plans";
+import { faqs } from "@/components/home/faq";
 import { useCurrency } from "@/components/currency-provider";
 
 type PlanName = "Launch" | "Grow" | "Scale";
@@ -19,7 +30,7 @@ type Question = {
 const questions: Question[] = [
   {
     id: "building",
-    prompt: "Hi 👋 What are you building today?",
+    prompt: "What are you building today?",
     options: [
       { label: "Portfolio or blog", scores: { Launch: 2, Grow: 1, Scale: 0 } },
       { label: "Online store", scores: { Launch: 0, Grow: 2, Scale: 1 } },
@@ -57,19 +68,21 @@ const questions: Question[] = [
 ];
 
 type HistoryItem = { question: string; answer: string };
+type Screen = "menu" | "quiz" | "faq";
 
 export function ChatbotWidget() {
   const [open, setOpen] = useState(false);
+  const [screen, setScreen] = useState<Screen>("menu");
   const [step, setStep] = useState(0);
   const [scores, setScores] = useState<Record<PlanName, number>>({ Launch: 0, Grow: 0, Scale: 0 });
-  const [started, setStarted] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [thinking, setThinking] = useState(false);
   const [promptTyped, setPromptTyped] = useState(false);
+  const [faqHistory, setFaqHistory] = useState<HistoryItem[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { format } = useCurrency();
 
-  const isDone = started && step >= questions.length;
+  const isDone = screen === "quiz" && step >= questions.length;
   const recommended = (() => {
     const entries = Object.entries(scores) as [PlanName, number][];
     const max = Math.max(...entries.map(([, v]) => v));
@@ -82,7 +95,7 @@ export function ChatbotWidget() {
   useEffect(() => {
     if (!open) return;
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [history, thinking, isDone, started, open]);
+  }, [history, faqHistory, thinking, isDone, screen, open]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -106,12 +119,34 @@ export function ChatbotWidget() {
     }, 500);
   }
 
+  function goToMenu() {
+    setScreen("menu");
+  }
+
+  function startQuiz() {
+    setScreen("quiz");
+    setStep(0);
+    setScores({ Launch: 0, Grow: 0, Scale: 0 });
+    setHistory([]);
+    setPromptTyped(false);
+  }
+
+  function startFaq() {
+    setScreen("faq");
+    setFaqHistory([]);
+  }
+
+  function askFaq(question: string, faqAnswer: string) {
+    setFaqHistory((h) => [...h, { question, answer: faqAnswer }]);
+  }
+
   function restart() {
     setStep(0);
     setScores({ Launch: 0, Grow: 0, Scale: 0 });
-    setStarted(false);
     setHistory([]);
     setPromptTyped(false);
+    setFaqHistory([]);
+    setScreen("menu");
   }
 
   return (
@@ -132,7 +167,7 @@ export function ChatbotWidget() {
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label={open ? "Close hosting advisor chat" : "Open hosting advisor chat"}
+          aria-label={open ? "Close chat" : "Open chat"}
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.94 }}
           className="relative inline-flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white shadow-[0_8px_24px_-6px_rgb(168_16_199/0.55)]"
@@ -162,13 +197,26 @@ export function ChatbotWidget() {
             className="fixed bottom-24 right-5 z-[60] flex h-[32rem] max-h-[75vh] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border-strong bg-card shadow-2xl sm:bottom-28 sm:right-6"
           >
             <div className="flex items-center gap-3 border-b border-border bg-surface px-5 py-4">
-              <div className="relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white">
-                <Bot size={18} aria-hidden="true" />
-                <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-surface bg-success" />
-              </div>
+              {screen !== "menu" ? (
+                <button
+                  type="button"
+                  onClick={goToMenu}
+                  aria-label="Back to menu"
+                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-text-muted hover:bg-surface-raised hover:text-text-primary"
+                >
+                  <ArrowLeft size={16} aria-hidden="true" />
+                </button>
+              ) : (
+                <div className="relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white">
+                  <Bot size={18} aria-hidden="true" />
+                  <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-surface bg-success" />
+                </div>
+              )}
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-text-primary">ShrotiHost Advisor</p>
-                <p className="text-xs text-text-muted">Guided plan recommendation</p>
+                <p className="text-sm font-semibold text-text-primary">ShrotiHost Assistant</p>
+                <p className="text-xs text-text-muted">
+                  {screen === "quiz" ? "Guided plan recommendation" : screen === "faq" ? "Quick questions" : "How can I help?"}
+                </p>
               </div>
               <button
                 type="button"
@@ -180,7 +228,7 @@ export function ChatbotWidget() {
               </button>
             </div>
 
-            {started && (
+            {screen === "quiz" && (
               <div className="h-1 w-full shrink-0 bg-border">
                 <motion.div
                   className="h-full bg-gradient-to-r from-brand-purple to-brand-blue"
@@ -196,10 +244,87 @@ export function ChatbotWidget() {
                 <div className="flex items-start gap-2">
                   <ChatAvatar />
                   <div className="rounded-2xl rounded-tl-sm bg-surface px-4 py-2.5 text-sm text-text-primary">
-                    Not sure which plan fits? Answer a few quick questions and I&apos;ll recommend one.
+                    Hi 👋 I&apos;m the ShrotiHost assistant. I can help you pick a plan, answer quick
+                    questions, or point you to the right place.
                   </div>
                 </div>
               </div>
+
+              {screen === "menu" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col gap-2 pl-9"
+                >
+                  <MenuButton icon={Sparkles} label="Help me pick a plan" onClick={startQuiz} />
+                  <MenuButton icon={HelpCircle} label="Quick questions" onClick={startFaq} />
+                  <MenuButton icon={Globe} label="Check domain pricing" href="/domains" onClick={() => setOpen(false)} />
+                  <MenuButton
+                    icon={LifeBuoy}
+                    label="Talk to support"
+                    href="https://portal.shrotihost.in/submitticket.php"
+                    onClick={() => setOpen(false)}
+                  />
+                </motion.div>
+              )}
+
+              {screen === "faq" && (
+                <>
+                  {faqHistory.map((item, i) => (
+                    <div key={i} className="space-y-3">
+                      <div className="flex justify-end">
+                        <div className="rounded-2xl rounded-tr-sm bg-brand-purple px-4 py-2.5 text-sm text-white">
+                          {item.question}
+                        </div>
+                      </div>
+                      <div className="flex justify-start">
+                        <div className="flex items-start gap-2">
+                          <ChatAvatar />
+                          <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-surface px-4 py-2.5 text-sm text-text-primary">
+                            {item.answer}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col items-end gap-2"
+                  >
+                    {faqs.map((faq) => (
+                      <button
+                        key={faq.question}
+                        type="button"
+                        onClick={() => askFaq(faq.question, faq.answer)}
+                        className="max-w-[90%] rounded-full border border-border-strong px-3 py-1.5 text-right text-xs font-medium text-text-primary transition-colors hover:border-brand-purple hover:bg-brand-purple/5 sm:text-sm"
+                      >
+                        {faq.question}
+                      </button>
+                    ))}
+                  </motion.div>
+                </>
+              )}
+
+              {screen === "quiz" && thinking && (
+                <div className="flex justify-start">
+                  <div className="flex items-start gap-2">
+                    <ChatAvatar />
+                    <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm bg-surface px-4 py-3">
+                      {[0, 1, 2].map((i) => (
+                        <motion.span
+                          key={i}
+                          className="h-1.5 w-1.5 rounded-full bg-text-muted"
+                          animate={{ opacity: [0.3, 1, 0.3] }}
+                          transition={{ duration: 1, repeat: Infinity, delay: i * 0.15 }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {history.map((item, i) => (
                 <div key={i} className="space-y-3">
@@ -219,34 +344,7 @@ export function ChatbotWidget() {
                 </div>
               ))}
 
-              {!started && (
-                <div className="flex justify-center pt-2">
-                  <Button size="lg" onClick={() => setStarted(true)}>
-                    <Sparkles size={16} aria-hidden="true" />
-                    Start Advisor
-                  </Button>
-                </div>
-              )}
-
-              {started && thinking && (
-                <div className="flex justify-start">
-                  <div className="flex items-start gap-2">
-                    <ChatAvatar />
-                    <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm bg-surface px-4 py-3">
-                      {[0, 1, 2].map((i) => (
-                        <motion.span
-                          key={i}
-                          className="h-1.5 w-1.5 rounded-full bg-text-muted"
-                          animate={{ opacity: [0.3, 1, 0.3] }}
-                          transition={{ duration: 1, repeat: Infinity, delay: i * 0.15 }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {started && !thinking && !isDone && (
+              {screen === "quiz" && !thinking && !isDone && (
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={questions[step].id}
@@ -347,5 +445,36 @@ function ChatAvatar() {
     <div className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white">
       <Bot size={14} aria-hidden="true" />
     </div>
+  );
+}
+
+function MenuButton({
+  icon: Icon,
+  label,
+  onClick,
+  href,
+}: {
+  icon: typeof Sparkles;
+  label: string;
+  onClick?: () => void;
+  href?: string;
+}) {
+  const className =
+    "flex items-center gap-2.5 rounded-xl border border-border-strong bg-surface px-4 py-2.5 text-left text-sm font-medium text-text-primary transition-colors hover:border-brand-purple hover:bg-brand-purple/5";
+
+  if (href) {
+    return (
+      <a href={href} onClick={onClick} className={className} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined}>
+        <Icon size={16} className="shrink-0 text-brand-purple" aria-hidden="true" />
+        {label}
+      </a>
+    );
+  }
+
+  return (
+    <button type="button" onClick={onClick} className={className}>
+      <Icon size={16} className="shrink-0 text-brand-purple" aria-hidden="true" />
+      {label}
+    </button>
   );
 }
