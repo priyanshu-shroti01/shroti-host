@@ -66,24 +66,51 @@ export function HeroDeploy() {
   const seconds = Math.floor(elapsedMs / 1000);
   const millis = Math.floor((elapsedMs % 1000) / 10);
 
+  const dnsActive = activeStep === 1;
+  const dnsDone = activeStep > 1 || isLive;
+  const sslActive = activeStep === 3;
+  const sslDone = isLive;
+
   return (
     <div className="relative w-full max-w-sm">
       <motion.div
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -left-6 -top-6 z-10 hidden items-center gap-2 rounded-full border border-border-strong bg-card px-3 py-2 shadow-lg sm:flex"
+        initial={false}
+        animate={
+          dnsActive
+            ? { opacity: 1, scale: 1.04, y: -2 }
+            : dnsDone
+              ? { opacity: 1, scale: 1, y: 0 }
+              : { opacity: 0.45, scale: 1, y: 0 }
+        }
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className={`absolute -left-6 -top-6 z-10 hidden items-center gap-2 rounded-full border bg-card px-3 py-2 shadow-lg sm:flex ${
+          dnsActive ? "border-brand-blue/60" : "border-border-strong"
+        }`}
       >
-        <Cloud size={14} className="text-brand-blue" aria-hidden="true" />
-        <span className="text-xs font-medium text-text-secondary">Cloudflare network</span>
+        <Cloud size={14} className={dnsDone ? "text-success" : "text-brand-blue"} aria-hidden="true" />
+        <span className="text-xs font-medium text-text-secondary">
+          {dnsDone ? "Routed via Cloudflare" : "Configuring DNS…"}
+        </span>
       </motion.div>
 
       <motion.div
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-        className="absolute -bottom-5 -right-4 z-10 hidden items-center gap-2 rounded-full border border-border-strong bg-card px-3 py-2 shadow-lg sm:flex"
+        initial={false}
+        animate={
+          sslActive
+            ? { opacity: 1, scale: 1.04, y: 2 }
+            : sslDone
+              ? { opacity: 1, scale: 1, y: 0 }
+              : { opacity: 0.45, scale: 1, y: 0 }
+        }
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className={`absolute -bottom-5 -right-4 z-10 hidden items-center gap-2 rounded-full border bg-card px-3 py-2 shadow-lg sm:flex ${
+          sslActive ? "border-success/60" : "border-border-strong"
+        }`}
       >
         <Lock size={14} className="text-success" aria-hidden="true" />
-        <span className="text-xs font-medium text-text-secondary">Free SSL</span>
+        <span className="text-xs font-medium text-text-secondary">
+          {sslDone ? "Secured — SSL active" : "Free SSL"}
+        </span>
       </motion.div>
 
       <div className="overflow-hidden rounded-2xl border border-border-strong bg-card shadow-2xl">
@@ -169,7 +196,7 @@ export function HeroDeploy() {
                   isLive ? "text-text-primary" : "text-text-disabled"
                 }`}
               >
-                {isLive ? "Website live 🚀" : "Website live"}
+                Website live
               </p>
               <p className="truncate font-mono text-xs text-text-muted">yourbrand.com</p>
             </div>
