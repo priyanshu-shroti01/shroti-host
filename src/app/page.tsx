@@ -1,7 +1,6 @@
 import { Hero } from "@/components/home/hero";
 import { TrustedTech } from "@/components/home/trusted-tech";
 import { DomainSearch } from "@/components/home/domain-search";
-import { HostingAdvisor } from "@/components/home/hosting-advisor";
 import { ProductEcosystem } from "@/components/home/product-ecosystem";
 import { WhyChoose } from "@/components/home/why-choose";
 import { DeveloperFeatures } from "@/components/home/developer-features";
@@ -27,18 +26,13 @@ export default function Home() {
         <DomainSearch />
       </Section>
 
-      {/* Hosting Advisor — "Tell us what you're building, we'll pick for you." */}
-      <Section id="advisor" className="bg-surface/30">
-        <HostingAdvisor />
-      </Section>
-
       {/* Products — "Here's everything we offer." */}
-      <Section id="products">
+      <Section id="products" className="bg-surface/30">
         <ProductEcosystem />
       </Section>
 
       {/* Why ShrotiHost — narrative bridge into the story */}
-      <Section id="why" className="bg-surface/30">
+      <Section id="why">
         <WhyChoose />
       </Section>
 
