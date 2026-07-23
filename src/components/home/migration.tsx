@@ -1,23 +1,23 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Globe, Server, Zap } from "lucide-react";
+import { Check, Database, FileArchive, Globe, Mail, Server } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Eyebrow } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 
-const flow = [
-  { icon: Globe, label: "Current Host" },
-  { icon: Zap, label: "Migration" },
-  { icon: Server, label: "ShrotiHost" },
-  { icon: CheckCircle2, label: "Done" },
+const files = [
+  { icon: Database, label: "Database", delay: 0 },
+  { icon: FileArchive, label: "Files", delay: 1.8 },
+  { icon: Mail, label: "Email", delay: 3.6 },
 ];
 
+const LANE_DURATION = 5.4;
+
 const steps = [
-  { title: "Submit your request", description: "Tell us about your current host and website." },
-  { title: "We handle the transfer", description: "Files, databases, and email moved securely." },
-  { title: "You verify and launch", description: "Confirm everything works, then go live." },
+  "Tell us your current host",
+  "We copy files, databases, and email",
+  "You verify, then we switch DNS",
 ];
 
 export function Migration() {
@@ -33,51 +33,64 @@ export function Migration() {
         </p>
       </div>
 
-      <div className="relative mx-auto mt-14 max-w-3xl">
-        <div className="absolute left-0 right-0 top-6 h-0.5 bg-border" aria-hidden="true">
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
-            style={{ transformOrigin: "left" }}
-            className="h-full bg-gradient-to-r from-brand-purple to-brand-blue"
-          />
-        </div>
-        <div className="relative grid grid-cols-4 gap-2">
-          {flow.map((item, i) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, scale: 0.6 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.2 }}
-              className="flex flex-col items-center gap-2"
-            >
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-brand-purple bg-bg text-brand-purple">
-                <item.icon size={20} aria-hidden="true" />
-              </div>
-              <span className="text-center text-xs font-medium text-text-secondary sm:text-sm">
-                {item.label}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-14 grid gap-6 sm:grid-cols-3">
-        {steps.map((step, i) => (
-          <Card key={step.title} className="text-center">
-            <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-brand-purple/10 text-sm font-semibold text-brand-purple">
-              {i + 1}
+      <div className="mx-auto mt-14 max-w-3xl rounded-3xl border border-border bg-card p-6 sm:p-10">
+        <div className="flex items-center gap-3 sm:gap-6">
+          <div className="flex w-24 shrink-0 flex-col items-center gap-2 text-center sm:w-32">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-border-strong bg-surface text-text-muted">
+              <Globe size={20} aria-hidden="true" />
             </div>
-            <h3 className="mt-4 text-base font-semibold text-text-primary">{step.title}</h3>
-            <p className="mt-2 text-sm text-text-secondary">{step.description}</p>
-          </Card>
-        ))}
+            <span className="text-xs font-medium text-text-secondary">Your current host</span>
+          </div>
+
+          <div className="relative h-14 flex-1 overflow-hidden">
+            <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-border" aria-hidden="true" />
+            {files.map((file) => (
+              <motion.div
+                key={file.label}
+                className="absolute top-1/2 flex -translate-y-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-border-strong bg-surface-raised px-2 py-1 text-[11px] font-medium text-text-secondary shadow-sm"
+                style={{ left: 0 }}
+                animate={{ left: ["2%", "84%"], opacity: [0, 1, 1, 0] }}
+                transition={{
+                  duration: LANE_DURATION,
+                  delay: file.delay,
+                  repeat: Infinity,
+                  ease: "linear",
+                  times: [0, 0.1, 0.82, 1],
+                }}
+                aria-hidden="true"
+              >
+                <file.icon size={12} className="text-brand-purple" aria-hidden="true" />
+                {file.label}
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="flex w-24 shrink-0 flex-col items-center gap-2 text-center sm:w-32">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-brand-purple/50 bg-brand-purple/10 text-brand-purple">
+              <Server size={20} aria-hidden="true" />
+            </div>
+            <span className="text-xs font-medium text-text-primary">ShrotiHost</span>
+          </div>
+        </div>
+
+        <ol className="mt-8 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:justify-between sm:gap-6">
+          {steps.map((step, i) => (
+            <li key={step} className="flex items-center gap-2.5 text-sm text-text-secondary sm:flex-1">
+              <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-purple/10 text-[11px] font-semibold text-brand-purple">
+                {i + 1}
+              </span>
+              {step}
+            </li>
+          ))}
+        </ol>
       </div>
 
-      <div className="mt-10 flex flex-wrap justify-center gap-4">
+      <div className="mt-8 flex items-center justify-center gap-2 text-xs text-text-muted">
+        <Check size={14} className="text-success" aria-hidden="true" />
+        Typical downtime: under 15 minutes, scheduled at your convenience.
+      </div>
+
+      <div className="mt-8 flex flex-wrap justify-center gap-4">
         <Button href="/migration" size="lg">
           Request Free Migration
         </Button>
