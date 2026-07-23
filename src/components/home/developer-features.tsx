@@ -24,7 +24,7 @@ const codeLines = [
 export function DeveloperFeatures() {
   return (
     <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-      <Reveal>
+      <Reveal className="min-w-0">
         <Eyebrow>For Developers</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
           Ship the way you already work.

@@ -104,7 +104,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
-      <body className="flex min-h-full flex-col bg-bg text-text-primary">
+      <body className="flex min-h-full flex-col overflow-x-hidden bg-bg text-text-primary">
         <CurrencyProvider>
           <AnnouncementBar />
           <Header />
