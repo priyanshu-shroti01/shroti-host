@@ -13,6 +13,13 @@ export type Plan = {
     email: string;
     support: string;
   };
+  /** Raw values driving the plan comparison meters — Infinity renders as an "unlimited" fill, not a proportional bar. */
+  meters: {
+    websites: number;
+    storageGB: number;
+    mailboxes: number;
+  };
+  supportTier: "Standard" | "Priority";
 };
 
 export const plans: Plan[] = [
@@ -37,6 +44,8 @@ export const plans: Plan[] = [
       email: "1 Mailbox",
       support: "Standard Support",
     },
+    meters: { websites: 1, storageGB: 10, mailboxes: 1 },
+    supportTier: "Standard",
   },
   {
     name: "Grow",
@@ -62,6 +71,8 @@ export const plans: Plan[] = [
       email: "10 Mailboxes",
       support: "Priority Support",
     },
+    meters: { websites: 10, storageGB: 50, mailboxes: 10 },
+    supportTier: "Priority",
   },
   {
     name: "Scale",
@@ -87,6 +98,8 @@ export const plans: Plan[] = [
       email: "Unlimited Mailboxes",
       support: "Priority Support",
     },
+    meters: { websites: Infinity, storageGB: 150, mailboxes: Infinity },
+    supportTier: "Priority",
   },
 ];
 

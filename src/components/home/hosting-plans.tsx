@@ -1,15 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
+import { Check, Headset } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import { plans } from "@/lib/plans";
+import { ResourceMeter } from "@/components/ui/resource-meter";
+import { plans, commonFeatures } from "@/lib/plans";
 import { useCurrency } from "@/components/currency-provider";
+
+const MAX_WEBSITES = Math.max(...plans.map((p) => p.meters.websites).filter(Number.isFinite));
+const MAX_STORAGE = Math.max(...plans.map((p) => p.meters.storageGB));
+const MAX_MAILBOXES = Math.max(...plans.map((p) => p.meters.mailboxes).filter(Number.isFinite));
 
 type Cycle = "monthly" | "quarterly" | "annual";
 
@@ -27,7 +32,6 @@ function priceFor(plan: (typeof plans)[number], cycle: Cycle) {
 
 export function HostingPlans() {
   const [cycle, setCycle] = useState<Cycle>("annual");
-  const [expanded, setExpanded] = useState<string | null>(null);
   const { currency, convertDisplay } = useCurrency();
   const currencySymbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "€";
 
@@ -61,7 +65,6 @@ export function HostingPlans() {
 
       <div className="mt-12 grid gap-6 lg:grid-cols-3">
         {plans.map((plan, i) => {
-          const isExpanded = expanded === plan.name;
           return (
             <Reveal key={plan.name} delay={i * 0.08}>
               <Card
@@ -96,14 +99,40 @@ export function HostingPlans() {
                 </div>
                 <p className="mt-1 text-xs text-text-muted">Billed {cycle}</p>
 
-                <ul className="mt-6 flex-1 space-y-3">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-sm text-text-secondary">
-                      <Check size={16} className="mt-0.5 shrink-0 text-success" aria-hidden="true" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                <div className="mt-6 flex-1 space-y-4">
+                  <ResourceMeter
+                    label="Websites"
+                    valueLabel={plan.specs.websites}
+                    value={plan.meters.websites}
+                    max={MAX_WEBSITES}
+                    emphasis={plan.recommended}
+                  />
+                  <ResourceMeter
+                    label="Storage"
+                    valueLabel={plan.specs.storage}
+                    value={plan.meters.storageGB}
+                    max={MAX_STORAGE}
+                    delay={0.08}
+                    emphasis={plan.recommended}
+                  />
+                  <ResourceMeter
+                    label="Email"
+                    valueLabel={plan.specs.email}
+                    value={plan.meters.mailboxes}
+                    max={MAX_MAILBOXES}
+                    delay={0.16}
+                    emphasis={plan.recommended}
+                  />
+
+                  <div className="flex items-center gap-2 border-t border-border pt-4 text-sm">
+                    <Headset
+                      size={16}
+                      className={plan.supportTier === "Priority" ? "text-brand-purple" : "text-text-muted"}
+                      aria-hidden="true"
+                    />
+                    <span className="text-text-secondary">{plan.specs.support}</span>
+                  </div>
+                </div>
 
                 <Button
                   href="/hosting"
@@ -113,44 +142,25 @@ export function HostingPlans() {
                 >
                   Choose {plan.name}
                 </Button>
-
-                <button
-                  type="button"
-                  onClick={() => setExpanded(isExpanded ? null : plan.name)}
-                  aria-expanded={isExpanded}
-                  className="mt-4 flex items-center justify-center gap-1 text-xs font-medium text-text-muted hover:text-text-secondary"
-                >
-                  Full specs
-                  <ChevronDown
-                    size={14}
-                    className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
-                    aria-hidden="true"
-                  />
-                </button>
-
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.dl
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="mt-3 grid grid-cols-2 gap-3 overflow-hidden border-t border-border pt-3 text-xs"
-                    >
-                      {Object.entries(plan.specs).map(([key, value]) => (
-                        <div key={key}>
-                          <dt className="capitalize text-text-muted">{key}</dt>
-                          <dd className="font-medium text-text-primary">{value}</dd>
-                        </div>
-                      ))}
-                    </motion.dl>
-                  )}
-                </AnimatePresence>
               </Card>
             </Reveal>
           );
         })}
       </div>
+
+      <Reveal delay={0.3}>
+        <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface/40 px-6 py-5 sm:flex-row sm:justify-center sm:gap-x-6 sm:gap-y-2 sm:flex-wrap">
+          <span className="text-xs font-medium uppercase tracking-wide text-text-muted">On every plan</span>
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+            {commonFeatures.map((feature) => (
+              <span key={feature} className="inline-flex items-center gap-1.5 text-sm text-text-secondary">
+                <Check size={14} className="text-success" aria-hidden="true" />
+                {feature}
+              </span>
+            ))}
+          </div>
+        </div>
+      </Reveal>
     </div>
   );
 }
