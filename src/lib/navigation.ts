@@ -37,7 +37,7 @@ export const primaryNav: NavItem[] = [
       { label: "Shared Hosting", href: "/hosting", description: "Launch, Grow, and Scale plans", icon: Server },
       { label: "WordPress Hosting", href: "/wordpress-hosting", description: "Optimized for WordPress & WooCommerce", icon: Globe },
       { label: "Unlimited Hosting", href: "/unlimited-hosting", description: "For agencies and multi-site owners", icon: Users },
-      { label: "Email Hosting", href: "/hosting#developer", description: "Business mailboxes on your domain", icon: Mail },
+      { label: "Email Hosting", href: "/hosting#compare", description: "Business mailboxes on your domain", icon: Mail },
     ],
   },
   {
@@ -88,10 +88,10 @@ export const footerNav = {
     { label: "WordPress Hosting", href: "/wordpress-hosting" },
     { label: "Unlimited Hosting", href: "/unlimited-hosting" },
     { label: "Domains", href: "/domains" },
-    { label: "Email Hosting", href: "/hosting#developer" },
+    { label: "Email Hosting", href: "/hosting#compare" },
     { label: "VPS (coming soon)", href: "/vps" },
-    { label: "Cloud Hosting (coming soon)", href: "/hosting#roadmap" },
-    { label: "Reseller Hosting (coming soon)", href: "/hosting#roadmap" },
+    { label: "Cloud Hosting (coming soon)", href: "/vps" },
+    { label: "Reseller Hosting (coming soon)", href: "/vps" },
   ],
   Modules: [
     { label: "All Modules", href: "/modules" },
@@ -109,7 +109,7 @@ export const footerNav = {
     { label: "Blog", href: "/blog" },
     { label: "Status", href: "/status" },
     { label: "Migration", href: "/migration" },
-    { label: "API (coming soon)", href: "/hosting#roadmap" },
+    { label: "API (coming soon)", href: "/vps" },
   ],
   Legal: [
     { label: "Terms", href: "/legal/terms" },
