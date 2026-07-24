@@ -20,7 +20,7 @@ const steps = [
   "You verify, then we switch DNS",
 ];
 
-export function Migration() {
+export function Migration({ ctaHref = "/migration" }: { ctaHref?: string }) {
   return (
     <Reveal>
       <div className="mx-auto max-w-2xl text-center">
@@ -91,7 +91,7 @@ export function Migration() {
       </div>
 
       <div className="mt-8 flex flex-wrap justify-center gap-4">
-        <Button href="/migration" size="lg">
+        <Button href={ctaHref} size="lg">
           Request Free Migration
         </Button>
         <Button href="#compare" variant="secondary" size="lg">
