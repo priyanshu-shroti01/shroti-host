@@ -54,7 +54,7 @@ const products = [
     icon: Mail,
     title: "Email Hosting",
     description: "Business mailboxes on your own domain.",
-    href: "/hosting#developer",
+    href: "/hosting#compare",
   },
   {
     icon: LayoutGrid,
@@ -68,7 +68,7 @@ const wide = {
   icon: Code2,
   title: "Developer Hosting",
   description: "Node.js, Python, PHP, Git, SSH, and cron — ready out of the box on every plan.",
-  href: "/hosting#developer",
+  href: "/hosting#compare",
 };
 
 const roadmap = [
