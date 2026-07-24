@@ -57,7 +57,7 @@ export const primaryNav: NavItem[] = [
       { label: "Documentation", href: "/docs", description: "Guides for setup and migration", icon: FileText },
       { label: "Status", href: "/status", description: "Live infrastructure status", icon: Server },
       { label: "Migration", href: "/migration", description: "Move your site to ShrotiHost, free", icon: Truck },
-      { label: "FAQs", href: "/#faq", description: "Answers to common questions", icon: HelpCircle },
+      { label: "FAQs", href: "/docs", description: "Answers to common questions", icon: HelpCircle },
     ],
   },
   {
