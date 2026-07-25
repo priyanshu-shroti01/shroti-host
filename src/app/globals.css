@@ -11,8 +11,15 @@
   /* Surfaces (dark theme is the default brand theme) */
   --color-bg: #0a0a0f;
   --color-surface: #131318;
-  --color-surface-raised: #191921;
-  --color-card: #16161d;
+  /* Card and raised-surface tokens are semi-transparent — paired with the
+     backdrop-filter rule below, this is what makes every card, dropdown,
+     and panel built on bg-card / bg-surface-raised a frosted-glass surface
+     site-wide, without editing each component individually. --color-bg and
+     --color-surface stay opaque: those are page-level canvas, not floating
+     glass panels, and section-alternation classes like bg-surface/30
+     already apply their own opacity on top of it. */
+  --color-surface-raised: rgb(25 25 33 / 0.65);
+  --color-card: rgb(22 22 29 / 0.6);
   --color-border: rgb(255 255 255 / 0.14);
   --color-border-strong: rgb(255 255 255 / 0.22);
 
@@ -45,8 +52,8 @@
 
   --color-bg: #ffffff;
   --color-surface: #f6f6f8;
-  --color-surface-raised: #ffffff;
-  --color-card: #ffffff;
+  --color-surface-raised: rgb(255 255 255 / 0.7);
+  --color-card: rgb(255 255 255 / 0.62);
   --color-border: rgb(10 10 15 / 0.12);
   --color-border-strong: rgb(10 10 15 / 0.18);
 
@@ -190,6 +197,17 @@
 body {
   background: var(--color-bg);
   color: var(--color-text-primary);
+}
+
+/* Glassmorphism: bg-card / bg-surface-raised are semi-transparent tokens
+   (see :root above) — this is what actually blurs whatever sits behind
+   every card, dropdown, and panel built on them. Excludes elements that
+   opt out via data-glass="off" (e.g. terminal-style mockups that should
+   stay a solid, real-looking black rather than frosted). */
+.bg-card:not([data-glass="off"]),
+.bg-surface-raised:not([data-glass="off"]) {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 ::selection {
