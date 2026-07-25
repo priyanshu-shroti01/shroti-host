@@ -66,7 +66,7 @@ export function vpsFormation(): BlockFormation[] {
 
 export function cloudFormation(): BlockFormation[] {
   const radius = 150;
-  const size = 30;
+  const size = 34;
   return Array.from({ length: BLOCK_COUNT }, (_, i) => {
     const angle = (i / BLOCK_COUNT) * Math.PI * 2 - Math.PI / 2;
     return {
@@ -75,7 +75,8 @@ export function cloudFormation(): BlockFormation[] {
       width: size,
       height: size,
       radius: size / 2,
-      rotation: (angle * 180) / Math.PI,
+      // Nodes stay upright (no rotation) so the icon inside each one stays readable.
+      rotation: 0,
     };
   });
 }
