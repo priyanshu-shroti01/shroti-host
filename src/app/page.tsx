@@ -1,11 +1,8 @@
-import { Hero } from "@/components/home/hero";
+import { ScrollStory } from "@/components/home/scroll-story/scroll-story";
 import { TrustedTech } from "@/components/home/trusted-tech";
-import { DomainSearch } from "@/components/home/domain-search";
 import { ProductEcosystem } from "@/components/home/product-ecosystem";
 import { WhyChoose } from "@/components/home/why-choose";
 import { DeveloperFeatures } from "@/components/home/developer-features";
-import { Infrastructure } from "@/components/home/infrastructure";
-import { DashboardPreview } from "@/components/home/dashboard-preview";
 import { Migration } from "@/components/home/migration";
 import { StudentProgram } from "@/components/home/student-program";
 import { StartupProgram } from "@/components/home/startup-program";
@@ -17,37 +14,27 @@ import { Section } from "@/components/ui/section";
 export default function Home() {
   return (
     <>
-      {/* Hero — "We help you launch." */}
-      <Hero />
-      <TrustedTech />
+      {/* One continuous scroll story — domain → DNS → deploy → dashboard → analytics → scaling */}
+      <ScrollStory />
 
-      {/* Domain Search — "Find your identity." */}
-      <Section id="domains" className="py-8 sm:py-10">
-        <DomainSearch />
+      {/* Pricing — where the story resolves. */}
+      <Section id="pricing" className="pt-0">
+        <HostingPlans />
       </Section>
+
+      <TrustedTech />
 
       {/* Products — "Here's everything we offer." */}
       <Section id="products" className="bg-surface/30">
         <ProductEcosystem />
       </Section>
 
-      {/* Why ShrotiHost — narrative bridge into the story */}
       <Section id="why">
         <WhyChoose />
       </Section>
 
       <Section id="developers">
         <DeveloperFeatures />
-      </Section>
-
-      {/* Technology — "Here's why it's fast." */}
-      <Section id="infrastructure" className="bg-surface/30">
-        <Infrastructure />
-      </Section>
-
-      {/* Dashboard — "Here's what you'll use." */}
-      <Section id="dashboard">
-        <DashboardPreview />
       </Section>
 
       {/* Migration — "Switch easily." */}
@@ -61,11 +48,6 @@ export default function Home() {
 
       <Section id="startup" className="pt-0">
         <StartupProgram />
-      </Section>
-
-      {/* Pricing — "Choose a plan." */}
-      <Section id="plans" className="bg-surface/30">
-        <HostingPlans />
       </Section>
 
       <Section id="testimonials">
