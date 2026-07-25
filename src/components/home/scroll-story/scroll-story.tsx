@@ -7,7 +7,16 @@ import { Globe } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 import { chapters, DEFAULT_STORY_DOMAIN } from "./data";
-import { AnalyticsPanel, DashboardPanel, DeployPanel, DnsPanel, DomainPanel, ScalingPanel } from "./panels";
+import {
+  DashboardPanel,
+  DnsPanel,
+  DomainPanel,
+  MonitorPanel,
+  ScalePanel,
+  ServerPanel,
+  SslPanel,
+  SuccessPanel,
+} from "./panels";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -22,14 +31,21 @@ function sanitizeDomain(raw: string): string {
   return cleaned.includes(".") ? cleaned : `${cleaned}.com`;
 }
 
-/** Chip position/scale per chapter, as a percentage of the pinned stage. */
+/**
+ * Chip position/scale per chapter, as a percentage of the pinned stage.
+ * The chip travels through the first three chapters (where it's the
+ * identity being carried forward), then hides once each chapter grows
+ * its own focal visual (server card, SSL card, browser frame, ...).
+ */
 const CHIP_ANCHORS = [
   { x: 50, y: 68, scale: 1.15, opacity: 1 }, // domain
-  { x: 50, y: 23, scale: 0.85, opacity: 1 }, // dns
-  { x: 50, y: 15, scale: 0.7, opacity: 1 }, // deploy
-  { x: 50, y: 11, scale: 0.55, opacity: 0 }, // dashboard (merges into browser bar, chip fades)
-  { x: 50, y: 11, scale: 0.55, opacity: 0 }, // analytics
-  { x: 50, y: 11, scale: 0.55, opacity: 0 }, // scaling
+  { x: 50, y: 26, scale: 0.85, opacity: 1 }, // server
+  { x: 50, y: 20, scale: 0.7, opacity: 1 }, // dns
+  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // ssl
+  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // dashboard
+  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // monitor
+  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // scale
+  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // success
 ];
 
 export function ScrollStory() {
@@ -68,11 +84,13 @@ function StaticStory({
     <div className="space-y-20 py-16 sm:space-y-28">
       {[
         <DomainPanel key="domain" registerEl={registerEl} domain={domain} domainInput={domainInput} onDomainInput={onDomainInput} />,
+        <ServerPanel key="server" registerEl={registerEl} domain={domain} complete />,
         <DnsPanel key="dns" registerEl={registerEl} domain={domain} />,
-        <DeployPanel key="deploy" registerEl={registerEl} domain={domain} complete />,
+        <SslPanel key="ssl" registerEl={registerEl} domain={domain} complete />,
         <DashboardPanel key="dashboard" registerEl={registerEl} domain={domain} />,
-        <AnalyticsPanel key="analytics" registerEl={registerEl} complete />,
-        <ScalingPanel key="scaling" registerEl={registerEl} complete />,
+        <MonitorPanel key="monitor" registerEl={registerEl} complete />,
+        <ScalePanel key="scale" registerEl={registerEl} complete />,
+        <SuccessPanel key="success" registerEl={registerEl} domain={domain} />,
       ].map((panel, i) => (
         <Reveal key={chapters[i].id} className="mx-auto flex justify-center">
           {panel}
@@ -126,14 +144,19 @@ function CinematicStory({
         opacity: CHIP_ANCHORS[0].opacity,
       });
 
+      const serverRing = el["server-ring"];
+      const serverTags = [0, 1, 2, 3].map((i) => el[`server-tag-${i}`]);
+      gsap.set(serverRing, { scale: 0.85 });
+      gsap.set(serverTags, { opacity: 0 });
+
       const dnsRows = [0, 1, 2].map((i) => el[`dns-row-${i}`]);
       gsap.set(dnsRows, { opacity: 0, x: -12 });
       gsap.set(el["dns-status"], { opacity: 0, y: 8 });
 
-      const deployRows = [0, 1, 2].map((i) => el[`deploy-step-${i}`]);
-      gsap.set(deployRows, { opacity: 0.4 });
-      const deployChecks = [0, 1, 2].map((i) => el[`deploy-check-${i}`]);
-      gsap.set(deployChecks, { opacity: 0 });
+      const sslPending = el["ssl-pending"];
+      const sslDone = el["ssl-done"];
+      gsap.set(sslPending, { opacity: 1 });
+      gsap.set(sslDone, { opacity: 0 });
 
       const sparkline = el["dashboard-sparkline"] as SVGPathElement | null;
       let sparkLength = 0;
@@ -155,6 +178,9 @@ function CinematicStory({
       const visitsCounter = el["analytics-visits"];
       const uptimeCounter = el["analytics-uptime"];
       const counterState = { visits: 0, uptime: 0 };
+
+      const successCheck = el["success-check"];
+      gsap.set(successCheck, { scale: 0.6, opacity: 0 });
 
       const STEP = 1;
       const tl = gsap.timeline({
@@ -192,31 +218,38 @@ function CinematicStory({
           .to(panels[toIdx], { opacity: 1, y: 0, scale: 1, duration: STEP * 0.6 }, `ch${toIdx}+=0.1`);
       }
 
-      // Chapter 0 → 1: Domain → DNS
+      // 0 → 1: Domain → Launch Server
       crossfade(0, 1, CHIP_ANCHORS[1]);
-      tl.to(dnsRows[0], { opacity: 1, x: 0, duration: 0.3 }, "ch1+=0.3")
-        .to(dnsRows[1], { opacity: 1, x: 0, duration: 0.3 }, "ch1+=0.45")
-        .to(dnsRows[2], { opacity: 1, x: 0, duration: 0.3 }, "ch1+=0.6")
-        .to(el["dns-status"], { opacity: 1, y: 0, duration: 0.3 }, "ch1+=0.8");
+      tl.to(serverRing, { scale: 1, duration: 0.4 }, "ch1+=0.2").to(serverTags, {
+        opacity: 1,
+        duration: 0.25,
+        stagger: 0.12,
+      }, "ch1+=0.45");
 
-      // Chapter 1 → 2: DNS → Deploy
+      // 1 → 2: Launch Server → Configure DNS
       crossfade(1, 2, CHIP_ANCHORS[2]);
-      tl.to(deployRows[0], { opacity: 1, duration: 0.25 }, "ch2+=0.25")
-        .to(deployChecks[0], { opacity: 1, duration: 0.2 }, "ch2+=0.5")
-        .to(deployRows[1], { opacity: 1, duration: 0.25 }, "ch2+=0.55")
-        .to(deployChecks[1], { opacity: 1, duration: 0.2 }, "ch2+=0.8")
-        .to(deployRows[2], { opacity: 1, duration: 0.25 }, "ch2+=0.85")
-        .to(deployChecks[2], { opacity: 1, duration: 0.2 }, "ch2+=1.05");
+      tl.to(dnsRows[0], { opacity: 1, x: 0, duration: 0.3 }, "ch2+=0.25")
+        .to(dnsRows[1], { opacity: 1, x: 0, duration: 0.3 }, "ch2+=0.4")
+        .to(dnsRows[2], { opacity: 1, x: 0, duration: 0.3 }, "ch2+=0.55")
+        .to(el["dns-status"], { opacity: 1, y: 0, duration: 0.3 }, "ch2+=0.75");
 
-      // Chapter 2 → 3: Deploy → Dashboard
+      // 2 → 3: Configure DNS → Install SSL
       crossfade(2, 3, CHIP_ANCHORS[3]);
+      tl.to(sslPending, { opacity: 0, duration: 0.3 }, "ch3+=0.35").to(
+        sslDone,
+        { opacity: 1, duration: 0.35 },
+        "ch3+=0.4"
+      );
+
+      // 3 → 4: Install SSL → Dashboard
+      crossfade(3, 4, CHIP_ANCHORS[4]);
       if (sparkline) {
-        tl.to(sparkline, { strokeDashoffset: 0, duration: 0.7, ease: "power1.inOut" }, "ch3+=0.2");
+        tl.to(sparkline, { strokeDashoffset: 0, duration: 0.7, ease: "power1.inOut" }, "ch4+=0.2");
       }
 
-      // Chapter 3 → 4: Dashboard → Analytics
-      crossfade(3, 4, CHIP_ANCHORS[4]);
-      tl.to(bars, { scaleY: 1, duration: 0.5, stagger: 0.04 }, "ch4+=0.15").to(
+      // 4 → 5: Dashboard → Monitor Website
+      crossfade(4, 5, CHIP_ANCHORS[5]);
+      tl.to(bars, { scaleY: 1, duration: 0.5, stagger: 0.04 }, "ch5+=0.15").to(
         counterState,
         {
           visits: 48200,
@@ -227,32 +260,36 @@ function CinematicStory({
             if (uptimeCounter) uptimeCounter.textContent = `${counterState.uptime.toFixed(2)}%`;
           },
         },
-        "ch4+=0.2"
+        "ch5+=0.2"
       );
 
-      // Chapter 4 → 5: Analytics → Scaling
-      crossfade(4, 5, CHIP_ANCHORS[5]);
-      tl.to(tiers[0], { opacity: 1, duration: 0.2 }, "ch5+=0.15")
-        .to([el["scaling-block-0-0"]], { opacity: 1, scaleY: 1, duration: 0.25 }, "ch5+=0.25")
-        .to(tiers[1], { opacity: 1, duration: 0.2 }, "ch5+=0.45")
+      // 5 → 6: Monitor Website → Scale Resources
+      crossfade(5, 6, CHIP_ANCHORS[6]);
+      tl.to(tiers[0], { opacity: 1, duration: 0.2 }, "ch6+=0.15")
+        .to([el["scaling-block-0-0"]], { opacity: 1, scaleY: 1, duration: 0.25 }, "ch6+=0.25")
+        .to(tiers[1], { opacity: 1, duration: 0.2 }, "ch6+=0.45")
         .to(
           Array.from({ length: 2 }, (_, b) => el[`scaling-block-1-${b}`]),
           { opacity: 1, scaleY: 1, duration: 0.25, stagger: 0.05 },
-          "ch5+=0.55"
+          "ch6+=0.55"
         )
-        .to(tiers[2], { opacity: 1, duration: 0.2 }, "ch5+=0.8")
+        .to(tiers[2], { opacity: 1, duration: 0.2 }, "ch6+=0.8")
         .to(
           Array.from({ length: 3 }, (_, b) => el[`scaling-block-2-${b}`]),
           { opacity: 1, scaleY: 1, duration: 0.25, stagger: 0.05 },
-          "ch5+=0.9"
+          "ch6+=0.9"
         );
+
+      // 6 → 7: Scale Resources → Success
+      crossfade(6, 7, CHIP_ANCHORS[7]);
+      tl.to(successCheck, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, "ch7+=0.2");
     }, wrapperRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={wrapperRef} className="relative" style={{ height: `${chapters.length * 120}vh` }}>
+    <div ref={wrapperRef} className="relative" style={{ height: `${chapters.length * 95}vh` }}>
       <a
         href="#pricing"
         className="sr-only rounded-lg bg-card px-3 py-2 text-xs font-medium text-text-primary shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-40"
@@ -287,20 +324,26 @@ function CinematicStory({
         <div ref={registerEl("panel-domain")} className="absolute inset-0 flex items-center justify-center">
           <DomainPanel registerEl={registerEl} domain={domain} domainInput={domainInput} onDomainInput={onDomainInput} />
         </div>
+        <div ref={registerEl("panel-server")} className="absolute inset-0 flex items-center justify-center">
+          <ServerPanel registerEl={registerEl} domain={domain} />
+        </div>
         <div ref={registerEl("panel-dns")} className="absolute inset-0 flex items-center justify-center">
           <DnsPanel registerEl={registerEl} domain={domain} />
         </div>
-        <div ref={registerEl("panel-deploy")} className="absolute inset-0 flex items-center justify-center">
-          <DeployPanel registerEl={registerEl} domain={domain} />
+        <div ref={registerEl("panel-ssl")} className="absolute inset-0 flex items-center justify-center">
+          <SslPanel registerEl={registerEl} domain={domain} />
         </div>
         <div ref={registerEl("panel-dashboard")} className="absolute inset-0 flex items-center justify-center">
           <DashboardPanel registerEl={registerEl} domain={domain} />
         </div>
-        <div ref={registerEl("panel-analytics")} className="absolute inset-0 flex items-center justify-center">
-          <AnalyticsPanel registerEl={registerEl} />
+        <div ref={registerEl("panel-monitor")} className="absolute inset-0 flex items-center justify-center">
+          <MonitorPanel registerEl={registerEl} />
         </div>
-        <div ref={registerEl("panel-scaling")} className="absolute inset-0 flex items-center justify-center">
-          <ScalingPanel registerEl={registerEl} />
+        <div ref={registerEl("panel-scale")} className="absolute inset-0 flex items-center justify-center">
+          <ScalePanel registerEl={registerEl} />
+        </div>
+        <div ref={registerEl("panel-success")} className="absolute inset-0 flex items-center justify-center">
+          <SuccessPanel registerEl={registerEl} domain={domain} />
         </div>
 
         <nav

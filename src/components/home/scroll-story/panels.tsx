@@ -1,7 +1,15 @@
 import type { RefCallback } from "react";
-import { Check, Cloud, Lock, Search, Server, Zap } from "lucide-react";
+import { Check, Globe, Lock, Search, Server, ShieldCheck } from "lucide-react";
 import { BrowserFrame } from "@/components/ui/browser-frame";
-import { dnsRecordsFor, deploySteps, sampleTraffic, scalingTiers, storySuggestions } from "./data";
+import {
+  dnsRecordsFor,
+  journeySteps,
+  sampleTraffic,
+  scalingTiers,
+  serverSpecs,
+  sslAuthority,
+  storySuggestions,
+} from "./data";
 
 type RegisterEl = <T extends Element = HTMLElement>(name: string) => RefCallback<T>;
 
@@ -55,13 +63,54 @@ export function DomainPanel({
   );
 }
 
+export function ServerPanel({
+  registerEl,
+  domain,
+  complete = false,
+}: {
+  registerEl: RegisterEl;
+  domain: string;
+  complete?: boolean;
+}) {
+  return (
+    <div className="flex w-full max-w-lg flex-col items-center px-4 text-center">
+      <p className="font-mono text-sm text-brand-blue">Server</p>
+      <h3 className="mt-3 text-2xl font-semibold text-text-primary sm:text-4xl">Launching your server.</h3>
+      <div className="mt-8 flex w-full flex-col items-center gap-6 rounded-2xl border border-border-strong bg-card p-8 shadow-2xl">
+        <div
+          ref={registerEl("server-ring")}
+          className="relative inline-flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-brand-purple/30 bg-brand-purple/5 text-brand-purple"
+          style={{ transform: complete ? "scale(1)" : "scale(0.85)" }}
+        >
+          <Server size={32} aria-hidden="true" />
+        </div>
+        <p className="font-mono text-xs text-text-muted">{domain}</p>
+        <div className="grid w-full grid-cols-2 gap-2">
+          {serverSpecs.map((spec, i) => (
+            <div
+              key={spec}
+              ref={registerEl(`server-tag-${i}`)}
+              className={`flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-left ${
+                complete ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Check size={13} className="shrink-0 text-success" aria-hidden="true" />
+              <span className="truncate text-xs text-text-secondary">{spec}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function DnsPanel({ registerEl, domain }: { registerEl: RegisterEl; domain: string }) {
   const records = dnsRecordsFor(domain);
   return (
     <div className="flex w-full max-w-lg flex-col items-center px-4 text-center">
       <p className="font-mono text-sm text-brand-blue">DNS</p>
       <h3 className="mt-3 text-2xl font-semibold text-text-primary sm:text-4xl">
-        Point <span className="text-brand-purple">{domain}</span> anywhere.
+        Point <span className="text-brand-purple">{domain}</span> at your server.
       </h3>
       <div className="mt-8 w-full overflow-hidden rounded-2xl border border-border-strong bg-card shadow-2xl">
         <div className="grid grid-cols-3 gap-2 border-b border-border bg-surface-raised px-4 py-2 text-left text-[11px] font-medium uppercase tracking-wide text-text-muted">
@@ -91,7 +140,7 @@ export function DnsPanel({ registerEl, domain }: { registerEl: RegisterEl; domai
   );
 }
 
-export function DeployPanel({
+export function SslPanel({
   registerEl,
   domain,
   complete = false,
@@ -102,35 +151,29 @@ export function DeployPanel({
 }) {
   return (
     <div className="flex w-full max-w-sm flex-col items-center px-4 text-center">
-      <p className="font-mono text-sm text-brand-blue">Deploy</p>
-      <h3 className="mt-3 text-2xl font-semibold text-text-primary sm:text-4xl">Go live in seconds.</h3>
-      <div className="mt-8 w-full overflow-hidden rounded-2xl border border-border-strong bg-card text-left shadow-2xl">
-        <div className="flex items-center justify-between border-b border-border bg-surface-raised px-5 py-3">
-          <span className="font-mono text-xs text-text-secondary">{domain}</span>
-          <Cloud size={14} className="text-brand-blue" aria-hidden="true" />
+      <p className="font-mono text-sm text-brand-blue">SSL</p>
+      <h3 className="mt-3 text-2xl font-semibold text-text-primary sm:text-4xl">Encrypting your connection.</h3>
+      <div className="relative mt-8 flex w-full flex-col items-center gap-4 rounded-2xl border border-border-strong bg-card p-8 shadow-2xl">
+        {/* Pending and done states are separate layers, cross-faded by opacity — icons/text can't be scroll-tweened directly. */}
+        <div
+          ref={registerEl("ssl-pending")}
+          className={`flex flex-col items-center gap-4 ${complete ? "opacity-0" : "opacity-100"}`}
+        >
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full border-2 border-border text-text-disabled">
+            <ShieldCheck size={26} aria-hidden="true" />
+          </div>
+          <p className="font-mono text-sm text-text-primary">{domain}</p>
+          <p className="text-xs text-text-muted">Requesting certificate from {sslAuthority}…</p>
         </div>
-        <div className="space-y-1 p-5">
-          {deploySteps.map((step, i) => (
-            <div
-              key={step.label}
-              ref={registerEl(`deploy-step-${i}`)}
-              className={`flex items-center gap-3 rounded-xl px-2 py-2.5 ${complete ? "opacity-100" : "opacity-40"}`}
-            >
-              <div className="relative inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border text-text-disabled">
-                {i === 0 ? <Server size={15} aria-hidden="true" /> : i === 1 ? <Lock size={15} aria-hidden="true" /> : <Zap size={15} aria-hidden="true" />}
-                <span
-                  ref={registerEl(`deploy-check-${i}`)}
-                  className={`absolute inset-0 flex items-center justify-center rounded-lg border border-success/40 bg-success/10 text-success ${complete ? "opacity-100" : "opacity-0"}`}
-                >
-                  <Check size={15} aria-hidden="true" />
-                </span>
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-text-secondary">{step.label}</p>
-                <p className="truncate font-mono text-xs text-text-muted">{step.detail}</p>
-              </div>
-            </div>
-          ))}
+        <div
+          ref={registerEl("ssl-done")}
+          className={`absolute inset-0 flex flex-col items-center justify-center gap-4 p-8 ${complete ? "opacity-100" : "opacity-0"}`}
+        >
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full border-2 border-success/40 bg-success/10 text-success">
+            <Lock size={26} aria-hidden="true" />
+          </div>
+          <p className="font-mono text-sm text-text-primary">https://{domain}</p>
+          <p className="text-xs text-text-muted">Secured — issued by {sslAuthority}</p>
         </div>
       </div>
     </div>
@@ -178,12 +221,15 @@ export function DashboardPanel({ registerEl, domain }: { registerEl: RegisterEl;
   );
 }
 
-export function AnalyticsPanel({ registerEl, complete = false }: { registerEl: RegisterEl; complete?: boolean }) {
+export function MonitorPanel({ registerEl, complete = false }: { registerEl: RegisterEl; complete?: boolean }) {
   return (
     <div className="w-full max-w-2xl px-4 text-center">
-      <p className="font-mono text-sm text-brand-blue">Analytics</p>
-      <h3 className="mt-3 text-2xl font-semibold text-text-primary sm:text-4xl">Watch it grow.</h3>
-      <p className="mt-2 text-xs text-text-muted">Illustrative sample data</p>
+      <p className="font-mono text-sm text-brand-blue">Monitor</p>
+      <h3 className="mt-3 text-2xl font-semibold text-text-primary sm:text-4xl">Watch it live.</h3>
+      <p className="mt-2 flex items-center justify-center gap-1.5 text-xs text-text-muted">
+        <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+        Illustrative sample data
+      </p>
       <div className="mx-auto mt-8 flex h-48 w-full max-w-lg items-end justify-between gap-1.5 rounded-2xl border border-border-strong bg-card p-6 shadow-2xl sm:gap-2">
         {sampleTraffic.map((v, i) => (
           <div
@@ -212,11 +258,11 @@ export function AnalyticsPanel({ registerEl, complete = false }: { registerEl: R
   );
 }
 
-export function ScalingPanel({ registerEl, complete = false }: { registerEl: RegisterEl; complete?: boolean }) {
+export function ScalePanel({ registerEl, complete = false }: { registerEl: RegisterEl; complete?: boolean }) {
   return (
     <div className="w-full max-w-2xl px-4 text-center">
-      <p className="font-mono text-sm text-brand-blue">Scaling</p>
-      <h3 className="mt-3 text-2xl font-semibold text-text-primary sm:text-4xl">Built to scale with you.</h3>
+      <p className="font-mono text-sm text-brand-blue">Scale</p>
+      <h3 className="mt-3 text-2xl font-semibold text-text-primary sm:text-4xl">Scale resources on demand.</h3>
       <div className="mx-auto mt-8 grid max-w-lg grid-cols-3 gap-3">
         {scalingTiers.map((tier, i) => (
           <div
@@ -242,6 +288,36 @@ export function ScalingPanel({ registerEl, complete = false }: { registerEl: Reg
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+export function SuccessPanel({ registerEl, domain }: { registerEl: RegisterEl; domain: string }) {
+  return (
+    <div className="flex w-full max-w-lg flex-col items-center px-4 text-center">
+      <div
+        ref={registerEl("success-check")}
+        className="inline-flex h-16 w-16 items-center justify-center rounded-full border-2 border-success/40 bg-success/10 text-success"
+      >
+        <Check size={28} aria-hidden="true" />
+      </div>
+      <p className="mt-6 flex items-center gap-2 font-mono text-lg text-text-primary sm:text-2xl">
+        <Globe size={18} className="text-brand-purple" aria-hidden="true" />
+        https://{domain}
+      </p>
+      <h3 className="mt-3 text-2xl font-semibold text-text-primary sm:text-4xl">is live.</h3>
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+        {journeySteps.map((step) => (
+          <span
+            key={step}
+            className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/5 px-3 py-1 text-xs font-medium text-success"
+          >
+            <Check size={11} aria-hidden="true" />
+            {step}
+          </span>
+        ))}
+      </div>
+      <p className="mt-6 text-sm text-text-muted">Pick a plan below to make it real.</p>
     </div>
   );
 }
