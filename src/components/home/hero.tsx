@@ -1,109 +1,242 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Container } from "@/components/ui/container";
-import { Badge } from "@/components/ui/badge";
-import { Magnetic } from "@/components/ui/magnetic";
-import { AnimatedCounter } from "@/components/ui/animated-counter";
-import { useCurrency } from "@/components/currency-provider";
-import { plans, commonFeatures } from "@/lib/plans";
-import { HeroDeploy } from "./hero-deploy";
-import { HeroBackground } from "./hero-background";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import gsap from "gsap";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Check, Lock, LockOpen } from "lucide-react";
+import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
-const techBadges = ["LiteSpeed", "CloudLinux", "NVMe SSD", "Let's Encrypt", "cPanel", "Imunify360"];
+const DEFAULT_DOMAIN = "yourbrand.com";
+
+type Stage = "idle" | "dns" | "server" | "ssl" | "deploy" | "live";
+
+const WAYPOINTS: { stage: Stage; label: string }[] = [
+  { stage: "dns", label: "Resolving DNS…" },
+  { stage: "server", label: "Connecting to server…" },
+  { stage: "ssl", label: "Issuing SSL certificate…" },
+  { stage: "deploy", label: "Deploying your site…" },
+];
+
+function sanitizeDomain(raw: string): string {
+  const cleaned = raw
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/\/.*$/, "")
+    .replace(/[^a-z0-9.-]/g, "");
+  if (!cleaned) return DEFAULT_DOMAIN;
+  return cleaned.includes(".") ? cleaned : `${cleaned}.com`;
+}
+
+const PILL_HEIGHT = 64;
+const FRAME_HEIGHT = 340;
 
 export function Hero() {
-  const { currency, convertDisplay } = useCurrency();
-  const startingPlan = plans[0];
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const frameRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
+  const lockOpenRef = useRef<HTMLSpanElement>(null);
+  const lockClosedRef = useRef<HTMLSpanElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const startTimeRef = useRef(0);
+  const hasInteractedRef = useRef(false);
+
+  const [domainInput, setDomainInput] = useState("");
+  const [liveDomain, setLiveDomain] = useState(DEFAULT_DOMAIN);
+  const [stage, setStage] = useState<Stage>("idle");
+  const [elapsed, setElapsed] = useState<string | null>(null);
+
+  function play(domain: string) {
+    const frame = frameRef.current;
+    const line = lineRef.current;
+    if (!frame || !line) return;
+
+    timelineRef.current?.kill();
+    setLiveDomain(domain);
+    setElapsed(null);
+
+    if (prefersReducedMotion) {
+      // Skip straight to the resolved end state — including the frame's
+      // final size, which otherwise only ever grows via the tween below.
+      gsap.set(frame, { height: FRAME_HEIGHT, borderRadius: 24 });
+      gsap.set(line, { scaleX: 1 });
+      gsap.set(lockOpenRef.current, { opacity: 0 });
+      gsap.set(lockClosedRef.current, { opacity: 1 });
+      setStage("live");
+      return;
+    }
+
+    gsap.set(frame, { height: PILL_HEIGHT, borderRadius: 999 });
+    gsap.set(line, { scaleX: 0 });
+    gsap.set(lockOpenRef.current, { opacity: 1 });
+    gsap.set(lockClosedRef.current, { opacity: 0 });
+
+    startTimeRef.current = performance.now();
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setStage("live");
+        setElapsed(((performance.now() - startTimeRef.current) / 1000).toFixed(1));
+      },
+    });
+    timelineRef.current = tl;
+
+    WAYPOINTS.forEach((wp, i) => {
+      tl.call(() => setStage(wp.stage))
+        .to(line, { scaleX: (i + 1) / WAYPOINTS.length, duration: 0.7, ease: "power1.inOut" }, i === 0 ? undefined : "+=0.05");
+      if (wp.stage === "ssl") {
+        tl.to(lockOpenRef.current, { opacity: 0, duration: 0.25 }, "-=0.3").to(
+          lockClosedRef.current,
+          { opacity: 1, duration: 0.25 },
+          "<"
+        );
+      }
+    });
+
+    tl.to(frame, { height: FRAME_HEIGHT, borderRadius: 24, duration: 0.7, ease: "power3.inOut" }, "+=0.15");
+  }
+
+  useEffect(() => {
+    // Depends on prefersReducedMotion so that if the hook's own effect
+    // resolves it after this one has already scheduled (its default is
+    // `false` until the media query is read), the timer is cleared and
+    // rescheduled with a `play` closure that sees the real value — a plain
+    // `[]` dependency array would freeze `play` to the stale first-render
+    // closure and silently ignore reduced-motion.
+    const timer = setTimeout(() => {
+      if (!hasInteractedRef.current) play(DEFAULT_DOMAIN);
+    }, 1400);
+    return () => {
+      clearTimeout(timer);
+      timelineRef.current?.kill();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefersReducedMotion]);
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    hasInteractedRef.current = true;
+    play(sanitizeDomain(domainInput));
+    inputRef.current?.blur();
+  }
+
+  const idle = stage === "idle";
+  const showsHttps = stage === "deploy" || stage === "live";
 
   return (
-    <div className="relative overflow-hidden">
-      <HeroBackground />
+    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden px-4 py-20 sm:py-24">
+      <div
+        className="absolute inset-0 -z-10 opacity-60"
+        style={{ background: "var(--gradient-glow)" }}
+        aria-hidden="true"
+      />
 
-      <Container className="relative grid gap-6 pb-10 pt-8 sm:gap-10 sm:pb-16 sm:pt-20 lg:grid-cols-11 lg:items-center lg:gap-8 lg:pb-16 lg:pt-24">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="lg:col-span-5"
+      <div className="mx-auto max-w-2xl text-center">
+        <p className="font-mono text-sm text-brand-blue">shrotihost.in</p>
+        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-6xl">
+          Launch a website.
+          <br className="hidden sm:block" /> Watch it happen.
+        </h1>
+        <p className="mx-auto mt-4 max-w-md text-text-secondary">
+          Type your domain and press enter — this is the real sequence behind going live.
+        </p>
+      </div>
+
+      <div className="mt-12 w-full max-w-2xl">
+        <div
+          ref={frameRef}
+          className="relative mx-auto flex w-full flex-col overflow-hidden border border-border-strong bg-card shadow-2xl"
+          style={{ height: PILL_HEIGHT }}
         >
-          <Badge tone="purple">Backed by Cloudflare + LiteSpeed infrastructure</Badge>
-
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:mt-6 sm:text-5xl lg:text-[3.1rem] lg:leading-[1.05]">
-            Launch Your Website
-            <span className="block text-brand-purple">in Under 5 Minutes.</span>
-          </h1>
-
-          <p className="mt-4 max-w-lg text-base text-text-secondary sm:mt-6 sm:text-lg">
-            Hosting, domains, migration, and a developer-ready stack — priced honestly, on a
-            global network.
-          </p>
-
-          <div className="mt-6 flex flex-wrap items-center gap-4 sm:mt-9">
-            <Magnetic>
-              <Button href="/hosting" size="lg">
-                Launch Your Website
-                <ArrowRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
-              </Button>
-            </Magnetic>
-            <Button href="#compare" variant="secondary" size="lg">
-              Compare Plans
-            </Button>
+          <div className="absolute inset-x-0 top-0 z-10 h-[3px] bg-border">
+            <div
+              ref={lineRef}
+              className="h-full origin-left bg-gradient-to-r from-brand-purple to-brand-blue"
+              style={{ transform: "scaleX(0)" }}
+            />
           </div>
 
-          <dl className="mt-8 grid max-w-md grid-cols-3 gap-4 border-t border-border pt-5 sm:mt-9 sm:pt-6">
-            <div>
-              <dt className="text-[11px] font-medium uppercase tracking-wide text-text-muted">
-                Starting at
-              </dt>
-              <dd className="mt-1 text-xl font-semibold text-text-primary">
-                <AnimatedCounter
-                  key={currency}
-                  value={convertDisplay(startingPlan.annualPrice)}
-                  prefix={currency === "INR" ? "₹" : currency === "USD" ? "$" : "€"}
-                  suffix="/mo"
-                />
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-medium uppercase tracking-wide text-text-muted">Plans</dt>
-              <dd className="mt-1 text-xl font-semibold text-text-primary">
-                <AnimatedCounter value={plans.length} />
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[11px] font-medium uppercase tracking-wide text-text-muted">
-                Included
-              </dt>
-              <dd className="mt-1 text-xl font-semibold text-text-primary">
-                <AnimatedCounter value={commonFeatures.length} suffix="+" />
-              </dd>
-            </div>
-          </dl>
-
-          <div className="mt-6 hidden flex-wrap gap-2 sm:flex">
-            {techBadges.map((name) => (
-              <span
-                key={name}
-                className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-text-muted"
-              >
-                {name}
+          <form
+            onSubmit={handleSubmit}
+            className="relative flex shrink-0 items-center gap-3 px-5 sm:px-6"
+            style={{ height: PILL_HEIGHT }}
+          >
+            <span className="relative inline-flex h-5 w-5 shrink-0 items-center justify-center">
+              <span ref={lockOpenRef} className="absolute text-text-muted">
+                <LockOpen size={18} aria-hidden="true" />
               </span>
-            ))}
-          </div>
-        </motion.div>
+              <span ref={lockClosedRef} className="absolute text-success opacity-0">
+                <Lock size={18} aria-hidden="true" />
+              </span>
+            </span>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-          className="relative mx-auto flex w-full max-w-sm items-center justify-center lg:col-span-6 lg:max-w-none"
-        >
-          <HeroDeploy />
-        </motion.div>
-      </Container>
-    </div>
+            {idle ? (
+              <input
+                ref={inputRef}
+                type="text"
+                value={domainInput}
+                onChange={(e) => setDomainInput(e.target.value)}
+                onFocus={() => {
+                  hasInteractedRef.current = true;
+                }}
+                placeholder="yourbrand.com"
+                aria-label="Your domain name"
+                className="min-w-0 flex-1 bg-transparent font-mono text-sm text-text-primary placeholder:text-text-muted focus:outline-none sm:text-base"
+              />
+            ) : (
+              <span className="min-w-0 flex-1 truncate text-left font-mono text-sm text-text-primary sm:text-base">
+                {showsHttps ? "https://" : ""}
+                {liveDomain}
+              </span>
+            )}
+
+            <button
+              type="submit"
+              aria-label="Launch this domain"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-purple text-white transition-transform duration-150 hover:scale-105 active:scale-95"
+            >
+              <ArrowRight size={16} aria-hidden="true" />
+            </button>
+          </form>
+
+          <div className="relative flex-1 px-6 pb-8" style={{ paddingTop: PILL_HEIGHT + 8 }}>
+            {stage === "live" && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="flex h-full flex-col items-center justify-center text-center"
+              >
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
+                  <Check size={13} aria-hidden="true" />
+                  Live
+                </div>
+                <p className="mt-4 font-mono text-2xl text-text-primary sm:text-3xl">{liveDomain}</p>
+                {elapsed && (
+                  <p className="mt-2 text-sm text-text-muted">Deployed in {elapsed}s — try your own domain above.</p>
+                )}
+              </motion.div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-4 h-5 text-center" aria-live="polite">
+          <AnimatePresence mode="wait">
+            {stage !== "idle" && stage !== "live" && (
+              <motion.p
+                key={stage}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2 }}
+                className="text-sm text-text-secondary"
+              >
+                {WAYPOINTS.find((w) => w.stage === stage)?.label}
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </section>
   );
 }
