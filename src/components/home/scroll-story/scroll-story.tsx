@@ -1,116 +1,92 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Globe } from "lucide-react";
+import { Cloud } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
-import { chapters, DEFAULT_STORY_DOMAIN } from "./data";
 import {
-  DashboardPanel,
-  DnsPanel,
-  DomainPanel,
-  MonitorPanel,
-  ScalePanel,
-  ServerPanel,
-  SslPanel,
-  SuccessPanel,
-} from "./panels";
+  BLOCK_COUNT,
+  chapters,
+  cloudFormation,
+  serverFormation,
+  vpsFormation,
+  type BlockFormation,
+} from "./data";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-function sanitizeDomain(raw: string): string {
-  const cleaned = raw
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9.-]/g, "");
-  if (!cleaned) return DEFAULT_STORY_DOMAIN;
-  return cleaned.includes(".") ? cleaned : `${cleaned}.com`;
-}
+const VIEWBOX = 220; // half-width/height of the SVG line layer's coordinate space
 
-/**
- * Chip position/scale per chapter, as a percentage of the pinned stage.
- * The chip travels through the first three chapters (where it's the
- * identity being carried forward), then hides once each chapter grows
- * its own focal visual (server card, SSL card, browser frame, ...).
- */
-const CHIP_ANCHORS = [
-  { x: 50, y: 68, scale: 1.15, opacity: 1 }, // domain
-  { x: 50, y: 26, scale: 0.85, opacity: 1 }, // server
-  { x: 50, y: 20, scale: 0.7, opacity: 1 }, // dns
-  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // ssl
-  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // dashboard
-  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // monitor
-  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // scale
-  { x: 50, y: 16, scale: 0.6, opacity: 0 }, // success
-];
+function lineLength(target: BlockFormation) {
+  const cx = target.x + target.width / 2;
+  const cy = target.y + target.height / 2;
+  return Math.hypot(cx, cy);
+}
 
 export function ScrollStory() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [mounted, setMounted] = useState(false);
-  const [domainInput, setDomainInput] = useState("");
 
   useEffect(() => {
-    // SSR and the first client render always assume static (accessible,
-    // no hydration mismatch). Once mounted, re-derive the mode fresh from
-    // the live media query on every render — never ratchet one-way.
+    // SSR and the first client render always assume static (accessible, no
+    // hydration mismatch). Once mounted, re-derive the mode fresh from the
+    // live media query on every render — never ratchet one-way.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
   const cinematic = mounted && !prefersReducedMotion;
-  const domain = sanitizeDomain(domainInput);
-
-  if (!cinematic) {
-    return <StaticStory domain={domain} domainInput={domainInput} onDomainInput={setDomainInput} />;
-  }
-  return <CinematicStory domain={domain} domainInput={domainInput} onDomainInput={setDomainInput} />;
+  return cinematic ? <CinematicStory /> : <StaticStory />;
 }
 
-function StaticStory({
-  domain,
-  domainInput,
-  onDomainInput,
-}: {
-  domain: string;
-  domainInput: string;
-  onDomainInput: (v: string) => void;
-}) {
-  const registerEl: <T extends Element = HTMLElement>(name: string) => RefCallback<T> = () => () => {};
+function MorphPreview({ formation }: { formation: BlockFormation[] }) {
   return (
-    <div className="space-y-20 py-16 sm:space-y-28">
-      {[
-        <DomainPanel key="domain" registerEl={registerEl} domain={domain} domainInput={domainInput} onDomainInput={onDomainInput} />,
-        <ServerPanel key="server" registerEl={registerEl} domain={domain} complete />,
-        <DnsPanel key="dns" registerEl={registerEl} domain={domain} />,
-        <SslPanel key="ssl" registerEl={registerEl} domain={domain} complete />,
-        <DashboardPanel key="dashboard" registerEl={registerEl} domain={domain} />,
-        <MonitorPanel key="monitor" registerEl={registerEl} complete />,
-        <ScalePanel key="scale" registerEl={registerEl} complete />,
-        <SuccessPanel key="success" registerEl={registerEl} domain={domain} />,
-      ].map((panel, i) => (
-        <Reveal key={chapters[i].id} className="mx-auto flex justify-center">
-          {panel}
-        </Reveal>
+    <div className="relative mx-auto h-[280px] w-[280px] sm:h-[340px] sm:w-[340px]">
+      {formation.map((b, i) => (
+        <div
+          key={i}
+          className="absolute bg-gradient-to-br from-brand-purple to-brand-blue"
+          style={{
+            left: "50%",
+            top: "50%",
+            width: b.width,
+            height: b.height,
+            borderRadius: b.radius,
+            transform: `translate(${b.x}px, ${b.y}px) rotate(${b.rotation}deg)`,
+          }}
+        />
       ))}
     </div>
   );
 }
 
-function CinematicStory({
-  domain,
-  domainInput,
-  onDomainInput,
-}: {
-  domain: string;
-  domainInput: string;
-  onDomainInput: (v: string) => void;
-}) {
+function StaticStory() {
+  const formations = [serverFormation(), vpsFormation(), cloudFormation()];
+  return (
+    <div className="space-y-20 py-16 sm:space-y-28">
+      {chapters.map((c, i) => (
+        <Reveal key={c.id} className="mx-auto flex max-w-xl flex-col items-center px-4 text-center">
+          <p className="font-mono text-xs uppercase tracking-widest text-text-muted">{c.kicker}</p>
+          <h3 className="mt-2 text-2xl font-semibold text-text-primary sm:text-4xl">{c.title}</h3>
+          <p className="mt-3 max-w-sm text-sm text-text-secondary">{c.detail}</p>
+          <div className="mt-8">
+            <MorphPreview formation={formations[i]} />
+          </div>
+        </Reveal>
+      ))}
+      <Reveal className="mx-auto max-w-xl px-4 text-center">
+        <p className="text-text-secondary">This is the infrastructure behind every plan.</p>
+      </Reveal>
+    </div>
+  );
+}
+
+function CinematicStory() {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
   const elements = useRef<Record<string, Element | null>>({});
   const [activeChapter, setActiveChapter] = useState(0);
   const [storyInView, setStoryInView] = useState(false);
@@ -119,8 +95,8 @@ function CinematicStory({
   // `elements.current` from React's commit phase (when a DOM node mounts or
   // unmounts), never during render, so this is safe despite the lint rule's
   // static heuristic not being able to prove that for a factory shape.
-  function registerEl<T extends Element = HTMLElement>(name: string): RefCallback<T> {
-    return (node) => {
+  function registerEl(name: string) {
+    return (node: Element | null) => {
       // eslint-disable-next-line react-hooks/refs
       elements.current[name] = node;
     };
@@ -128,67 +104,40 @@ function CinematicStory({
 
   useEffect(() => {
     const el = elements.current;
+    const server = serverFormation();
+    const vps = vpsFormation();
+    const cloud = cloudFormation();
+
     const ctx = gsap.context(() => {
-      const panelNames = chapters.map((c) => `panel-${c.id}`);
-      const panels = panelNames.map((n) => el[n]);
-      const chip = el["chip"];
+      const blocks = Array.from({ length: BLOCK_COUNT }, (_, i) => el[`block-${i}`]);
+      const lines = Array.from({ length: BLOCK_COUNT }, (_, i) => el[`line-${i}`]);
+      const hub = el["hub-icon"];
+      const resolution = el["resolution"];
 
-      gsap.set(panels, { opacity: 0, y: 24, scale: 0.94 });
-      gsap.set(panels[0], { opacity: 1, y: 0, scale: 1 });
-      gsap.set(chip, {
-        left: `${CHIP_ANCHORS[0].x}%`,
-        top: `${CHIP_ANCHORS[0].y}%`,
-        xPercent: -50,
-        yPercent: -50,
-        scale: CHIP_ANCHORS[0].scale,
-        opacity: CHIP_ANCHORS[0].opacity,
+      blocks.forEach((b, i) => gsap.set(b, { ...server[i] }));
+      lines.forEach((line, i) => {
+        const len = lineLength(cloud[i]);
+        gsap.set(line, {
+          attr: { x1: 0, y1: 0, x2: cloud[i].x + cloud[i].width / 2, y2: cloud[i].y + cloud[i].height / 2 },
+          strokeDasharray: len,
+          strokeDashoffset: len,
+        });
       });
+      gsap.set(hub, { opacity: 0, scale: 0.5 });
+      gsap.set(resolution, { opacity: 0, y: 12 });
 
-      const serverRing = el["server-ring"];
-      const serverTags = [0, 1, 2, 3].map((i) => el[`server-tag-${i}`]);
-      gsap.set(serverRing, { scale: 0.85 });
-      gsap.set(serverTags, { opacity: 0 });
-
-      const dnsRows = [0, 1, 2].map((i) => el[`dns-row-${i}`]);
-      gsap.set(dnsRows, { opacity: 0, x: -12 });
-      gsap.set(el["dns-status"], { opacity: 0, y: 8 });
-
-      const sslPending = el["ssl-pending"];
-      const sslDone = el["ssl-done"];
-      gsap.set(sslPending, { opacity: 1 });
-      gsap.set(sslDone, { opacity: 0 });
-
-      const sparkline = el["dashboard-sparkline"] as SVGPathElement | null;
-      let sparkLength = 0;
-      if (sparkline) {
-        sparkLength = sparkline.getTotalLength();
-        gsap.set(sparkline, { strokeDasharray: sparkLength, strokeDashoffset: sparkLength });
-      }
-
-      const bars = Array.from({ length: 12 }, (_, i) => el[`analytics-bar-${i}`]);
-      gsap.set(bars, { scaleY: 0 });
-
-      const tierBlocks = [0, 1, 2].flatMap((tier) =>
-        Array.from({ length: tier + 1 }, (_, b) => el[`scaling-block-${tier}-${b}`])
-      );
-      gsap.set(tierBlocks, { opacity: 0, scaleY: 0.3 });
-      const tiers = [0, 1, 2].map((i) => el[`scaling-tier-${i}`]);
-      gsap.set(tiers, { opacity: 0.4 });
-
-      const visitsCounter = el["analytics-visits"];
-      const uptimeCounter = el["analytics-uptime"];
-      const counterState = { visits: 0, uptime: 0 };
-
-      const successCheck = el["success-check"];
-      gsap.set(successCheck, { scale: 0.6, opacity: 0 });
-
-      const STEP = 1;
+      // Scrub-driven timelines stay linear ("none") — an eased tween's
+      // velocity is non-constant across its own duration, so under scrub
+      // (which maps scroll distance to timeline position 1:1) it reads as
+      // motion lagging behind the scroll then suddenly catching up. Each
+      // block also keeps moving continuously through its whole window
+      // instead of arriving early and leaving a dead stretch of scroll.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapperRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.6,
+          scrub: 0.4,
           onUpdate: (self) => {
             const idx = Math.min(chapters.length - 1, Math.floor(self.progress * chapters.length));
             setActiveChapter((prev) => (prev === idx ? prev : idx));
@@ -198,98 +147,33 @@ function CinematicStory({
           onEnterBack: () => setStoryInView(true),
           onLeaveBack: () => setStoryInView(false),
         },
-        defaults: { ease: "power2.inOut" },
+        defaults: { ease: "none" },
       });
 
-      function crossfade(fromIdx: number, toIdx: number, chipTarget: (typeof CHIP_ANCHORS)[number]) {
-        tl.addLabel(`ch${toIdx}`, `+=${STEP * 0.35}`)
-          .to(panels[fromIdx], { opacity: 0, y: -24, scale: 0.94, duration: STEP * 0.5 }, `ch${toIdx}`)
-          .to(
-            chip,
-            {
-              left: `${chipTarget.x}%`,
-              top: `${chipTarget.y}%`,
-              scale: chipTarget.scale,
-              opacity: chipTarget.opacity,
-              duration: STEP * 0.6,
-            },
-            `ch${toIdx}`
-          )
-          .to(panels[toIdx], { opacity: 1, y: 0, scale: 1, duration: STEP * 0.6 }, `ch${toIdx}+=0.1`);
-      }
+      // Chapter 0 → 1: Server → VPS (same 8 blocks reshape into an isolated grid)
+      tl.addLabel("vps", "+=0.3");
+      blocks.forEach((b, i) => {
+        tl.to(b, { ...vps[i], duration: 1.1 }, `vps+=${i * 0.05}`);
+      });
 
-      // 0 → 1: Domain → Launch Server
-      crossfade(0, 1, CHIP_ANCHORS[1]);
-      tl.to(serverRing, { scale: 1, duration: 0.4 }, "ch1+=0.2").to(serverTags, {
-        opacity: 1,
-        duration: 0.25,
-        stagger: 0.12,
-      }, "ch1+=0.45");
+      // Chapter 1 → 2: VPS → Cloud (blocks disperse into an orbit, lines draw the network)
+      tl.addLabel("cloud", "+=0.35");
+      blocks.forEach((b, i) => {
+        tl.to(b, { ...cloud[i], duration: 1.1 }, `cloud+=${i * 0.05}`);
+      });
+      tl.to(hub, { opacity: 1, scale: 1, duration: 0.4 }, "cloud+=0.7");
+      lines.forEach((line, i) => {
+        tl.to(line, { strokeDashoffset: 0, duration: 0.5 }, `cloud+=${0.75 + i * 0.05}`);
+      });
 
-      // 1 → 2: Launch Server → Configure DNS
-      crossfade(1, 2, CHIP_ANCHORS[2]);
-      tl.to(dnsRows[0], { opacity: 1, x: 0, duration: 0.3 }, "ch2+=0.25")
-        .to(dnsRows[1], { opacity: 1, x: 0, duration: 0.3 }, "ch2+=0.4")
-        .to(dnsRows[2], { opacity: 1, x: 0, duration: 0.3 }, "ch2+=0.55")
-        .to(el["dns-status"], { opacity: 1, y: 0, duration: 0.3 }, "ch2+=0.75");
-
-      // 2 → 3: Configure DNS → Install SSL
-      crossfade(2, 3, CHIP_ANCHORS[3]);
-      tl.to(sslPending, { opacity: 0, duration: 0.3 }, "ch3+=0.35").to(
-        sslDone,
-        { opacity: 1, duration: 0.35 },
-        "ch3+=0.4"
-      );
-
-      // 3 → 4: Install SSL → Dashboard
-      crossfade(3, 4, CHIP_ANCHORS[4]);
-      if (sparkline) {
-        tl.to(sparkline, { strokeDashoffset: 0, duration: 0.7, ease: "power1.inOut" }, "ch4+=0.2");
-      }
-
-      // 4 → 5: Dashboard → Monitor Website
-      crossfade(4, 5, CHIP_ANCHORS[5]);
-      tl.to(bars, { scaleY: 1, duration: 0.5, stagger: 0.04 }, "ch5+=0.15").to(
-        counterState,
-        {
-          visits: 48200,
-          uptime: 99.98,
-          duration: 0.7,
-          onUpdate: () => {
-            if (visitsCounter) visitsCounter.textContent = Math.round(counterState.visits).toLocaleString("en-IN");
-            if (uptimeCounter) uptimeCounter.textContent = `${counterState.uptime.toFixed(2)}%`;
-          },
-        },
-        "ch5+=0.2"
-      );
-
-      // 5 → 6: Monitor Website → Scale Resources
-      crossfade(5, 6, CHIP_ANCHORS[6]);
-      tl.to(tiers[0], { opacity: 1, duration: 0.2 }, "ch6+=0.15")
-        .to([el["scaling-block-0-0"]], { opacity: 1, scaleY: 1, duration: 0.25 }, "ch6+=0.25")
-        .to(tiers[1], { opacity: 1, duration: 0.2 }, "ch6+=0.45")
-        .to(
-          Array.from({ length: 2 }, (_, b) => el[`scaling-block-1-${b}`]),
-          { opacity: 1, scaleY: 1, duration: 0.25, stagger: 0.05 },
-          "ch6+=0.55"
-        )
-        .to(tiers[2], { opacity: 1, duration: 0.2 }, "ch6+=0.8")
-        .to(
-          Array.from({ length: 3 }, (_, b) => el[`scaling-block-2-${b}`]),
-          { opacity: 1, scaleY: 1, duration: 0.25, stagger: 0.05 },
-          "ch6+=0.9"
-        );
-
-      // 6 → 7: Scale Resources → Success
-      crossfade(6, 7, CHIP_ANCHORS[7]);
-      tl.to(successCheck, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, "ch7+=0.2");
+      tl.to(resolution, { opacity: 1, y: 0, duration: 0.4 }, "cloud+=1.7");
     }, wrapperRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={wrapperRef} className="relative" style={{ height: `${chapters.length * 95}vh` }}>
+    <div ref={wrapperRef} className="relative" style={{ height: `${chapters.length * 130}vh` }}>
       <a
         href="#pricing"
         className="sr-only rounded-lg bg-card px-3 py-2 text-xs font-medium text-text-primary shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-40"
@@ -297,7 +181,7 @@ function CinematicStory({
         Skip cinematic intro
       </a>
 
-      <div ref={stageRef} className="sticky top-0 h-screen w-full overflow-hidden">
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
         <div
           className="absolute inset-0 -z-10 opacity-60"
           style={{ background: "var(--gradient-glow)" }}
@@ -308,43 +192,54 @@ function CinematicStory({
           <p className="font-mono text-xs uppercase tracking-widest text-text-muted">
             {chapters[activeChapter].kicker}
           </p>
-          <p className="mt-1 text-sm font-medium text-text-secondary sm:text-base">
+          <h3 className="mt-2 text-xl font-semibold text-text-primary sm:text-3xl">
             {chapters[activeChapter].title}
+          </h3>
+          <p className="mx-auto mt-2 max-w-xs text-xs text-text-secondary sm:max-w-sm sm:text-sm">
+            {chapters[activeChapter].detail}
           </p>
         </div>
 
-        <div
-          ref={registerEl<HTMLDivElement>("chip")}
-          className="absolute z-20 inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-brand-purple/40 bg-card px-3 py-1.5 shadow-xl"
-        >
-          <Globe size={13} className="text-brand-purple" aria-hidden="true" />
-          <span className="font-mono text-xs text-text-primary">{domain}</span>
+        <div className="absolute left-1/2 top-1/2 h-0 w-0">
+          <svg
+            className="pointer-events-none absolute"
+            style={{ left: -VIEWBOX, top: -VIEWBOX }}
+            width={VIEWBOX * 2}
+            height={VIEWBOX * 2}
+            viewBox={`-${VIEWBOX} -${VIEWBOX} ${VIEWBOX * 2} ${VIEWBOX * 2}`}
+            aria-hidden="true"
+          >
+            {Array.from({ length: BLOCK_COUNT }, (_, i) => (
+              <line
+                key={i}
+                ref={registerEl(`line-${i}`)}
+                stroke="var(--color-brand-purple)"
+                strokeOpacity={0.35}
+                strokeWidth={1.5}
+              />
+            ))}
+          </svg>
+
+          <div ref={registerEl("hub-icon")} className="absolute -left-4 -top-4 text-brand-purple">
+            <Cloud size={32} aria-hidden="true" />
+          </div>
+
+          {Array.from({ length: BLOCK_COUNT }, (_, i) => (
+            <div
+              key={i}
+              ref={registerEl(`block-${i}`)}
+              className="absolute bg-gradient-to-br from-brand-purple to-brand-blue shadow-lg"
+              style={{ left: 0, top: 0 }}
+            />
+          ))}
         </div>
 
-        <div ref={registerEl("panel-domain")} className="absolute inset-0 flex items-center justify-center">
-          <DomainPanel registerEl={registerEl} domain={domain} domainInput={domainInput} onDomainInput={onDomainInput} />
-        </div>
-        <div ref={registerEl("panel-server")} className="absolute inset-0 flex items-center justify-center">
-          <ServerPanel registerEl={registerEl} domain={domain} />
-        </div>
-        <div ref={registerEl("panel-dns")} className="absolute inset-0 flex items-center justify-center">
-          <DnsPanel registerEl={registerEl} domain={domain} />
-        </div>
-        <div ref={registerEl("panel-ssl")} className="absolute inset-0 flex items-center justify-center">
-          <SslPanel registerEl={registerEl} domain={domain} />
-        </div>
-        <div ref={registerEl("panel-dashboard")} className="absolute inset-0 flex items-center justify-center">
-          <DashboardPanel registerEl={registerEl} domain={domain} />
-        </div>
-        <div ref={registerEl("panel-monitor")} className="absolute inset-0 flex items-center justify-center">
-          <MonitorPanel registerEl={registerEl} />
-        </div>
-        <div ref={registerEl("panel-scale")} className="absolute inset-0 flex items-center justify-center">
-          <ScalePanel registerEl={registerEl} />
-        </div>
-        <div ref={registerEl("panel-success")} className="absolute inset-0 flex items-center justify-center">
-          <SuccessPanel registerEl={registerEl} domain={domain} />
-        </div>
+        <p
+          ref={registerEl("resolution")}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 px-4 text-center text-sm text-text-secondary sm:bottom-14"
+        >
+          This is the infrastructure behind every plan.
+        </p>
 
         <nav
           aria-label="Story progress"

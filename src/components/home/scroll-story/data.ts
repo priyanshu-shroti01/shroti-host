@@ -1,48 +1,81 @@
-export const DEFAULT_STORY_DOMAIN = "yourbrand.com";
-
-/** Real provisioning order: server before DNS (you need an IP before you can point anything at it). */
 export const chapters = [
-  { id: "domain", kicker: "Chapter 01", title: "Search Domain" },
-  { id: "server", kicker: "Chapter 02", title: "Launch Server" },
-  { id: "dns", kicker: "Chapter 03", title: "Configure DNS" },
-  { id: "ssl", kicker: "Chapter 04", title: "Install SSL" },
-  { id: "dashboard", kicker: "Chapter 05", title: "Dashboard" },
-  { id: "monitor", kicker: "Chapter 06", title: "Monitor Website" },
-  { id: "scale", kicker: "Chapter 07", title: "Scale Resources" },
-  { id: "success", kicker: "Chapter 08", title: "Success" },
+  {
+    id: "server",
+    kicker: "Chapter 01",
+    title: "It starts as one machine.",
+    detail: "Real hardware. Real capacity — not a shared guess.",
+  },
+  {
+    id: "vps",
+    kicker: "Chapter 02",
+    title: "Isolated into your own environment.",
+    detail: "CloudLinux-isolated resources — your account never fights a noisy neighbor for CPU.",
+  },
+  {
+    id: "cloud",
+    kicker: "Chapter 03",
+    title: "Distributed for resilience.",
+    detail: "Redundant across our network, so one machine failing doesn't take you down with it.",
+  },
 ] as const;
 
 export type ChapterId = (typeof chapters)[number]["id"];
 
-/** Real query ideas, same generator as the /domains page — not availability claims. */
-export function storySuggestions(base: string): string[] {
-  const clean = base.trim().toLowerCase().replace(/[^a-z0-9]/g, "") || "yourbrand";
-  return [`${clean}.com`, `${clean}.in`, `get${clean}.com`, `${clean}.app`];
+export const BLOCK_COUNT = 8;
+
+export type BlockFormation = { x: number; y: number; width: number; height: number; radius: number; rotation: number };
+
+/** Coordinates are px offsets from the morph stage's center — same 8 blocks, three formations. */
+export function serverFormation(): BlockFormation[] {
+  const w = 208;
+  const h = 20;
+  const gap = 5;
+  const totalH = BLOCK_COUNT * h + (BLOCK_COUNT - 1) * gap;
+  return Array.from({ length: BLOCK_COUNT }, (_, i) => ({
+    x: -w / 2,
+    y: -totalH / 2 + i * (h + gap),
+    width: w,
+    height: h,
+    radius: 5,
+    rotation: 0,
+  }));
 }
 
-export const SERVER_IP = "192.0.2.10";
-
-export function dnsRecordsFor(domain: string) {
-  return [
-    { type: "A", name: "@", value: SERVER_IP },
-    { type: "CNAME", name: "www", value: domain },
-    { type: "MX", name: "@", value: `mail.${domain}` },
-  ];
+export function vpsFormation(): BlockFormation[] {
+  const w = 78;
+  const h = 78;
+  const gapX = 14;
+  const gapY = 14;
+  const cols = 4;
+  const rows = 2;
+  const totalW = cols * w + (cols - 1) * gapX;
+  const totalH = rows * h + (rows - 1) * gapY;
+  return Array.from({ length: BLOCK_COUNT }, (_, i) => {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    return {
+      x: -totalW / 2 + col * (w + gapX),
+      y: -totalH / 2 + row * (h + gapY),
+      width: w,
+      height: h,
+      radius: 14,
+      rotation: 0,
+    };
+  });
 }
 
-/** Subset of the real "on every plan" feature list — SSL gets its own chapter, so it's excluded here. */
-export const serverSpecs = ["LiteSpeed Web Server", "NVMe Storage", "Daily Backups", "CloudLinux"];
-
-export const sslAuthority = "Let's Encrypt";
-
-/** Illustrative sample traffic — not a real customer's analytics. */
-export const sampleTraffic = [24, 31, 28, 40, 38, 52, 49, 64, 60, 74, 71, 88];
-
-export const scalingTiers = [
-  { plan: "Launch", sites: 1, storage: 10 },
-  { plan: "Grow", sites: 10, storage: 50 },
-  { plan: "Scale", sites: "Unlimited" as const, storage: 150 },
-];
-
-/** Journey recap shown on the Success chapter. */
-export const journeySteps = ["Domain", "Server", "DNS", "SSL"];
+export function cloudFormation(): BlockFormation[] {
+  const radius = 150;
+  const size = 30;
+  return Array.from({ length: BLOCK_COUNT }, (_, i) => {
+    const angle = (i / BLOCK_COUNT) * Math.PI * 2 - Math.PI / 2;
+    return {
+      x: Math.cos(angle) * radius - size / 2,
+      y: Math.sin(angle) * radius - size / 2,
+      width: size,
+      height: size,
+      radius: size / 2,
+      rotation: (angle * 180) / Math.PI,
+    };
+  });
+}
