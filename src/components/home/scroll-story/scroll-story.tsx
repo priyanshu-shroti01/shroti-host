@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Cloud } from "lucide-react";
+import { Cloud, Cpu, Server } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 import {
@@ -20,6 +20,8 @@ if (typeof window !== "undefined") {
 }
 
 const VIEWBOX = 220; // half-width/height of the SVG line layer's coordinate space
+const VENT_PATTERN =
+  "repeating-linear-gradient(90deg, rgba(0,0,0,0.28) 0px, rgba(0,0,0,0.28) 2px, transparent 2px, transparent 6px)";
 
 function lineLength(target: BlockFormation) {
   const cx = target.x + target.width / 2;
@@ -43,29 +45,57 @@ export function ScrollStory() {
   return cinematic ? <CinematicStory /> : <StaticStory />;
 }
 
-function MorphPreview({ formation }: { formation: BlockFormation[] }) {
+/** Static (non-animated) rendering of one block, styled for whichever scene it belongs to. */
+function StaticBlock({ b, variant }: { b: BlockFormation; variant: "server" | "vps" | "cloud" }) {
+  return (
+    <div
+      className="absolute overflow-hidden shadow-lg"
+      style={{
+        left: "50%",
+        top: "50%",
+        width: b.width,
+        height: b.height,
+        borderRadius: b.radius,
+        transform: `translate(${b.x}px, ${b.y}px) rotate(${b.rotation}deg)`,
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-purple to-brand-blue" />
+      {variant === "server" && (
+        <>
+          <div className="absolute inset-y-0 left-0 w-2/3" style={{ backgroundImage: VENT_PATTERN }} />
+          <div className="absolute right-1.5 top-1/2 flex -translate-y-1/2 gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-success" />
+            <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+          </div>
+        </>
+      )}
+      {variant === "vps" && (
+        <div className="absolute inset-0 flex items-center justify-center text-white/85">
+          <Cpu size={18} aria-hidden="true" />
+        </div>
+      )}
+      {variant === "cloud" && (
+        <div className="absolute inset-0 flex items-center justify-center text-white">
+          <Server size={13} aria-hidden="true" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MorphPreview({ formation, variant }: { formation: BlockFormation[]; variant: "server" | "vps" | "cloud" }) {
   return (
     <div className="relative mx-auto h-[280px] w-[280px] sm:h-[340px] sm:w-[340px]">
       {formation.map((b, i) => (
-        <div
-          key={i}
-          className="absolute bg-gradient-to-br from-brand-purple to-brand-blue"
-          style={{
-            left: "50%",
-            top: "50%",
-            width: b.width,
-            height: b.height,
-            borderRadius: b.radius,
-            transform: `translate(${b.x}px, ${b.y}px) rotate(${b.rotation}deg)`,
-          }}
-        />
+        <StaticBlock key={i} b={b} variant={variant} />
       ))}
     </div>
   );
 }
 
 function StaticStory() {
-  const formations = [serverFormation(), vpsFormation(), cloudFormation()];
+  const formations: BlockFormation[][] = [serverFormation(), vpsFormation(), cloudFormation()];
+  const variants = ["server", "vps", "cloud"] as const;
   return (
     <div className="space-y-20 py-16 sm:space-y-28">
       {chapters.map((c, i) => (
@@ -74,7 +104,7 @@ function StaticStory() {
           <h3 className="mt-2 text-2xl font-semibold text-text-primary sm:text-4xl">{c.title}</h3>
           <p className="mt-3 max-w-sm text-sm text-text-secondary">{c.detail}</p>
           <div className="mt-8">
-            <MorphPreview formation={formations[i]} />
+            <MorphPreview formation={formations[i]} variant={variants[i]} />
           </div>
         </Reveal>
       ))}
@@ -110,11 +140,17 @@ function CinematicStory() {
 
     const ctx = gsap.context(() => {
       const blocks = Array.from({ length: BLOCK_COUNT }, (_, i) => el[`block-${i}`]);
+      const vents = Array.from({ length: BLOCK_COUNT }, (_, i) => el[`vents-${i}`]);
+      const leds = Array.from({ length: BLOCK_COUNT }, (_, i) => el[`leds-${i}`]);
+      const vpsIcons = Array.from({ length: BLOCK_COUNT }, (_, i) => el[`vps-icon-${i}`]);
+      const cloudIcons = Array.from({ length: BLOCK_COUNT }, (_, i) => el[`cloud-icon-${i}`]);
       const lines = Array.from({ length: BLOCK_COUNT }, (_, i) => el[`line-${i}`]);
       const hub = el["hub-icon"];
       const resolution = el["resolution"];
 
       blocks.forEach((b, i) => gsap.set(b, { ...server[i] }));
+      gsap.set(vpsIcons, { opacity: 0 });
+      gsap.set(cloudIcons, { opacity: 0 });
       lines.forEach((line, i) => {
         const len = lineLength(cloud[i]);
         gsap.set(line, {
@@ -155,13 +191,17 @@ function CinematicStory() {
       blocks.forEach((b, i) => {
         tl.to(b, { ...vps[i], duration: 1.1 }, `vps+=${i * 0.05}`);
       });
+      tl.to([...vents, ...leds], { opacity: 0, duration: 0.4 }, "vps")
+        .to(vpsIcons, { opacity: 1, duration: 0.4, stagger: 0.04 }, "vps+=0.9");
 
       // Chapter 1 → 2: VPS → Cloud (blocks disperse into an orbit, lines draw the network)
       tl.addLabel("cloud", "+=0.35");
       blocks.forEach((b, i) => {
         tl.to(b, { ...cloud[i], duration: 1.1 }, `cloud+=${i * 0.05}`);
       });
-      tl.to(hub, { opacity: 1, scale: 1, duration: 0.4 }, "cloud+=0.7");
+      tl.to(vpsIcons, { opacity: 0, duration: 0.35 }, "cloud")
+        .to(hub, { opacity: 1, scale: 1, duration: 0.4 }, "cloud+=0.7")
+        .to(cloudIcons, { opacity: 1, duration: 0.35, stagger: 0.04 }, "cloud+=0.9");
       lines.forEach((line, i) => {
         tl.to(line, { strokeDashoffset: 0, duration: 0.5 }, `cloud+=${0.75 + i * 0.05}`);
       });
@@ -228,9 +268,32 @@ function CinematicStory() {
             <div
               key={i}
               ref={registerEl(`block-${i}`)}
-              className="absolute bg-gradient-to-br from-brand-purple to-brand-blue shadow-lg"
+              className="absolute overflow-hidden shadow-lg"
               style={{ left: 0, top: 0 }}
-            />
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-purple to-brand-blue" />
+              <div
+                ref={registerEl(`vents-${i}`)}
+                className="absolute inset-y-0 left-0 w-2/3"
+                style={{ backgroundImage: VENT_PATTERN }}
+              />
+              <div ref={registerEl(`leds-${i}`)} className="absolute right-1.5 top-1/2 flex -translate-y-1/2 gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-success" />
+                <span className="h-1.5 w-1.5 rounded-full bg-warning animate-pulse" />
+              </div>
+              <div
+                ref={registerEl(`vps-icon-${i}`)}
+                className="absolute inset-0 flex items-center justify-center text-white/85 opacity-0"
+              >
+                <Cpu size={18} aria-hidden="true" />
+              </div>
+              <div
+                ref={registerEl(`cloud-icon-${i}`)}
+                className="absolute inset-0 flex items-center justify-center text-white opacity-0"
+              >
+                <Server size={13} aria-hidden="true" />
+              </div>
+            </div>
           ))}
         </div>
 
