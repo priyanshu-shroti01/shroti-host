@@ -1,161 +1,121 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import gsap from "gsap";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { ArrowRight, Check, Lock, LockOpen } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowRight,
+  BarChart3,
+  Check,
+  Globe,
+  HardDrive,
+  LayoutDashboard,
+  Lock,
+  PartyPopper,
+  Search,
+  Server,
+  ShieldCheck,
+  Share2,
+  Sparkles,
+  UploadCloud,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
-const DEFAULT_DOMAIN = "yourbrand.com";
+const EXAMPLE_DOMAINS = ["yourbrand.com", "myagency.in", "startup.dev"];
 
-type Stage = "idle" | "dns" | "server" | "ssl" | "deploy" | "live";
-
-// Durations aren't equal — DNS resolves fast, SSL "does real work" for
-// longer, so the sequence has rhythm instead of four identical ticks.
-const WAYPOINTS: { stage: Stage; label: string; duration: number }[] = [
-  { stage: "dns", label: "Resolving DNS…", duration: 0.5 },
-  { stage: "server", label: "Connecting to server…", duration: 0.6 },
-  { stage: "ssl", label: "Issuing SSL certificate…", duration: 0.85 },
-  { stage: "deploy", label: "Deploying your site…", duration: 0.55 },
+const TRUST_BADGES = [
+  { icon: HardDrive, label: "NVMe Storage" },
+  { icon: ShieldCheck, label: "CloudLinux" },
+  { icon: Lock, label: "Free SSL" },
+  { icon: Sparkles, label: "AI-Powered Infra" },
 ];
-const TOTAL_WAYPOINT_DURATION = WAYPOINTS.reduce((s, w) => s + w.duration, 0);
 
-function sanitizeDomain(raw: string): string {
+type StepStatus = "pending" | "active" | "done";
+
+const STEPS = [
+  { icon: Search, pending: "Searching domain…", done: "Domain available", detail: "", duration: 900 },
+  { icon: Server, pending: "Allocating server…", done: "Server ready", detail: "LiteSpeed · NVMe", duration: 1100 },
+  { icon: Lock, pending: "Installing SSL…", done: "SSL installed", detail: "Let's Encrypt", duration: 850 },
+  { icon: Globe, pending: "Configuring DNS…", done: "DNS connected", detail: "Cloudflare", duration: 800 },
+  { icon: UploadCloud, pending: "Deploying files…", done: "Files deployed", detail: "", duration: 900 },
+] as const;
+
+function sanitizeDomain(raw: string, fallback: string): string {
   const cleaned = raw
     .trim()
     .toLowerCase()
     .replace(/^https?:\/\//, "")
     .replace(/\/.*$/, "")
     .replace(/[^a-z0-9.-]/g, "");
-  if (!cleaned) return DEFAULT_DOMAIN;
+  if (!cleaned) return fallback;
   return cleaned.includes(".") ? cleaned : `${cleaned}.com`;
 }
 
-const PILL_HEIGHT = 64;
-const MAX_FRAME_HEIGHT = 560;
-
-const contentVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
-};
-const barVariants: Variants = {
-  hidden: { opacity: 0, scaleX: 0 },
-  visible: { opacity: 1, scaleX: 1, transition: { duration: 0.35, ease: "easeOut" } },
-};
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export function Hero() {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const frameRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
-  const dotRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const lockOpenRef = useRef<HTMLSpanElement>(null);
-  const lockClosedRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const autoTypeRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const startTimeRef = useRef(0);
+  const sequenceIdRef = useRef(0);
   const hasInteractedRef = useRef(false);
+  const demoIndexRef = useRef(0);
 
   const [domainInput, setDomainInput] = useState("");
-  const [liveDomain, setLiveDomain] = useState(DEFAULT_DOMAIN);
-  const [stage, setStage] = useState<Stage>("idle");
-  const [elapsed, setElapsed] = useState<string | null>(null);
+  const [liveDomain, setLiveDomain] = useState(EXAMPLE_DOMAINS[0]);
+  const [activeStep, setActiveStep] = useState(-1);
+  const [isLive, setIsLive] = useState(false);
+  const [shareState, setShareState] = useState<"idle" | "copied">("idle");
 
-  function play(domain: string) {
-    const frame = frameRef.current;
-    const line = lineRef.current;
-    if (!frame || !line) return;
-
-    timelineRef.current?.kill();
+  async function play(domain: string, mySeq: number) {
     setLiveDomain(domain);
-    setElapsed(null);
-    const frameHeight = Math.min(MAX_FRAME_HEIGHT, window.innerHeight * 0.6);
+    setIsLive(false);
+    setShareState("idle");
+    setActiveStep(-1);
 
     if (prefersReducedMotion) {
-      // Skip straight to the resolved end state — including the frame's
-      // final size, which otherwise only ever grows via the tween below.
-      gsap.set(frame, { height: frameHeight, borderRadius: 24 });
-      gsap.set(line, { scaleX: 1 });
-      gsap.set(lockOpenRef.current, { opacity: 0 });
-      gsap.set(lockClosedRef.current, { opacity: 1 });
-      gsap.set(headerRef.current, { opacity: 0.35, scale: 0.94, y: -6 });
-      setStage("live");
+      if (sequenceIdRef.current !== mySeq) return;
+      setActiveStep(STEPS.length);
+      setIsLive(true);
       return;
     }
 
-    gsap.set(frame, { height: PILL_HEIGHT, borderRadius: 999 });
-    gsap.set(line, { scaleX: 0 });
-    gsap.set(dotRef.current, { left: "0%", scale: 1, opacity: 1 });
-    gsap.set(lockOpenRef.current, { opacity: 1 });
-    gsap.set(lockClosedRef.current, { opacity: 0 });
+    for (let i = 0; i < STEPS.length; i++) {
+      if (sequenceIdRef.current !== mySeq) return;
+      setActiveStep(i);
+      await sleep(STEPS[i].duration);
+    }
+    if (sequenceIdRef.current !== mySeq) return;
+    setActiveStep(STEPS.length);
+    setIsLive(true);
 
-    startTimeRef.current = performance.now();
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setStage("live");
-        setElapsed(((performance.now() - startTimeRef.current) / 1000).toFixed(1));
-      },
-    });
-    timelineRef.current = tl;
-
-    tl.to(headerRef.current, { opacity: 0.35, scale: 0.94, y: -6, duration: 0.4 }, 0);
-
-    // Positions are tracked as absolute timestamps (not GSAP's implicit
-    // "end of timeline" cursor) so the snap-pulse effects can overlap into
-    // the next segment intentionally, rather than each one sequentially
-    // appending ~0.3s and stretching the whole sequence out.
-    let cursor = 0.15;
-    let cumulative = 0;
-    WAYPOINTS.forEach((wp) => {
-      const start = cursor;
-      cumulative += wp.duration;
-      const progress = cumulative / TOTAL_WAYPOINT_DURATION;
-      tl.call(() => setStage(wp.stage), [], start)
-        .to(line, { scaleX: progress, duration: wp.duration, ease: "power1.inOut" }, start)
-        .to(dotRef.current, { left: `${progress * 100}%`, duration: wp.duration, ease: "power1.inOut" }, start);
-
-      if (wp.stage === "ssl") {
-        const mid = start + wp.duration * 0.5;
-        tl.to(lockOpenRef.current, { opacity: 0, duration: 0.25 }, mid).to(
-          lockClosedRef.current,
-          { opacity: 1, duration: 0.25 },
-          mid
-        );
-      }
-
-      // A small "snap" right as each waypoint lands, so progress feels like
-      // discrete hits rather than one continuous, undifferentiated fill —
-      // overlapping the next segment rather than delaying it.
-      const land = start + wp.duration;
-      tl.to(dotRef.current, { scale: 1.9, duration: 0.12, ease: "power1.out" }, land)
-        .to(dotRef.current, { scale: 1, duration: 0.22, ease: "power1.in" }, land + 0.12)
-        .to(glowRef.current, { opacity: 0.85, duration: 0.12 }, land)
-        .to(glowRef.current, { opacity: 0.5, duration: 0.3 }, land + 0.12);
-
-      cursor = land;
-    });
-
-    tl.to(frame, { height: frameHeight, borderRadius: 24, duration: 0.7, ease: "power3.inOut" }, cursor + 0.1);
+    // Auto-restart with a different example domain if the visitor never engaged.
+    await sleep(3200);
+    if (sequenceIdRef.current !== mySeq || hasInteractedRef.current) return;
+    demoIndexRef.current = (demoIndexRef.current + 1) % EXAMPLE_DOMAINS.length;
+    void play(EXAMPLE_DOMAINS[demoIndexRef.current], mySeq);
   }
 
   useEffect(() => {
     // Depends on prefersReducedMotion so that if the hook's own effect
     // resolves it after this one has already scheduled (its default is
-    // `false` until the media query is read), the timer is cleared and
-    // rescheduled with a closure that sees the real value — a plain `[]`
-    // dependency array would freeze it to the stale first-render closure.
+    // `false` until the media query is read), the timer restarts with a
+    // closure that sees the real value — a plain `[]` dependency array
+    // would freeze it to the stale first-render closure.
+    const mySeq = ++sequenceIdRef.current;
+
     if (prefersReducedMotion) {
       const t = setTimeout(() => {
-        if (!hasInteractedRef.current) play(DEFAULT_DOMAIN);
-      }, 400);
+        if (!hasInteractedRef.current) void play(EXAMPLE_DOMAINS[0], mySeq);
+      }, 300);
       return () => clearTimeout(t);
     }
 
     const startTimer = setTimeout(() => {
       if (hasInteractedRef.current) return;
-      const text = DEFAULT_DOMAIN;
+      const text = EXAMPLE_DOMAINS[0];
       let i = 0;
       autoTypeRef.current = setInterval(() => {
         if (hasInteractedRef.current) {
@@ -167,7 +127,7 @@ export function Hero() {
         if (i >= text.length) {
           if (autoTypeRef.current) clearInterval(autoTypeRef.current);
           setTimeout(() => {
-            if (!hasInteractedRef.current) play(text);
+            if (!hasInteractedRef.current) void play(text, mySeq);
           }, 350);
         }
       }, 55);
@@ -176,7 +136,6 @@ export function Hero() {
     return () => {
       clearTimeout(startTimer);
       if (autoTypeRef.current) clearInterval(autoTypeRef.current);
-      timelineRef.current?.kill();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefersReducedMotion]);
@@ -192,141 +151,199 @@ export function Hero() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     stopAutoType();
-    play(sanitizeDomain(domainInput));
+    // Sync the input to the sanitized value too — otherwise once the input
+    // reappears after this run (available again for "try your own domain"),
+    // it shows the raw typed text (e.g. "myagency") while the run itself,
+    // and the celebration screen, use the sanitized one ("myagency.com").
+    const sanitized = sanitizeDomain(domainInput, liveDomain);
+    setDomainInput(sanitized);
+    const mySeq = ++sequenceIdRef.current;
+    void play(sanitized, mySeq);
     inputRef.current?.blur();
   }
 
-  const idle = stage === "idle";
-  const showsHttps = stage === "deploy" || stage === "live";
+  function focusDemo() {
+    inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    inputRef.current?.focus();
+  }
+
+  async function handleShare() {
+    const url = "https://shrotihost.in";
+    const text = "Check out ShrotiHost — launch a website in seconds.";
+    if (typeof navigator !== "undefined" && "share" in navigator) {
+      try {
+        await navigator.share({ title: "ShrotiHost", text, url });
+        return;
+      } catch {
+        // user cancelled or share failed — fall through to clipboard
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareState("copied");
+      setTimeout(() => setShareState("idle"), 2000);
+    } catch {
+      // clipboard unavailable — nothing more we can honestly do here
+    }
+  }
+
+  // The input stays available before a run and once one finishes (so
+  // "try your own domain" always has somewhere to go) — only hidden while
+  // actively stepping through the sequence.
+  const inProgress = activeStep >= 0 && activeStep < STEPS.length;
+  const showInput = !inProgress;
 
   return (
-    <section className="relative flex min-h-[92vh] flex-col items-center justify-center overflow-hidden px-4 py-16 sm:py-20">
-      <div
-        ref={glowRef}
-        className="absolute inset-0 -z-10 opacity-60"
-        style={{ background: "var(--gradient-glow)" }}
-        aria-hidden="true"
-      />
+    <section className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-28">
+      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
+        <div className="text-center lg:text-left">
+          <p className="font-mono text-sm text-brand-blue">shrotihost.in</p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+            Launch a website.
+            <br /> Watch it happen.
+          </h1>
+          <p className="mt-4 text-lg font-medium text-text-primary">Build. Deploy. Scale.</p>
+          <p className="mx-auto mt-3 max-w-md text-text-secondary lg:mx-0">
+            Type a domain in the demo and press enter — this is the real sequence behind going live.
+          </p>
 
-      <div ref={headerRef} className="mx-auto max-w-2xl text-center">
-        <p className="font-mono text-sm text-brand-blue">shrotihost.in</p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-6xl">
-          Launch a website.
-          <br className="hidden sm:block" /> Watch it happen.
-        </h1>
-        <p className="mx-auto mt-4 max-w-md text-text-secondary">
-          Type your domain and press enter — this is the real sequence behind going live.
-        </p>
-      </div>
-
-      <div className="mt-10 w-full max-w-2xl">
-        <div
-          ref={frameRef}
-          className="relative mx-auto flex w-full flex-col overflow-hidden border border-border-strong bg-card shadow-2xl"
-          style={{ height: PILL_HEIGHT }}
-        >
-          <div className="absolute inset-x-0 top-0 z-10 h-[3px] bg-border">
-            <div
-              ref={lineRef}
-              className="h-full origin-left bg-gradient-to-r from-brand-purple to-brand-blue"
-              style={{ transform: "scaleX(0)" }}
-            />
-            <div
-              ref={dotRef}
-              className="absolute top-1/2 h-2.5 w-2.5 rounded-full bg-brand-blue shadow-[0_0_10px_3px_rgb(63_167_255/0.7)]"
-              style={{ left: "0%", transform: "translate(-50%, -50%)" }}
-            />
+          <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
+            <Button href="/pricing" size="lg">
+              View Plans
+            </Button>
+            <Button variant="secondary" size="lg" onClick={focusDemo}>
+              Try the Demo
+            </Button>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="relative flex shrink-0 items-center gap-3 px-5 sm:px-6"
-            style={{ height: PILL_HEIGHT }}
-          >
-            <span className="relative inline-flex h-5 w-5 shrink-0 items-center justify-center">
-              <span ref={lockOpenRef} className="absolute text-text-muted">
-                <LockOpen size={18} aria-hidden="true" />
-              </span>
-              <span ref={lockClosedRef} className="absolute text-success opacity-0">
-                <Lock size={18} aria-hidden="true" />
-              </span>
-            </span>
-
-            {idle ? (
-              <input
-                ref={inputRef}
-                type="text"
-                value={domainInput}
-                onChange={(e) => setDomainInput(e.target.value)}
-                onFocus={stopAutoType}
-                placeholder="yourbrand.com"
-                aria-label="Your domain name"
-                className="min-w-0 flex-1 bg-transparent font-mono text-sm text-text-primary placeholder:text-text-muted focus:outline-none sm:text-base"
-              />
-            ) : (
-              <span className="min-w-0 flex-1 truncate text-left font-mono text-sm text-text-primary sm:text-base">
-                {showsHttps ? "https://" : ""}
-                {liveDomain}
-              </span>
-            )}
-
-            <button
-              type="submit"
-              aria-label="Launch this domain"
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-purple text-white transition-transform duration-150 hover:scale-105 active:scale-95"
-            >
-              <ArrowRight size={16} aria-hidden="true" />
-            </button>
-          </form>
-
-          <div className="relative flex-1 px-6 pb-8 sm:px-10" style={{ paddingTop: PILL_HEIGHT + 16 }}>
-            {stage === "live" && (
-              <motion.div
-                variants={contentVariants}
-                initial="hidden"
-                animate="visible"
-                className="flex h-full flex-col items-center justify-center gap-10"
+          <div className="mx-auto mt-10 grid max-w-md grid-cols-2 gap-3 lg:mx-0">
+            {TRUST_BADGES.map((b) => (
+              <div
+                key={b.label}
+                className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5"
               >
-                <div className="w-full max-w-sm space-y-3 opacity-40">
-                  <motion.div variants={barVariants} className="h-2 w-1/4 origin-left rounded-full bg-text-muted" />
-                  <motion.div variants={barVariants} className="h-4 w-3/5 origin-left rounded-full bg-text-muted" />
-                  <motion.div variants={barVariants} className="h-2 w-full origin-left rounded-full bg-text-muted" />
-                  <motion.div variants={barVariants} className="h-2 w-4/5 origin-left rounded-full bg-text-muted" />
-                </div>
-
-                <motion.div variants={barVariants} className="flex flex-col items-center text-center">
-
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
-                    <Check size={13} aria-hidden="true" />
-                    Live
-                  </div>
-                  <p className="mt-4 font-mono text-2xl text-text-primary sm:text-3xl">{liveDomain}</p>
-                  {elapsed && (
-                    <p className="mt-2 text-sm text-text-muted">
-                      Deployed in {elapsed}s — try your own domain above.
-                    </p>
-                  )}
-                </motion.div>
-              </motion.div>
-            )}
+                <b.icon size={15} className="shrink-0 text-brand-purple" aria-hidden="true" />
+                <span className="truncate text-xs font-medium text-text-secondary">{b.label}</span>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="mt-4 h-5 text-center" aria-live="polite">
-          <AnimatePresence mode="wait">
-            {stage !== "idle" && stage !== "live" && (
-              <motion.p
-                key={stage}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm text-text-secondary"
+        <div className="mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
+          <div className="overflow-hidden rounded-2xl border border-border-strong bg-card shadow-2xl">
+            <form onSubmit={handleSubmit} className="flex items-center gap-3 border-b border-border px-5 py-4">
+              <Globe size={16} className="shrink-0 text-text-muted" aria-hidden="true" />
+              {showInput ? (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={domainInput}
+                  onChange={(e) => setDomainInput(e.target.value)}
+                  onFocus={stopAutoType}
+                  placeholder="yourbrand.com"
+                  aria-label="Your domain name"
+                  className="min-w-0 flex-1 bg-transparent font-mono text-sm text-text-primary placeholder:text-text-muted focus:outline-none sm:text-base"
+                />
+              ) : (
+                <span className="min-w-0 flex-1 truncate font-mono text-sm text-text-primary sm:text-base">
+                  {liveDomain}
+                </span>
+              )}
+              <button
+                type="submit"
+                aria-label="Launch this domain"
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-purple text-white transition-transform duration-150 hover:scale-105 active:scale-95"
               >
-                {WAYPOINTS.find((w) => w.stage === stage)?.label}
-              </motion.p>
-            )}
-          </AnimatePresence>
+                <ArrowRight size={16} aria-hidden="true" />
+              </button>
+            </form>
+
+            <div className="min-h-[22rem] p-5 sm:p-6">
+              <AnimatePresence mode="wait">
+                {isLive ? (
+                  <motion.div
+                    key="celebration"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.35 }}
+                    className="flex h-full min-h-[19rem] flex-col items-center justify-center text-center"
+                  >
+                    <PartyPopper size={30} className="text-brand-purple" aria-hidden="true" />
+                    <p className="mt-3 text-lg font-semibold text-text-primary">Website Successfully Launched</p>
+                    <p className="mt-1 font-mono text-sm text-text-muted">{liveDomain}</p>
+                    <div className="mt-6 flex w-full max-w-xs flex-col gap-2.5">
+                      <Button href="https://portal.shrotihost.in/clientarea.php" size="md" className="w-full">
+                        <LayoutDashboard size={15} aria-hidden="true" />
+                        Open Dashboard
+                      </Button>
+                      <Button href="/dashboard" variant="secondary" size="md" className="w-full">
+                        <BarChart3 size={15} aria-hidden="true" />
+                        View Analytics
+                      </Button>
+                      <Button variant="ghost" size="md" className="w-full" onClick={handleShare} type="button">
+                        <Share2 size={15} aria-hidden="true" />
+                        {shareState === "copied" ? "Link copied" : "Share Website"}
+                      </Button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="steps"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="space-y-1"
+                  >
+                    {STEPS.map((step, i) => {
+                      const status: StepStatus = i < activeStep || activeStep === STEPS.length ? "done" : i === activeStep ? "active" : "pending";
+                      return (
+                        <div key={step.pending} className="flex items-center gap-3 rounded-xl px-2 py-2.5">
+                          <div
+                            className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-300 ${
+                              status === "done"
+                                ? "border-success/40 bg-success/10 text-success"
+                                : status === "active"
+                                  ? "border-brand-purple/50 bg-brand-purple/10 text-brand-purple"
+                                  : "border-border text-text-disabled"
+                            }`}
+                          >
+                            {status === "done" ? (
+                              <Check size={15} aria-hidden="true" />
+                            ) : (
+                              <step.icon size={15} aria-hidden="true" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p
+                              className={`text-sm font-medium transition-colors duration-300 ${
+                                status === "pending" ? "text-text-disabled" : "text-text-primary"
+                              }`}
+                            >
+                              {status === "done" ? step.done : step.pending}
+                            </p>
+                            {step.detail && <p className="truncate font-mono text-xs text-text-muted">{step.detail}</p>}
+                          </div>
+                          {status === "active" && (
+                            <div className="h-1 w-14 shrink-0 overflow-hidden rounded-full bg-border">
+                              <motion.div
+                                key={i}
+                                className="h-full rounded-full bg-gradient-to-r from-brand-purple to-brand-blue"
+                                initial={{ width: "0%" }}
+                                animate={{ width: "100%" }}
+                                transition={{ duration: step.duration / 1000, ease: "linear" }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </section>
