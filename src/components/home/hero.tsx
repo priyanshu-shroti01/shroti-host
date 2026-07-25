@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import gsap from "gsap";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { ArrowRight, Check, Lock, LockOpen } from "lucide-react";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
@@ -10,12 +10,15 @@ const DEFAULT_DOMAIN = "yourbrand.com";
 
 type Stage = "idle" | "dns" | "server" | "ssl" | "deploy" | "live";
 
-const WAYPOINTS: { stage: Stage; label: string }[] = [
-  { stage: "dns", label: "Resolving DNS…" },
-  { stage: "server", label: "Connecting to server…" },
-  { stage: "ssl", label: "Issuing SSL certificate…" },
-  { stage: "deploy", label: "Deploying your site…" },
+// Durations aren't equal — DNS resolves fast, SSL "does real work" for
+// longer, so the sequence has rhythm instead of four identical ticks.
+const WAYPOINTS: { stage: Stage; label: string; duration: number }[] = [
+  { stage: "dns", label: "Resolving DNS…", duration: 0.5 },
+  { stage: "server", label: "Connecting to server…", duration: 0.6 },
+  { stage: "ssl", label: "Issuing SSL certificate…", duration: 0.85 },
+  { stage: "deploy", label: "Deploying your site…", duration: 0.55 },
 ];
+const TOTAL_WAYPOINT_DURATION = WAYPOINTS.reduce((s, w) => s + w.duration, 0);
 
 function sanitizeDomain(raw: string): string {
   const cleaned = raw
@@ -29,16 +32,29 @@ function sanitizeDomain(raw: string): string {
 }
 
 const PILL_HEIGHT = 64;
-const FRAME_HEIGHT = 340;
+const MAX_FRAME_HEIGHT = 560;
+
+const contentVariants: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+};
+const barVariants: Variants = {
+  hidden: { opacity: 0, scaleX: 0 },
+  visible: { opacity: 1, scaleX: 1, transition: { duration: 0.35, ease: "easeOut" } },
+};
 
 export function Hero() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const frameRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const lockOpenRef = useRef<HTMLSpanElement>(null);
   const lockClosedRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const autoTypeRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef(0);
   const hasInteractedRef = useRef(false);
 
@@ -55,20 +71,23 @@ export function Hero() {
     timelineRef.current?.kill();
     setLiveDomain(domain);
     setElapsed(null);
+    const frameHeight = Math.min(MAX_FRAME_HEIGHT, window.innerHeight * 0.6);
 
     if (prefersReducedMotion) {
       // Skip straight to the resolved end state — including the frame's
       // final size, which otherwise only ever grows via the tween below.
-      gsap.set(frame, { height: FRAME_HEIGHT, borderRadius: 24 });
+      gsap.set(frame, { height: frameHeight, borderRadius: 24 });
       gsap.set(line, { scaleX: 1 });
       gsap.set(lockOpenRef.current, { opacity: 0 });
       gsap.set(lockClosedRef.current, { opacity: 1 });
+      gsap.set(headerRef.current, { opacity: 0.35, scale: 0.94, y: -6 });
       setStage("live");
       return;
     }
 
     gsap.set(frame, { height: PILL_HEIGHT, borderRadius: 999 });
     gsap.set(line, { scaleX: 0 });
+    gsap.set(dotRef.current, { left: "0%", scale: 1, opacity: 1 });
     gsap.set(lockOpenRef.current, { opacity: 1 });
     gsap.set(lockClosedRef.current, { opacity: 0 });
 
@@ -81,41 +100,98 @@ export function Hero() {
     });
     timelineRef.current = tl;
 
-    WAYPOINTS.forEach((wp, i) => {
-      tl.call(() => setStage(wp.stage))
-        .to(line, { scaleX: (i + 1) / WAYPOINTS.length, duration: 0.7, ease: "power1.inOut" }, i === 0 ? undefined : "+=0.05");
+    tl.to(headerRef.current, { opacity: 0.35, scale: 0.94, y: -6, duration: 0.4 }, 0);
+
+    // Positions are tracked as absolute timestamps (not GSAP's implicit
+    // "end of timeline" cursor) so the snap-pulse effects can overlap into
+    // the next segment intentionally, rather than each one sequentially
+    // appending ~0.3s and stretching the whole sequence out.
+    let cursor = 0.15;
+    let cumulative = 0;
+    WAYPOINTS.forEach((wp) => {
+      const start = cursor;
+      cumulative += wp.duration;
+      const progress = cumulative / TOTAL_WAYPOINT_DURATION;
+      tl.call(() => setStage(wp.stage), [], start)
+        .to(line, { scaleX: progress, duration: wp.duration, ease: "power1.inOut" }, start)
+        .to(dotRef.current, { left: `${progress * 100}%`, duration: wp.duration, ease: "power1.inOut" }, start);
+
       if (wp.stage === "ssl") {
-        tl.to(lockOpenRef.current, { opacity: 0, duration: 0.25 }, "-=0.3").to(
+        const mid = start + wp.duration * 0.5;
+        tl.to(lockOpenRef.current, { opacity: 0, duration: 0.25 }, mid).to(
           lockClosedRef.current,
           { opacity: 1, duration: 0.25 },
-          "<"
+          mid
         );
       }
+
+      // A small "snap" right as each waypoint lands, so progress feels like
+      // discrete hits rather than one continuous, undifferentiated fill —
+      // overlapping the next segment rather than delaying it.
+      const land = start + wp.duration;
+      tl.to(dotRef.current, { scale: 1.9, duration: 0.12, ease: "power1.out" }, land)
+        .to(dotRef.current, { scale: 1, duration: 0.22, ease: "power1.in" }, land + 0.12)
+        .to(glowRef.current, { opacity: 0.85, duration: 0.12 }, land)
+        .to(glowRef.current, { opacity: 0.5, duration: 0.3 }, land + 0.12);
+
+      cursor = land;
     });
 
-    tl.to(frame, { height: FRAME_HEIGHT, borderRadius: 24, duration: 0.7, ease: "power3.inOut" }, "+=0.15");
+    tl.to(frame, { height: frameHeight, borderRadius: 24, duration: 0.7, ease: "power3.inOut" }, cursor + 0.1);
   }
 
   useEffect(() => {
     // Depends on prefersReducedMotion so that if the hook's own effect
     // resolves it after this one has already scheduled (its default is
     // `false` until the media query is read), the timer is cleared and
-    // rescheduled with a `play` closure that sees the real value — a plain
-    // `[]` dependency array would freeze `play` to the stale first-render
-    // closure and silently ignore reduced-motion.
-    const timer = setTimeout(() => {
-      if (!hasInteractedRef.current) play(DEFAULT_DOMAIN);
-    }, 1400);
+    // rescheduled with a closure that sees the real value — a plain `[]`
+    // dependency array would freeze it to the stale first-render closure.
+    if (prefersReducedMotion) {
+      const t = setTimeout(() => {
+        if (!hasInteractedRef.current) play(DEFAULT_DOMAIN);
+      }, 400);
+      return () => clearTimeout(t);
+    }
+
+    const startTimer = setTimeout(() => {
+      if (hasInteractedRef.current) return;
+      const text = DEFAULT_DOMAIN;
+      let i = 0;
+      autoTypeRef.current = setInterval(() => {
+        if (hasInteractedRef.current) {
+          if (autoTypeRef.current) clearInterval(autoTypeRef.current);
+          return;
+        }
+        i += 1;
+        setDomainInput(text.slice(0, i));
+        if (i >= text.length) {
+          if (autoTypeRef.current) clearInterval(autoTypeRef.current);
+          setTimeout(() => {
+            if (!hasInteractedRef.current) play(text);
+          }, 350);
+        }
+      }, 55);
+    }, 700);
+
     return () => {
-      clearTimeout(timer);
+      clearTimeout(startTimer);
+      if (autoTypeRef.current) clearInterval(autoTypeRef.current);
       timelineRef.current?.kill();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefersReducedMotion]);
 
+  function stopAutoType() {
+    hasInteractedRef.current = true;
+    if (autoTypeRef.current) {
+      clearInterval(autoTypeRef.current);
+      autoTypeRef.current = null;
+    }
+  }
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    hasInteractedRef.current = true;
+    stopAutoType();
     play(sanitizeDomain(domainInput));
     inputRef.current?.blur();
   }
@@ -124,14 +200,15 @@ export function Hero() {
   const showsHttps = stage === "deploy" || stage === "live";
 
   return (
-    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden px-4 py-20 sm:py-24">
+    <section className="relative flex min-h-[92vh] flex-col items-center justify-center overflow-hidden px-4 py-16 sm:py-20">
       <div
+        ref={glowRef}
         className="absolute inset-0 -z-10 opacity-60"
         style={{ background: "var(--gradient-glow)" }}
         aria-hidden="true"
       />
 
-      <div className="mx-auto max-w-2xl text-center">
+      <div ref={headerRef} className="mx-auto max-w-2xl text-center">
         <p className="font-mono text-sm text-brand-blue">shrotihost.in</p>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-6xl">
           Launch a website.
@@ -142,7 +219,7 @@ export function Hero() {
         </p>
       </div>
 
-      <div className="mt-12 w-full max-w-2xl">
+      <div className="mt-10 w-full max-w-2xl">
         <div
           ref={frameRef}
           className="relative mx-auto flex w-full flex-col overflow-hidden border border-border-strong bg-card shadow-2xl"
@@ -153,6 +230,11 @@ export function Hero() {
               ref={lineRef}
               className="h-full origin-left bg-gradient-to-r from-brand-purple to-brand-blue"
               style={{ transform: "scaleX(0)" }}
+            />
+            <div
+              ref={dotRef}
+              className="absolute top-1/2 h-2.5 w-2.5 rounded-full bg-brand-blue shadow-[0_0_10px_3px_rgb(63_167_255/0.7)]"
+              style={{ left: "0%", transform: "translate(-50%, -50%)" }}
             />
           </div>
 
@@ -176,9 +258,7 @@ export function Hero() {
                 type="text"
                 value={domainInput}
                 onChange={(e) => setDomainInput(e.target.value)}
-                onFocus={() => {
-                  hasInteractedRef.current = true;
-                }}
+                onFocus={stopAutoType}
                 placeholder="yourbrand.com"
                 aria-label="Your domain name"
                 className="min-w-0 flex-1 bg-transparent font-mono text-sm text-text-primary placeholder:text-text-muted focus:outline-none sm:text-base"
@@ -199,22 +279,34 @@ export function Hero() {
             </button>
           </form>
 
-          <div className="relative flex-1 px-6 pb-8" style={{ paddingTop: PILL_HEIGHT + 8 }}>
+          <div className="relative flex-1 px-6 pb-8 sm:px-10" style={{ paddingTop: PILL_HEIGHT + 16 }}>
             {stage === "live" && (
               <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="flex h-full flex-col items-center justify-center text-center"
+                variants={contentVariants}
+                initial="hidden"
+                animate="visible"
+                className="flex h-full flex-col items-center justify-center gap-10"
               >
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
-                  <Check size={13} aria-hidden="true" />
-                  Live
+                <div className="w-full max-w-sm space-y-3 opacity-40">
+                  <motion.div variants={barVariants} className="h-2 w-1/4 origin-left rounded-full bg-text-muted" />
+                  <motion.div variants={barVariants} className="h-4 w-3/5 origin-left rounded-full bg-text-muted" />
+                  <motion.div variants={barVariants} className="h-2 w-full origin-left rounded-full bg-text-muted" />
+                  <motion.div variants={barVariants} className="h-2 w-4/5 origin-left rounded-full bg-text-muted" />
                 </div>
-                <p className="mt-4 font-mono text-2xl text-text-primary sm:text-3xl">{liveDomain}</p>
-                {elapsed && (
-                  <p className="mt-2 text-sm text-text-muted">Deployed in {elapsed}s — try your own domain above.</p>
-                )}
+
+                <motion.div variants={barVariants} className="flex flex-col items-center text-center">
+
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
+                    <Check size={13} aria-hidden="true" />
+                    Live
+                  </div>
+                  <p className="mt-4 font-mono text-2xl text-text-primary sm:text-3xl">{liveDomain}</p>
+                  {elapsed && (
+                    <p className="mt-2 text-sm text-text-muted">
+                      Deployed in {elapsed}s — try your own domain above.
+                    </p>
+                  )}
+                </motion.div>
               </motion.div>
             )}
           </div>
