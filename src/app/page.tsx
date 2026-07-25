@@ -1,4 +1,4 @@
-import { ScrollStory } from "@/components/home/scroll-story/scroll-story";
+import { Hero } from "@/components/home/hero";
 import { TrustedTech } from "@/components/home/trusted-tech";
 import { ProductEcosystem } from "@/components/home/product-ecosystem";
 import { WhyChoose } from "@/components/home/why-choose";
@@ -14,15 +14,13 @@ import { Section } from "@/components/ui/section";
 export default function Home() {
   return (
     <>
-      {/* One continuous scroll story — domain → DNS → deploy → dashboard → analytics → scaling */}
-      <ScrollStory />
+      <Hero />
+      <TrustedTech />
 
-      {/* Pricing — where the story resolves. */}
-      <Section id="pricing" className="pt-0">
+      {/* Pricing */}
+      <Section id="pricing">
         <HostingPlans />
       </Section>
-
-      <TrustedTech />
 
       {/* Products — "Here's everything we offer." */}
       <Section id="products" className="bg-surface/30">
