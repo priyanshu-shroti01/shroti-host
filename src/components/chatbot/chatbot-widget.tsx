@@ -185,7 +185,7 @@ export function ChatbotWidget() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
               transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}
-              className="absolute bottom-full right-0 mb-3 w-64 rounded-2xl rounded-br-sm border border-border-strong bg-card p-4 pr-8 shadow-2xl"
+              className="absolute bottom-full right-0 mb-3 w-64 rounded-2xl rounded-br-sm border border-border-strong bg-bg p-4 pr-8 shadow-2xl"
             >
               <button
                 type="button"
@@ -259,7 +259,7 @@ export function ChatbotWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.96 }}
             transition={{ duration: 0.2, ease: [0.33, 1, 0.68, 1] }}
-            className="fixed bottom-24 right-5 z-[60] flex h-[32rem] max-h-[75vh] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border-strong bg-card shadow-2xl sm:bottom-28 sm:right-6"
+            className="fixed bottom-24 right-5 z-[60] flex h-[32rem] max-h-[75vh] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border-strong bg-bg shadow-2xl sm:bottom-28 sm:right-6"
           >
             <div className="flex items-center gap-3 border-b border-border bg-surface px-5 py-4">
               {screen !== "menu" ? (
