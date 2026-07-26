@@ -6,7 +6,7 @@ import { CurrencyProvider } from "@/components/currency-provider";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { ChatbotWidget } from "@/components/chatbot/chatbot-widget";
+import { ChatbotWidgetLoader } from "@/components/chatbot/chatbot-widget-loader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -110,7 +110,7 @@ export default function RootLayout({
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
-          <ChatbotWidget />
+          <ChatbotWidgetLoader />
         </CurrencyProvider>
       </body>
     </html>
