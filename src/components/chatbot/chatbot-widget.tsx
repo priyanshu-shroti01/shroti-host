@@ -9,7 +9,6 @@ import {
   Globe,
   HelpCircle,
   LifeBuoy,
-  MessageCircle,
   Sparkles,
   X,
 } from "lucide-react";
@@ -18,6 +17,10 @@ import { Typewriter } from "@/components/ui/typewriter";
 import { plans } from "@/lib/plans";
 import { faqs } from "@/components/home/faq";
 import { useCurrency } from "@/components/currency-provider";
+import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
+
+const GREETING_STORAGE_KEY = "chatbot-greeting-seen";
+const GREETING_DELAY_MS = 6000;
 
 type PlanName = "Launch" | "Grow" | "Scale";
 
@@ -79,8 +82,10 @@ export function ChatbotWidget() {
   const [thinking, setThinking] = useState(false);
   const [promptTyped, setPromptTyped] = useState(false);
   const [faqHistory, setFaqHistory] = useState<HistoryItem[]>([]);
+  const [showGreeting, setShowGreeting] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { format } = useCurrency();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const isDone = screen === "quiz" && step >= questions.length;
   const recommended = (() => {
@@ -103,6 +108,26 @@ export function ChatbotWidget() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  // One-time proactive nudge, like Intercom/Crisp's greeting bubble — shown
+  // once per browser session, never once the widget's been opened.
+  useEffect(() => {
+    if (sessionStorage.getItem(GREETING_STORAGE_KEY)) return;
+    const timer = setTimeout(() => {
+      sessionStorage.setItem(GREETING_STORAGE_KEY, "1");
+      setShowGreeting(true);
+    }, GREETING_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  function openChat() {
+    setShowGreeting(false);
+    setOpen(true);
+  }
+
+  function dismissGreeting() {
+    setShowGreeting(false);
+  }
 
   function answer(option: Question["options"][number]) {
     setHistory((h) => [...h, { question: questions[step].prompt, answer: option.label }]);
@@ -151,26 +176,60 @@ export function ChatbotWidget() {
 
   return (
     <>
-      <div className="fixed bottom-5 right-5 z-[60] sm:bottom-6 sm:right-6">
+      <div className="group fixed bottom-5 right-5 z-[60] flex items-center sm:bottom-6 sm:right-6">
+        <AnimatePresence>
+          {showGreeting && !open && (
+            <motion.div
+              role="status"
+              initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
+              transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}
+              className="absolute bottom-full right-0 mb-3 w-64 rounded-2xl rounded-br-sm border border-border-strong bg-card p-4 pr-8 shadow-2xl"
+            >
+              <button
+                type="button"
+                onClick={dismissGreeting}
+                aria-label="Dismiss"
+                className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full text-text-muted hover:bg-surface-raised hover:text-text-primary"
+              >
+                <X size={13} aria-hidden="true" />
+              </button>
+              <button type="button" onClick={openChat} className="block text-left text-sm text-text-primary">
+                👋 Need help picking a plan? I can match you to one in a few taps.
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {!open && (
+          <span
+            className="mr-0 max-w-0 overflow-hidden whitespace-nowrap rounded-full border border-border-strong bg-card py-2.5 text-sm font-medium text-text-primary opacity-0 shadow-lg transition-all duration-300 group-hover:mr-3 group-hover:max-w-[8rem] group-hover:px-4 group-hover:opacity-100 max-md:hidden"
+            aria-hidden="true"
+          >
+            Ask AI
+          </span>
+        )}
+
         <AnimatePresence>
           {!open && (
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 rounded-full bg-brand-purple/40 motion-safe:animate-ping"
+              className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-brand-purple to-brand-blue opacity-40 blur-xl motion-safe:animate-glow-breathe"
               aria-hidden="true"
             />
           )}
         </AnimatePresence>
         <motion.button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => (open ? setOpen(false) : openChat())}
           aria-expanded={open}
-          aria-label={open ? "Close chat" : "Open chat"}
+          aria-label={open ? "Close chat" : "Open chat with ShrotiHost Assistant"}
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.94 }}
-          className="relative inline-flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white shadow-[0_8px_24px_-6px_rgb(168_16_199/0.55)]"
+          className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white shadow-[0_8px_24px_-6px_rgb(168_16_199/0.55)]"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -181,9 +240,15 @@ export function ChatbotWidget() {
               transition={{ duration: 0.18 }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              {open ? <X size={22} aria-hidden="true" /> : <MessageCircle size={24} aria-hidden="true" />}
+              {open ? <X size={22} aria-hidden="true" /> : <Bot size={24} aria-hidden="true" />}
             </motion.span>
           </AnimatePresence>
+          {!open && (
+            <span
+              className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-white/90 bg-success"
+              aria-hidden="true"
+            />
+          )}
         </motion.button>
       </div>
 
