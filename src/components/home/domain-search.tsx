@@ -8,9 +8,11 @@ import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
 import { Magnetic } from "@/components/ui/magnetic";
 import { useCurrency } from "@/components/currency-provider";
-import { popularDomains } from "@/lib/domains";
+import { allDomains } from "@/lib/domains";
 
 const WHMCS_CART_URL = "https://portal.shrotihost.in/cart.php";
+const FEATURED_TLDS = [".com", ".in", ".org", ".net", ".co", ".xyz", ".online", ".shop"];
+const featuredDomains = allDomains.filter((d) => FEATURED_TLDS.includes(d.tld));
 
 export function DomainSearch() {
   const [query, setQuery] = useState("");
@@ -102,7 +104,7 @@ export function DomainSearch() {
           variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
           className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8"
         >
-          {popularDomains.map((d) => (
+          {featuredDomains.map((d) => (
             <motion.a
               key={d.tld}
               href={`${WHMCS_CART_URL}?a=add&domain=register&query=${encodeURIComponent((base || "yourbrand") + d.tld)}`}
