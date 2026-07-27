@@ -247,7 +247,7 @@ export function DomainsHero() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
-                className="absolute left-0 right-0 top-full z-10 mt-2 max-h-96 overflow-y-auto rounded-2xl border border-border-strong bg-card p-2 text-left shadow-2xl"
+                className="absolute left-0 right-0 top-full z-10 mt-2 max-h-96 overflow-y-auto rounded-2xl border border-border-strong bg-bg p-2 text-left shadow-2xl"
               >
                 {liveChecking && !hasResults && (
                   <div className="flex items-center gap-2.5 px-4 py-3 text-sm text-text-muted">
