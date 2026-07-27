@@ -113,7 +113,7 @@ export function Header() {
                         initial="hidden"
                         animate="visible"
                         variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
-                        className="rounded-2xl border border-border bg-surface-raised p-2 shadow-xl"
+                        className="rounded-2xl border border-border bg-bg p-2 shadow-xl"
                       >
                         {item.items.map((link) => (
                           <motion.div
