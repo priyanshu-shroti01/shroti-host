@@ -40,16 +40,18 @@ function ResultRow({ result, onNavigate }: { result: CheckResult; onNavigate: (d
 
   let status: React.ReactNode;
   let clickable = true;
-  if (result.available === true && result.priceInr !== null) {
-    status = <span className="font-semibold text-success">{format(result.priceInr)}/yr</span>;
-  } else if (result.available === true) {
-    status = <span className="text-text-muted">Available — not sold here</span>;
-    clickable = false;
-  } else if (result.available === false) {
+  if (result.available === false) {
     status = <span className="text-text-muted">Taken</span>;
     clickable = false;
+  } else if (result.priceInr !== null) {
+    // Real price regardless of whether availability is confirmed (true) or
+    // still unknown (null, e.g. a live check that failed/timed out) — the
+    // price itself is always real data from our own catalog. Clicking still
+    // routes to the real cart, which does its own authoritative check.
+    status = <span className="font-semibold text-success">{format(result.priceInr)}/yr</span>;
   } else {
-    status = <span className="text-text-muted">Check at checkout</span>;
+    status = <span className="text-text-muted">Not sold here</span>;
+    clickable = false;
   }
 
   const rowClasses =
