@@ -17,6 +17,11 @@ same root cause.
   reference (color, spacing, type scale, radius tiers, elevation tiers,
   grid). This is ground truth; use it instead of eyeballing "does this look
   about right."
+- `.claude/skills/cinematic-product-design/SKILL.md` — the higher-level
+  philosophy this review's "premium feel" judgment (#7 below) is actually
+  checking against: one dominant visual, motion that explains the product,
+  no decoration that doesn't reinforce hosting. Read it so "premium" means
+  something concrete, not a vibe.
 - `docs/planning/02_BRAND_GUIDELINES.md` and `docs/planning/03_DESIGN_PHILOSOPHY.md`
   for stated brand intent where the token skill doesn't cover something.
 - The component being reviewed, plus one or two sibling components in the
@@ -48,6 +53,15 @@ same root cause.
    flag a panel using `--color-bg`/`--color-surface` (deliberately opaque,
    page-canvas tokens) where a floating/raised feel was clearly intended, or
    vice versa (a full-page background accidentally going translucent).
+   **Documented exception**: a floating overlay that is *also* animated with
+   a Framer Motion transform (`x`/`y`/`scale` in `initial`/`animate`/`exit`)
+   is deliberately opaque (`bg-bg`) instead of glass on this project — the
+   chatbot panel, the nav mega-menu dropdown, and the domain search results
+   dropdown were all switched from glass to `bg-bg` after `backdrop-filter`
+   was found to silently fail to render on some mobile GPUs when combined
+   with an active transform, letting page content bleed through unblurred.
+   Don't flag those (or a new overlay following the same pattern) as
+   "should be glass" — opaque is the correct, deliberate choice there.
 7. **Premium feel, concretely**: not a vibe check — check for the specific
    things that read as "template" rather than premium: default browser
    focus rings instead of the project's `:focus-visible` treatment, missing
