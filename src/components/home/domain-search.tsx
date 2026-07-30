@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Magnetic } from "@/components/ui/magnetic";
 import { useCurrency } from "@/components/currency-provider";
 import { allDomains } from "@/lib/domains";
+import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const WHMCS_CART_URL = "https://portal.shrotihost.in/cart.php";
 const FEATURED_TLDS = [".com", ".in", ".org", ".net", ".co", ".xyz", ".online", ".shop"];
@@ -19,6 +20,7 @@ export function DomainSearch() {
   const [checking, setChecking] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const { format } = useCurrency();
+  const reducedMotion = usePrefersReducedMotion();
 
   const cleanQuery = query.trim().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
   const base = cleanQuery.includes(".") ? cleanQuery.split(".")[0] : cleanQuery;
@@ -101,7 +103,7 @@ export function DomainSearch() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
+          variants={{ visible: { transition: { staggerChildren: reducedMotion ? 0 : 0.06 } } }}
           className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8"
         >
           {featuredDomains.map((d) => (
@@ -110,8 +112,8 @@ export function DomainSearch() {
               href={`${WHMCS_CART_URL}?a=add&domain=register&query=${encodeURIComponent((base || "yourbrand") + d.tld)}`}
               aria-label={`Register a ${d.tld} domain`}
               variants={{
-                hidden: { opacity: 0, y: 16 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.33, 1, 0.68, 1] } },
+                hidden: reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
+                visible: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : 0.35, ease: [0.33, 1, 0.68, 1] } },
               }}
               className="group flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card px-3 py-5 text-center transition-all duration-200 hover:-translate-y-1 hover:border-brand-purple hover:shadow-lg"
             >
