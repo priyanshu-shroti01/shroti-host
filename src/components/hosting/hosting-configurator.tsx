@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { useCurrency } from "@/components/currency-provider";
-import { plans } from "@/lib/plans";
+import { sharedPlans } from "@/lib/plans";
 
 const storageOptions = [
   { label: "10 GB", value: 10 },
@@ -74,7 +74,7 @@ export function HostingConfigurator() {
 
   const storageTier = storageOptions.findIndex((s) => s.value === storage);
   const recommendedTier = Math.max(storageTier, trafficTier, emailTier);
-  const plan = plans[recommendedTier];
+  const plan = sharedPlans[recommendedTier];
 
   const storagePercent = Math.round((storage / 150) * 100);
   const loadPercent = loadByTier[recommendedTier];
@@ -243,7 +243,7 @@ export function HostingConfigurator() {
                 <span className="text-sm text-text-muted">
                   <AnimatedCounter
                     key={`${plan.name}-${currency}`}
-                    value={convertDisplay(plan.annualPrice)}
+                    value={convertDisplay(plan.monthlyPrice)}
                     prefix={currencySymbol}
                     suffix="/mo"
                   />

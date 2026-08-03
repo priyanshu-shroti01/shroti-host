@@ -4,6 +4,7 @@ import { UnlimitedHero } from "@/components/unlimited/unlimited-hero";
 import { Infrastructure } from "@/components/home/infrastructure";
 import { HostingPlans } from "@/components/home/hosting-plans";
 import { FinalCta } from "@/components/home/final-cta";
+import { unlimitedPlans } from "@/lib/plans";
 
 export const metadata: Metadata = {
   title: "Unlimited Hosting",
@@ -24,7 +25,7 @@ export default function UnlimitedHostingPage() {
       </Section>
 
       <Section>
-        <HostingPlans />
+        <HostingPlans plans={unlimitedPlans} />
       </Section>
 
       <Section id="cta" className="bg-surface/30">

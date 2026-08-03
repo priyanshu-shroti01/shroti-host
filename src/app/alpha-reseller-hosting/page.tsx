@@ -1,28 +1,28 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/section";
-import { WpHero } from "@/components/wordpress/wp-hero";
-import { WpFeatures } from "@/components/wordpress/wp-features";
+import { AlphaResellerHero } from "@/components/reseller/alpha-reseller-hero";
+import { AlphaResellerBenefits } from "@/components/reseller/alpha-reseller-benefits";
 import { Infrastructure } from "@/components/home/infrastructure";
 import { HostingPlans } from "@/components/home/hosting-plans";
 import { FinalCta } from "@/components/home/final-cta";
-import { wordpressPlans } from "@/lib/plans";
+import { alphaResellerPlans } from "@/lib/plans";
 
 export const metadata: Metadata = {
-  title: "WordPress Hosting",
+  title: "Alpha Reseller Hosting",
   description:
-    "WordPress hosting tuned for speed — one-click install, LiteSpeed Cache, AccelerateWP, and free migration on every plan.",
-  alternates: { canonical: "/wordpress-hosting" },
+    "The elite reseller tier — a three-level cPanel, WHM reseller, and Master Reseller hierarchy with the highest resource caps we offer.",
+  alternates: { canonical: "/alpha-reseller-hosting" },
 };
 
-export default function WordPressHostingPage() {
+export default function AlphaResellerHostingPage() {
   return (
     <>
       <Section className="pt-16 sm:pt-24">
-        <WpHero />
+        <AlphaResellerHero />
       </Section>
 
       <Section className="bg-surface/30 py-14 sm:py-16">
-        <WpFeatures />
+        <AlphaResellerBenefits />
       </Section>
 
       <Section id="infrastructure">
@@ -30,7 +30,7 @@ export default function WordPressHostingPage() {
       </Section>
 
       <Section className="bg-surface/30">
-        <HostingPlans plans={wordpressPlans} />
+        <HostingPlans plans={alphaResellerPlans} />
       </Section>
 
       <Section id="cta">

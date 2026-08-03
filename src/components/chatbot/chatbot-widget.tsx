@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
-import { plans } from "@/lib/plans";
+import { sharedPlans } from "@/lib/plans";
 import { faqs } from "@/components/home/faq";
 import { useCurrency } from "@/components/currency-provider";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
@@ -95,7 +95,8 @@ export function ChatbotWidget() {
     if (tied.length > 1 && tied.includes("Grow")) return "Grow";
     return tied[0] ?? "Grow";
   })();
-  const plan = plans.find((p) => p.name === recommended)!;
+  const tierByRecommendation: Record<PlanName, string> = { Launch: "Bronze", Grow: "Gold", Scale: "Platinum" };
+  const plan = sharedPlans.find((p) => p.name === tierByRecommendation[recommended])!;
 
   useEffect(() => {
     if (!open) return;
@@ -467,8 +468,8 @@ export function ChatbotWidget() {
                       <p className="mt-1 text-2xl font-semibold text-brand-purple">{plan.name}</p>
                       <p className="mt-1 text-sm text-text-secondary">{plan.tagline}</p>
                       <p className="mt-2 text-lg font-semibold text-text-primary">
-                        {format(plan.annualPrice)}
-                        <span className="text-xs font-normal text-text-muted">/mo, billed annually</span>
+                        {format(plan.monthlyPrice)}
+                        <span className="text-xs font-normal text-text-muted">/mo</span>
                       </p>
                       <ul className="mt-3 space-y-1.5">
                         {plan.features.slice(0, 4).map((f) => (

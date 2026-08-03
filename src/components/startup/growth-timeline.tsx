@@ -6,7 +6,7 @@ import { ArrowRight, Building2, Lightbulb, Rocket, Sparkle, TrendingUp } from "l
 import { Button } from "@/components/ui/button";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { useCurrency } from "@/components/currency-provider";
-import { plans } from "@/lib/plans";
+import { sharedPlans } from "@/lib/plans";
 
 const stages = [
   {
@@ -41,7 +41,7 @@ const stages = [
     icon: Sparkle,
     label: "Enterprise",
     blurb: "Dedicated infrastructure territory — VPS and Cloud Hosting, both on our roadmap.",
-    planIndex: 2,
+    planIndex: 3,
     real: false,
   },
 ];
@@ -51,7 +51,7 @@ export function GrowthTimeline() {
   const { currency, convertDisplay } = useCurrency();
   const currencySymbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "€";
   const stage = stages[active];
-  const plan = plans[stage.planIndex];
+  const plan = sharedPlans[stage.planIndex];
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -106,7 +106,7 @@ export function GrowthTimeline() {
               <span className="text-sm text-text-muted">
                 <AnimatedCounter
                   key={`${plan.name}-${currency}`}
-                  value={convertDisplay(plan.annualPrice)}
+                  value={convertDisplay(plan.monthlyPrice)}
                   prefix={currencySymbol}
                   suffix="/mo"
                 />

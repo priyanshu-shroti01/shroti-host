@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
 import { Magnetic } from "@/components/ui/magnetic";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import { commonFeatures, plans } from "@/lib/plans";
+import { commonFeatures, sharedPlans } from "@/lib/plans";
 import { useCurrency } from "@/components/currency-provider";
 
 export function HostingHero() {
@@ -48,7 +48,7 @@ export function HostingHero() {
             <span className="font-semibold text-text-primary">
               <AnimatedCounter
                 key={currency}
-                value={convertDisplay(plans[0].annualPrice)}
+                value={convertDisplay(sharedPlans[0].monthlyPrice)}
                 prefix={currencySymbol}
                 suffix="/mo"
               />

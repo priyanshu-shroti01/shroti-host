@@ -72,9 +72,10 @@ const wide = {
   href: "/hosting#compare",
 };
 
-const comingSoon = [
-  { icon: Share2, label: "Reseller Hosting" },
-  { icon: Building2, label: "Master Reseller Hosting" },
+const resellerLines = [
+  { icon: Share2, label: "Reseller Hosting", href: "/reseller-hosting" },
+  { icon: Building2, label: "Master Reseller Hosting", href: "/master-reseller-hosting" },
+  { icon: Layers, label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting" },
 ];
 
 const roadmap = [
@@ -156,16 +157,17 @@ export function ProductEcosystem() {
       <Reveal delay={0.16}>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-brand-purple/30 bg-card p-5">
           <span className="text-xs font-medium uppercase tracking-wide text-brand-purple">
-            Coming soon
+            Reseller Hosting
           </span>
-          {comingSoon.map((item) => (
-            <span
+          {resellerLines.map((item) => (
+            <Link
               key={item.label}
-              className="inline-flex items-center gap-1.5 rounded-full border border-brand-purple/30 bg-brand-purple/5 px-3 py-1.5 text-xs font-medium text-text-secondary"
+              href={item.href}
+              className="inline-flex items-center gap-1.5 rounded-full border border-brand-purple/30 bg-brand-purple/5 px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple"
             >
               <item.icon size={13} className="text-brand-purple" aria-hidden="true" />
               {item.label}
-            </span>
+            </Link>
           ))}
         </div>
       </Reveal>

@@ -7,20 +7,21 @@ import { Eyebrow } from "@/components/ui/section";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { plans } from "@/lib/plans";
+import { sharedPlans } from "@/lib/plans";
 import { useCurrency } from "@/components/currency-provider";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 import { duration, easing } from "@/lib/motion";
 
 const siteCountOptions = [
   { id: "1", label: "Just 1", value: 1 },
-  { id: "2-10", label: "2–10", value: 10 },
+  { id: "2-5", label: "2–5", value: 5 },
+  { id: "6-10", label: "6–10", value: 10 },
   { id: "10+", label: "More than 10", value: Infinity },
 ] as const;
 
-const supportOptions = [
-  { id: "yes", label: "Yes, that matters" },
-  { id: "no", label: "Not yet" },
+const growthOptions = [
+  { id: "yes", label: "Yes, expecting to grow soon" },
+  { id: "no", label: "Not for now" },
 ] as const;
 
 const buildOptions = [
@@ -31,28 +32,26 @@ const buildOptions = [
 
 type Answers = {
   sites?: (typeof siteCountOptions)[number]["id"];
-  support?: (typeof supportOptions)[number]["id"];
+  growth?: (typeof growthOptions)[number]["id"];
   building?: (typeof buildOptions)[number]["id"];
 };
 
 const questions = [
   { key: "sites" as const, prompt: "How many websites will you host?", options: siteCountOptions },
-  { key: "support" as const, prompt: "Do you need business email or priority support?", options: supportOptions },
+  { key: "growth" as const, prompt: "Expecting to add more sites soon?", options: growthOptions },
   { key: "building" as const, prompt: "What are you building?", options: buildOptions },
 ];
 
 function recommendPlan(answers: Answers) {
   const siteCount = siteCountOptions.find((o) => o.id === answers.sites)?.value ?? 1;
-  let recommended = plans.find((p) => siteCount <= p.meters.websites) ?? plans[plans.length - 1];
+  const baseIndex = sharedPlans.findIndex((p) => siteCount <= p.meters.websites);
+  let index = baseIndex === -1 ? sharedPlans.length - 1 : baseIndex;
 
-  if (answers.support === "yes" && recommended.supportTier !== "Priority") {
-    const upgraded = plans.find(
-      (p) => p.supportTier === "Priority" && p.meters.websites >= recommended.meters.websites
-    );
-    if (upgraded) recommended = upgraded;
+  if (answers.growth === "yes") {
+    index = Math.min(index + 1, sharedPlans.length - 1);
   }
 
-  return recommended;
+  return sharedPlans[index];
 }
 
 export function HostingAdvisor() {
@@ -73,9 +72,9 @@ export function HostingAdvisor() {
 
   const isResult = step >= questions.length;
   const recommended = isResult ? recommendPlan(answers) : null;
-  const recommendedIndex = recommended ? plans.indexOf(recommended) : -1;
+  const recommendedIndex = recommended ? sharedPlans.indexOf(recommended) : -1;
   const alternatives = recommended
-    ? [plans[recommendedIndex - 1], plans[recommendedIndex + 1]].filter((p): p is typeof plans[number] => Boolean(p))
+    ? [sharedPlans[recommendedIndex - 1], sharedPlans[recommendedIndex + 1]].filter((p): p is typeof sharedPlans[number] => Boolean(p))
     : [];
 
   const siteLabel = siteCountOptions.find((o) => o.id === answers.sites)?.label.toLowerCase();
@@ -157,9 +156,9 @@ export function HostingAdvisor() {
 
                     <div className="mt-5 flex items-baseline gap-1">
                       <span className="text-3xl font-semibold text-text-primary">
-                        {format(recommended.annualPrice)}
+                        {format(recommended.monthlyPrice)}
                       </span>
-                      <span className="text-sm text-text-muted">/mo, billed annually</span>
+                      <span className="text-sm text-text-muted">/mo</span>
                     </div>
 
                     <ul className="mt-6 space-y-2">
@@ -188,7 +187,7 @@ export function HostingAdvisor() {
                             href="/hosting"
                             className="text-sm font-medium text-brand-purple hover:underline"
                           >
-                            {plan.name} — {format(plan.annualPrice)}/mo
+                            {plan.name} — {format(plan.monthlyPrice)}/mo
                           </a>
                         ))}
                       </div>

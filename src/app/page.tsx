@@ -1,9 +1,11 @@
 import { Hero } from "@/components/home/hero";
 import { TrustedTech } from "@/components/home/trusted-tech";
 import { HostingAdvisor } from "@/components/home/hosting-advisor";
+import { ThreeSteps } from "@/components/home/three-steps";
 import { ProductEcosystem } from "@/components/home/product-ecosystem";
 import { WhyChoose } from "@/components/home/why-choose";
 import { Infrastructure } from "@/components/home/infrastructure";
+import { ComparisonTable } from "@/components/home/comparison-table";
 import { DeveloperFeatures } from "@/components/home/developer-features";
 import { Migration } from "@/components/home/migration";
 import { StudentProgram } from "@/components/home/student-program";
@@ -30,8 +32,12 @@ export default function Home() {
         <HostingPlans />
       </Section>
 
+      <Section id="steps" className="bg-surface/30">
+        <ThreeSteps />
+      </Section>
+
       {/* Domains — a concrete next action once you've seen price */}
-      <Section id="domains" className="bg-surface/30">
+      <Section id="domains">
         <DomainSearch />
       </Section>
 
@@ -47,6 +53,10 @@ export default function Home() {
       {/* Infrastructure — proof behind WhyChoose's "Deploy" claim */}
       <Section id="infrastructure" className="bg-surface/30">
         <Infrastructure />
+      </Section>
+
+      <Section id="comparison">
+        <ComparisonTable />
       </Section>
 
       <Section id="developers">
