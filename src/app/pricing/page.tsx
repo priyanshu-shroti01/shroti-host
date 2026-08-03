@@ -4,6 +4,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
 import { HostingConfigurator } from "@/components/hosting/hosting-configurator";
 import { HostingPlans } from "@/components/home/hosting-plans";
+import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 
 export const metadata: Metadata = {
@@ -36,12 +37,16 @@ export default function PricingPage() {
         <div className="mx-auto max-w-2xl text-center">
           <Eyebrow>Compare</Eyebrow>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-            Or see all three side by side.
+            Or see every tier side by side.
           </h2>
         </div>
         <div className="mt-12">
           <HostingPlans />
         </div>
+      </Section>
+
+      <Section>
+        <Faq />
       </Section>
 
       <Section id="cta">

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Cloud, Globe, HardDrive, Monitor, Shield, Zap } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { Eyebrow } from "@/components/ui/section";
+import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const flow = [
   {
@@ -34,6 +35,8 @@ const flow = [
 ];
 
 export function Infrastructure() {
+  const reducedMotion = usePrefersReducedMotion();
+
   return (
     <div>
       <div className="mx-auto max-w-2xl text-center">
@@ -49,20 +52,21 @@ export function Infrastructure() {
       <div className="relative mx-auto mt-14 max-w-md">
         <div className="absolute bottom-8 left-6 top-8 w-px bg-border" aria-hidden="true">
           <motion.div
-            initial={{ scaleY: 0 }}
+            initial={reducedMotion ? { scaleY: 1 } : { scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.4, ease: "easeInOut" }}
+            transition={{ duration: reducedMotion ? 0 : 1.4, ease: "easeInOut" }}
             style={{ transformOrigin: "top" }}
             className="h-full w-full bg-gradient-to-b from-brand-purple to-brand-blue"
           />
-          {[0, 2.6, 5.2].map((delay, i) => (
-            <span
-              key={i}
-              className="absolute left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-brand-blue shadow-[0_0_8px_2px_rgb(63_167_255/0.6)]"
-              style={{ animation: "packet-travel 3.6s linear infinite", animationDelay: `${delay}s` }}
-            />
-          ))}
+          {!reducedMotion &&
+            [0, 2.6, 5.2].map((delay, i) => (
+              <span
+                key={i}
+                className="absolute left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-brand-blue shadow-[0_0_8px_2px_rgb(63_167_255/0.6)]"
+                style={{ animation: "packet-travel 3.6s linear infinite", animationDelay: `${delay}s` }}
+              />
+            ))}
         </div>
 
         <div className="space-y-3">

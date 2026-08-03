@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Check } from "lucide-react";
 import { Section } from "@/components/ui/section";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/ui/reveal";
 import { StudentJourney } from "@/components/student/student-journey";
 import { FinalCta } from "@/components/home/final-cta";
@@ -40,9 +42,12 @@ export default function StudentPage() {
             "Launch subdomain, no domain required",
             "Daily backups & LiteSpeed performance",
           ].map((b) => (
-            <p key={b} className="text-center text-sm text-text-secondary">
-              {b}
-            </p>
+            <Card key={b} className="flex flex-col items-center gap-2 text-center">
+              <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-purple/10 text-brand-purple">
+                <Check size={20} aria-hidden="true" />
+              </div>
+              <p className="text-sm text-text-secondary">{b}</p>
+            </Card>
           ))}
         </div>
       </Section>

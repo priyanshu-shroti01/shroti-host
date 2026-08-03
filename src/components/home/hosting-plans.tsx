@@ -9,31 +9,24 @@ import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { ResourceMeter } from "@/components/ui/resource-meter";
-import { plans, commonFeatures } from "@/lib/plans";
+import { sharedPlans, commonFeatures, cycleMonths, savePercent, type Cycle, type Plan } from "@/lib/plans";
 import { useCurrency } from "@/components/currency-provider";
-
-const MAX_WEBSITES = Math.max(...plans.map((p) => p.meters.websites).filter(Number.isFinite));
-const MAX_STORAGE = Math.max(...plans.map((p) => p.meters.storageGB));
-const MAX_MAILBOXES = Math.max(...plans.map((p) => p.meters.mailboxes).filter(Number.isFinite));
-
-type Cycle = "monthly" | "quarterly" | "annual";
 
 const cycleLabels: Record<Cycle, string> = {
   monthly: "Monthly",
-  quarterly: "Quarterly",
-  annual: "Annual · Save up to 35%",
+  quarterly: "3 Months",
+  semiAnnual: "6 Months",
+  annual: "Annual",
 };
 
-function priceFor(plan: (typeof plans)[number], cycle: Cycle) {
-  if (cycle === "annual") return plan.annualPrice;
-  if (cycle === "quarterly") return plan.quarterlyPrice;
-  return plan.monthlyPrice;
-}
-
-export function HostingPlans() {
+export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
   const [cycle, setCycle] = useState<Cycle>("annual");
   const { currency, convertDisplay } = useCurrency();
   const currencySymbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "€";
+
+  const maxWebsites = Math.max(...plans.map((p) => p.meters.websites).filter(Number.isFinite));
+  const maxStorage = Math.max(...plans.map((p) => p.meters.storageGB).filter(Number.isFinite));
+  const maxMailboxes = Math.max(...plans.map((p) => p.meters.mailboxes).filter(Number.isFinite));
 
   return (
     <div id="compare">
@@ -42,7 +35,7 @@ export function HostingPlans() {
           Simple, honest pricing
         </h2>
         <p className="mt-4 text-text-secondary">
-          Pick a billing cycle. Renewal pricing is always shown upfront — no surprises later.
+          Same renewal price, every cycle — no surprise increase later.
         </p>
       </div>
 
@@ -63,8 +56,13 @@ export function HostingPlans() {
         </div>
       </div>
 
-      <div className="mt-12 grid gap-6 lg:grid-cols-3">
+      <div className="mt-12 grid gap-6 lg:grid-cols-4">
         {plans.map((plan, i) => {
+          const months = cycleMonths[cycle];
+          const saleTotal = plan.monthlyPrice * months;
+          const regularTotal = plan.monthlyRegularPrice * months;
+          const save = savePercent(plan);
+
           return (
             <Reveal key={plan.name} delay={i * 0.08}>
               <Card
@@ -87,31 +85,39 @@ export function HostingPlans() {
                 <h3 className="text-xl font-semibold text-text-primary">{plan.name}</h3>
                 <p className="mt-1 text-sm text-text-muted">{plan.tagline}</p>
 
-                <div className="mt-6 flex items-baseline gap-1">
+                <div className="mt-6 flex items-baseline gap-2">
                   <span className="text-4xl font-semibold text-text-primary">
                     <AnimatedCounter
                       key={`${plan.name}-${cycle}-${currency}`}
-                      value={convertDisplay(priceFor(plan, cycle))}
+                      value={convertDisplay(saleTotal)}
                       prefix={currencySymbol}
                     />
                   </span>
-                  <span className="text-sm text-text-muted">/mo</span>
+                  <span className="text-sm text-text-muted line-through">
+                    {currencySymbol}
+                    {Math.round(convertDisplay(regularTotal)).toLocaleString("en-US")}
+                  </span>
                 </div>
-                <p className="mt-1 text-xs text-text-muted">Billed {cycle}</p>
+                <div className="mt-1 flex items-center gap-2">
+                  <p className="text-xs text-text-muted">Billed {cycleLabels[cycle].toLowerCase()}</p>
+                  <Badge tone="success" className="text-[10px]">
+                    Save {save}%
+                  </Badge>
+                </div>
 
                 <div className="mt-6 flex-1 space-y-4">
                   <ResourceMeter
                     label="Websites"
                     valueLabel={plan.specs.websites}
                     value={plan.meters.websites}
-                    max={MAX_WEBSITES}
+                    max={maxWebsites}
                     emphasis={plan.recommended}
                   />
                   <ResourceMeter
                     label="Storage"
                     valueLabel={plan.specs.storage}
                     value={plan.meters.storageGB}
-                    max={MAX_STORAGE}
+                    max={maxStorage}
                     delay={0.08}
                     emphasis={plan.recommended}
                   />
@@ -119,17 +125,24 @@ export function HostingPlans() {
                     label="Email"
                     valueLabel={plan.specs.email}
                     value={plan.meters.mailboxes}
-                    max={MAX_MAILBOXES}
+                    max={maxMailboxes}
                     delay={0.16}
                     emphasis={plan.recommended}
                   />
+                  {plan.additionalMeters?.map((meter, meterIndex) => (
+                    <ResourceMeter
+                      key={meter.label}
+                      label={meter.label}
+                      valueLabel={meter.valueLabel}
+                      value={meter.value}
+                      max={Math.max(...plans.flatMap((p) => p.additionalMeters?.[meterIndex]?.value ?? []).filter(Number.isFinite))}
+                      delay={0.24}
+                      emphasis={plan.recommended}
+                    />
+                  ))}
 
                   <div className="flex items-center gap-2 border-t border-border pt-4 text-sm">
-                    <Headset
-                      size={16}
-                      className={plan.supportTier === "Priority" ? "text-brand-purple" : "text-text-muted"}
-                      aria-hidden="true"
-                    />
+                    <Headset size={16} className="text-brand-purple" aria-hidden="true" />
                     <span className="text-text-secondary">{plan.specs.support}</span>
                   </div>
                 </div>

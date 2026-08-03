@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ArrowUpRight,
+  Building2,
   Cloud,
   Code2,
   Globe2,
@@ -21,7 +22,7 @@ const featured = {
   icon: Server,
   title: "Shared Hosting",
   description:
-    "Launch, Grow, and Scale plans on LiteSpeed and NVMe storage — the foundation everything else builds on.",
+    "Bronze, Gold, Platinum, and Diamond plans on LiteSpeed and NVMe storage — the foundation everything else builds on.",
   href: "/hosting",
 };
 
@@ -71,10 +72,15 @@ const wide = {
   href: "/hosting#compare",
 };
 
+const resellerLines = [
+  { icon: Share2, label: "Reseller Hosting", href: "/reseller-hosting" },
+  { icon: Building2, label: "Master Reseller Hosting", href: "/master-reseller-hosting" },
+  { icon: Layers, label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting" },
+];
+
 const roadmap = [
   { icon: Server, label: "VPS", href: "/vps" },
   { icon: Cloud, label: "Cloud Hosting" },
-  { icon: Share2, label: "Reseller Hosting" },
   { icon: Zap, label: "API" },
 ];
 
@@ -148,8 +154,26 @@ export function ProductEcosystem() {
         ))}
       </div>
 
-      <Reveal delay={0.2}>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-dashed border-border-strong p-5">
+      <Reveal delay={0.16}>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-brand-purple/30 bg-card p-5">
+          <span className="text-xs font-medium uppercase tracking-wide text-brand-purple">
+            Reseller Hosting
+          </span>
+          {resellerLines.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="inline-flex items-center gap-1.5 rounded-full border border-brand-purple/30 bg-brand-purple/5 px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple"
+            >
+              <item.icon size={13} className="text-brand-purple" aria-hidden="true" />
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal delay={0.24}>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-dashed border-border-strong p-5">
           <span className="text-xs font-medium uppercase tracking-wide text-text-muted">
             On the roadmap
           </span>
