@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Clock3, Sparkles, Star } from "lucide-react";
 import { Section, Eyebrow } from "@/components/ui/section";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
+import { StatPill } from "@/components/ui/stat-pill";
 import { CompanyTimeline } from "@/components/about/company-timeline";
 import { MissionValues } from "@/components/about/mission-values";
 import { Testimonials } from "@/components/home/testimonials";
@@ -27,6 +29,13 @@ export default function AboutPage() {
             Premium infrastructure, real customer experience, and honest pricing — for students,
             developers, startups, and businesses.
           </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5">
+            <StatPill icon={Clock3}>Serving customers since 2023</StatPill>
+            <StatPill icon={Sparkles}>AI-assisted support, 24/7</StatPill>
+            <StatPill icon={Star} iconClassName="text-warning" href="https://www.trustpilot.com/review/shrotihost.in">
+              Reviewed on Trustpilot
+            </StatPill>
+          </div>
         </Reveal>
       </Section>
 

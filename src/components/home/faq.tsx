@@ -14,7 +14,7 @@ export const faqs = [
   {
     question: "Can I upgrade my plan later?",
     answer:
-      "Yes. You can move from Launch to Grow to Scale at any time without migrating your website to a new server.",
+      "Yes. You can move from Bronze to Diamond at any time without migrating your website to a new server.",
   },
   {
     question: "Do you offer student discounts?",

@@ -1,11 +1,12 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
 import { Magnetic } from "@/components/ui/magnetic";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
+import { StatPill } from "@/components/ui/stat-pill";
 import { commonFeatures, sharedPlans } from "@/lib/plans";
 import { useCurrency } from "@/components/currency-provider";
 
@@ -55,9 +56,9 @@ export function HostingHero() {
             </span>
           </span>
           {commonFeatures.slice(0, 4).map((f) => (
-            <span key={f} className="text-text-muted">
+            <StatPill key={f} icon={Check} iconClassName="text-success">
               {f}
-            </span>
+            </StatPill>
           ))}
         </div>
       </Reveal>

@@ -1,5 +1,6 @@
 import { Lock, Network, Plug, ReceiptText } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
+import { Card } from "@/components/ui/card";
 
 const benefits = [
   { icon: Lock, label: "Free WHOIS privacy", description: "Your contact details stay off public records." },
@@ -13,13 +14,13 @@ export function DomainBenefits() {
     <Reveal>
       <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {benefits.map((b) => (
-          <div key={b.label} className="flex flex-col items-center gap-2 text-center">
+          <Card key={b.label} className="flex flex-col items-center gap-2 text-center">
             <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-purple/10 text-brand-purple">
               <b.icon size={20} aria-hidden="true" />
             </div>
             <p className="text-sm font-semibold text-text-primary">{b.label}</p>
             <p className="text-xs text-text-muted">{b.description}</p>
-          </div>
+          </Card>
         ))}
       </div>
     </Reveal>

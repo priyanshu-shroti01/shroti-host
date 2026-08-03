@@ -22,7 +22,7 @@ const featured = {
   icon: Server,
   title: "Shared Hosting",
   description:
-    "Launch, Grow, and Scale plans on LiteSpeed and NVMe storage — the foundation everything else builds on.",
+    "Bronze, Gold, Platinum, and Diamond plans on LiteSpeed and NVMe storage — the foundation everything else builds on.",
   href: "/hosting",
 };
 

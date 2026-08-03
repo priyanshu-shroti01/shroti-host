@@ -30,7 +30,7 @@ const chapters = [
     title: "Scale",
     headline: "Grow without ever migrating servers.",
     description:
-      "Move from Launch to Grow to Scale — and eventually VPS or Cloud — without touching a single file. Support from people who understand hosting.",
+      "Move from Bronze to Diamond — and eventually VPS or Cloud — without touching a single file. Support from people who understand hosting.",
     points: [
       { icon: TrendingUp, label: "Room to grow" },
       { icon: HeartHandshake, label: "Real human support" },

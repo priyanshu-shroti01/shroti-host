@@ -1,5 +1,6 @@
 import { Gauge, RefreshCw, ShieldCheck, Wand2 } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
+import { Card } from "@/components/ui/card";
 
 const features = [
   {
@@ -29,13 +30,13 @@ export function WpFeatures() {
     <Reveal>
       <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {features.map((f) => (
-          <div key={f.title} className="flex flex-col items-center gap-2 text-center">
+          <Card key={f.title} className="flex flex-col items-center gap-2 text-center">
             <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-purple/10 text-brand-purple">
               <f.icon size={20} aria-hidden="true" />
             </div>
             <p className="text-sm font-semibold text-text-primary">{f.title}</p>
             <p className="text-xs text-text-muted">{f.description}</p>
-          </div>
+          </Card>
         ))}
       </div>
     </Reveal>

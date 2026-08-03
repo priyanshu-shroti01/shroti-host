@@ -47,8 +47,8 @@ export function LatestArticles() {
       </div>
 
       <div className="mt-10 text-center">
-        <Button href="/blog" variant="secondary" size="lg">
-          Visit the Blog
+        <Button href="/contact" variant="secondary" size="lg">
+          Get in Touch
         </Button>
       </div>
     </div>
