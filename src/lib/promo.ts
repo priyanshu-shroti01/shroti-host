@@ -21,17 +21,13 @@ export type PromoBannerConfig = {
   icon?: PromoIcon;
 };
 
-/**
- * PLACEHOLDER CAMPAIGN — discountLabel, code, and the promo code baked into
- * href all need real business sign-off before this ships to production.
- */
 export const homepagePromo: PromoBannerConfig = {
-  id: "launch-promo-2026",
+  id: "shrotihost-40-2026",
   active: true,
   kind: "promo",
-  message: "Limited-time launch offer on your first term.",
-  discountLabel: "XX% OFF", // TODO(business): real discount percentage
-  code: "PLACEHOLDER10", // TODO(business): real coupon code
-  href: "https://portal.shrotihost.in/cart.php?promocode=PLACEHOLDER10", // TODO(business): confirm once code is real
+  message: "40% off your first monthly term — new customers only.",
+  discountLabel: "40% OFF",
+  code: "SHROTIHOST",
+  href: "https://portal.shrotihost.in/cart.php?promocode=SHROTIHOST",
   icon: "tag",
 };

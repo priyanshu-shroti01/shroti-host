@@ -18,25 +18,26 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <TrustedTech />
 
-      {/* Hosting Advisor — "Not sure which plan fits?" */}
-      <Section id="advisor">
-        <HostingAdvisor />
-      </Section>
-
-      {/* Pricing */}
+      {/* Pricing — RankHostZone puts plans directly under the hero; matching that here. */}
       <Section id="pricing">
         <HostingPlans />
       </Section>
 
-      <Section id="steps" className="bg-surface/30">
-        <ThreeSteps />
+      <TrustedTech />
+
+      {/* Hosting Advisor — "Not sure which plan fits?" */}
+      <Section id="advisor" className="bg-surface/30">
+        <HostingAdvisor />
       </Section>
 
       {/* Domains — a concrete next action once you've seen price */}
       <Section id="domains">
         <DomainSearch />
+      </Section>
+
+      <Section id="steps" className="bg-surface/30">
+        <ThreeSteps />
       </Section>
 
       {/* Products — "Here's everything we offer." */}
