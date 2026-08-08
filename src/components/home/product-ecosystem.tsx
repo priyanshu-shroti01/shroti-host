@@ -5,13 +5,10 @@ import {
   Cloud,
   Code2,
   Globe2,
-  GraduationCap,
-  LayoutGrid,
   Layers,
   Mail,
   Server,
   Share2,
-  Truck,
   Zap,
 } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
@@ -40,28 +37,10 @@ const products = [
     href: "/domains",
   },
   {
-    icon: Truck,
-    title: "Migration",
-    description: "We move your site from any host, free.",
-    href: "/migration",
-  },
-  {
-    icon: GraduationCap,
-    title: "Student Hosting",
-    description: "Discounted plans, free launch subdomain.",
-    href: "/student",
-  },
-  {
     icon: Mail,
     title: "Email Hosting",
     description: "Business mailboxes on your own domain.",
     href: "/hosting#compare",
-  },
-  {
-    icon: LayoutGrid,
-    title: "WHMCS Modules",
-    description: "Gateway fees, WhatsApp billing alerts, and more — built for WHMCS admins.",
-    href: "/modules",
   },
 ];
 

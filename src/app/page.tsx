@@ -7,9 +7,6 @@ import { WhyChoose } from "@/components/home/why-choose";
 import { Infrastructure } from "@/components/home/infrastructure";
 import { ComparisonTable } from "@/components/home/comparison-table";
 import { DeveloperFeatures } from "@/components/home/developer-features";
-import { Migration } from "@/components/home/migration";
-import { StudentProgram } from "@/components/home/student-program";
-import { StartupProgram } from "@/components/home/startup-program";
 import { HostingPlans } from "@/components/home/hosting-plans";
 import { DomainSearch } from "@/components/home/domain-search";
 import { Testimonials } from "@/components/home/testimonials";
@@ -62,19 +59,6 @@ export default function Home() {
 
       <Section id="developers">
         <DeveloperFeatures />
-      </Section>
-
-      {/* Migration — "Switch easily." */}
-      <Section id="migration" className="bg-surface/30">
-        <Migration />
-      </Section>
-
-      <Section id="student">
-        <StudentProgram />
-      </Section>
-
-      <Section id="startup" className="pt-0">
-        <StartupProgram />
       </Section>
 
       <Section id="testimonials">

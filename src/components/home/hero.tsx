@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
-  BarChart3,
   Check,
   Globe,
   HardDrive,
@@ -214,7 +213,7 @@ export function Hero() {
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-            <Button href="/pricing" size="lg">
+            <Button href="/hosting#compare" size="lg">
               View Plans
             </Button>
             <Button variant="secondary" size="lg" onClick={focusDemo}>
@@ -283,9 +282,9 @@ export function Hero() {
                         <LayoutDashboard size={15} aria-hidden="true" />
                         Open Dashboard
                       </Button>
-                      <Button href="/dashboard" variant="secondary" size="md" className="w-full">
-                        <BarChart3 size={15} aria-hidden="true" />
-                        View Analytics
+                      <Button href="/domains" variant="secondary" size="md" className="w-full">
+                        <Globe size={15} aria-hidden="true" />
+                        Manage Domains
                       </Button>
                       <Button variant="ghost" size="md" className="w-full" onClick={handleShare} type="button">
                         <Share2 size={15} aria-hidden="true" />
