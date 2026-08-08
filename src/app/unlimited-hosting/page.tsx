@@ -3,6 +3,7 @@ import { Section } from "@/components/ui/section";
 import { UnlimitedHero } from "@/components/unlimited/unlimited-hero";
 import { Infrastructure } from "@/components/home/infrastructure";
 import { HostingPlans } from "@/components/home/hosting-plans";
+import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 import { unlimitedPlans } from "@/lib/plans";
 
@@ -20,15 +21,19 @@ export default function UnlimitedHostingPage() {
         <UnlimitedHero />
       </Section>
 
-      <Section id="infrastructure" className="bg-surface/30">
-        <Infrastructure />
-      </Section>
-
-      <Section>
+      <Section id="pricing" className="bg-surface/30">
         <HostingPlans plans={unlimitedPlans} />
       </Section>
 
-      <Section id="cta" className="bg-surface/30">
+      <Section id="infrastructure">
+        <Infrastructure />
+      </Section>
+
+      <Section id="faq" className="bg-surface/30">
+        <Faq />
+      </Section>
+
+      <Section id="cta">
         <FinalCta />
       </Section>
     </>

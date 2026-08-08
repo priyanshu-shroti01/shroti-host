@@ -4,6 +4,7 @@ import { ResellerHero } from "@/components/reseller/reseller-hero";
 import { ResellerBenefits } from "@/components/reseller/reseller-benefits";
 import { Infrastructure } from "@/components/home/infrastructure";
 import { HostingPlans } from "@/components/home/hosting-plans";
+import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 import { resellerPlans } from "@/lib/plans";
 
@@ -21,19 +22,23 @@ export default function ResellerHostingPage() {
         <ResellerHero />
       </Section>
 
-      <Section className="bg-surface/30 py-14 sm:py-16">
-        <ResellerBenefits />
-      </Section>
-
-      <Section id="infrastructure">
-        <Infrastructure />
-      </Section>
-
-      <Section className="bg-surface/30">
+      <Section id="pricing" className="bg-surface/30">
         <HostingPlans plans={resellerPlans} />
       </Section>
 
-      <Section id="cta">
+      <Section className="py-14 sm:py-16">
+        <ResellerBenefits />
+      </Section>
+
+      <Section id="infrastructure" className="bg-surface/30">
+        <Infrastructure />
+      </Section>
+
+      <Section id="faq">
+        <Faq />
+      </Section>
+
+      <Section id="cta" className="bg-surface/30">
         <FinalCta />
       </Section>
     </>
