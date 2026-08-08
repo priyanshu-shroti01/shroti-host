@@ -35,14 +35,3 @@ export const homepagePromo: PromoBannerConfig = {
   href: "https://portal.shrotihost.in/cart.php?promocode=PLACEHOLDER10", // TODO(business): confirm once code is real
   icon: "tag",
 };
-
-/** Preserves the pre-rebuild AnnouncementBar copy for reuse elsewhere,
- *  e.g. `<AnnouncementBar promo={studentProgramPromo} />`. */
-export const studentProgramPromo: PromoBannerConfig = {
-  id: "student-program",
-  active: true,
-  kind: "info",
-  message: "Student? Get dedicated pricing and a free launch subdomain with the Student Program.",
-  href: "/student",
-  icon: "graduation-cap",
-};

@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Headset } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import { ResourceMeter } from "@/components/ui/resource-meter";
-import { sharedPlans, commonFeatures, cycleMonths, savePercent, type Cycle, type Plan } from "@/lib/plans";
+import { sharedPlans, cycleMonths, savePercent, type Cycle, type Plan } from "@/lib/plans";
 import { useCurrency } from "@/components/currency-provider";
 
 const cycleLabels: Record<Cycle, string> = {
@@ -23,10 +22,6 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
   const [cycle, setCycle] = useState<Cycle>("annual");
   const { currency, convertDisplay } = useCurrency();
   const currencySymbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "€";
-
-  const maxWebsites = Math.max(...plans.map((p) => p.meters.websites).filter(Number.isFinite));
-  const maxStorage = Math.max(...plans.map((p) => p.meters.storageGB).filter(Number.isFinite));
-  const maxMailboxes = Math.max(...plans.map((p) => p.meters.mailboxes).filter(Number.isFinite));
 
   return (
     <div id="compare">
@@ -64,10 +59,11 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
           const save = savePercent(plan);
 
           return (
-            <Reveal key={plan.name} delay={i * 0.08}>
+            <Reveal key={plan.name} delay={i * 0.08} className={plan.recommended ? "lg:scale-105" : undefined}>
+              <div data-theme={plan.recommended ? "dark" : undefined}>
               <Card
-                className={`flex h-full flex-col transition-transform duration-300 hover:-translate-y-1 ${
-                  plan.recommended ? "border-brand-purple ring-1 ring-brand-purple" : ""
+                className={`flex h-full flex-col transition-all duration-300 hover:-translate-y-1 ${
+                  plan.recommended ? "border-transparent shadow-[var(--shadow-popular)]" : ""
                 }`}
               >
                 {plan.recommended && (
@@ -105,47 +101,14 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                   </Badge>
                 </div>
 
-                <div className="mt-6 flex-1 space-y-4">
-                  <ResourceMeter
-                    label="Websites"
-                    valueLabel={plan.specs.websites}
-                    value={plan.meters.websites}
-                    max={maxWebsites}
-                    emphasis={plan.recommended}
-                  />
-                  <ResourceMeter
-                    label="Storage"
-                    valueLabel={plan.specs.storage}
-                    value={plan.meters.storageGB}
-                    max={maxStorage}
-                    delay={0.08}
-                    emphasis={plan.recommended}
-                  />
-                  <ResourceMeter
-                    label="Email"
-                    valueLabel={plan.specs.email}
-                    value={plan.meters.mailboxes}
-                    max={maxMailboxes}
-                    delay={0.16}
-                    emphasis={plan.recommended}
-                  />
-                  {plan.additionalMeters?.map((meter, meterIndex) => (
-                    <ResourceMeter
-                      key={meter.label}
-                      label={meter.label}
-                      valueLabel={meter.valueLabel}
-                      value={meter.value}
-                      max={Math.max(...plans.flatMap((p) => p.additionalMeters?.[meterIndex]?.value ?? []).filter(Number.isFinite))}
-                      delay={0.24}
-                      emphasis={plan.recommended}
-                    />
+                <ul className="mt-6 flex-1 space-y-2.5">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5 text-sm text-text-secondary">
+                      <Check size={16} className="mt-0.5 shrink-0 text-success" aria-hidden="true" />
+                      <span>{feature}</span>
+                    </li>
                   ))}
-
-                  <div className="flex items-center gap-2 border-t border-border pt-4 text-sm">
-                    <Headset size={16} className="text-brand-purple" aria-hidden="true" />
-                    <span className="text-text-secondary">{plan.specs.support}</span>
-                  </div>
-                </div>
+                </ul>
 
                 <Button
                   href="/hosting"
@@ -156,24 +119,11 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                   Choose {plan.name}
                 </Button>
               </Card>
+              </div>
             </Reveal>
           );
         })}
       </div>
-
-      <Reveal delay={0.3}>
-        <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface/40 px-6 py-5 sm:flex-row sm:justify-center sm:gap-x-6 sm:gap-y-2 sm:flex-wrap">
-          <span className="text-xs font-medium uppercase tracking-wide text-text-muted">On every plan</span>
-          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
-            {commonFeatures.map((feature) => (
-              <span key={feature} className="inline-flex items-center gap-1.5 text-sm text-text-secondary">
-                <Check size={14} className="text-success" aria-hidden="true" />
-                {feature}
-              </span>
-            ))}
-          </div>
-        </div>
-      </Reveal>
     </div>
   );
 }

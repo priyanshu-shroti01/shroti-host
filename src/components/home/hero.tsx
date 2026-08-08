@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
-  BarChart3,
   Check,
   Globe,
   HardDrive,
@@ -197,10 +196,16 @@ export function Hero() {
     <section className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-28">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
         <div className="text-center lg:text-left">
-          <p className="font-mono text-sm text-brand-blue">shrotihost.in</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+          <span className="inline-flex items-center gap-2 rounded-full border-2 border-border bg-card px-4 py-1.5 text-xs font-bold text-text-secondary shadow-[var(--shadow-card)]">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75 motion-reduce:animate-none" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
+            </span>
+            shrotihost.in
+          </span>
+          <h1 className="mt-5 text-4xl font-extrabold tracking-tighter text-text-primary sm:text-5xl lg:text-[68px] lg:leading-[1.03]">
             Launch a website.
-            <br /> Watch it happen.
+            <br /> <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">Watch it happen.</span>
           </h1>
           <p className="mt-4 text-lg font-medium text-text-primary">Build. Deploy. Scale.</p>
           <p className="mx-auto mt-3 max-w-md text-text-secondary lg:mx-0">
@@ -208,7 +213,7 @@ export function Hero() {
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-            <Button href="/pricing" size="lg">
+            <Button href="/hosting#compare" size="lg">
               View Plans
             </Button>
             <Button variant="secondary" size="lg" onClick={focusDemo}>
@@ -216,15 +221,15 @@ export function Hero() {
             </Button>
           </div>
 
-          <div className="mx-auto mt-10 grid max-w-md grid-cols-2 gap-3 lg:mx-0">
+          <div className="mx-auto mt-10 flex max-w-md flex-wrap justify-center gap-2.5 border-t border-border pt-6 lg:mx-0 lg:justify-start">
             {TRUST_BADGES.map((b) => (
-              <div
+              <span
                 key={b.label}
-                className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5"
+                className="inline-flex items-center gap-1.5 rounded-full border-2 border-border bg-card px-3 py-1.5 shadow-[var(--shadow-card)]"
               >
-                <b.icon size={15} className="shrink-0 text-brand-purple" aria-hidden="true" />
-                <span className="truncate text-xs font-medium text-text-secondary">{b.label}</span>
-              </div>
+                <b.icon size={13} className="shrink-0 text-brand-purple" aria-hidden="true" />
+                <span className="text-xs font-semibold text-text-secondary">{b.label}</span>
+              </span>
             ))}
           </div>
         </div>
@@ -277,9 +282,9 @@ export function Hero() {
                         <LayoutDashboard size={15} aria-hidden="true" />
                         Open Dashboard
                       </Button>
-                      <Button href="/dashboard" variant="secondary" size="md" className="w-full">
-                        <BarChart3 size={15} aria-hidden="true" />
-                        View Analytics
+                      <Button href="/domains" variant="secondary" size="md" className="w-full">
+                        <Globe size={15} aria-hidden="true" />
+                        Manage Domains
                       </Button>
                       <Button variant="ghost" size="md" className="w-full" onClick={handleShare} type="button">
                         <Share2 size={15} aria-hidden="true" />

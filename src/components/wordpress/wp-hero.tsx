@@ -28,7 +28,7 @@ export function WpHero() {
               Choose a plan
               <ArrowRight size={18} aria-hidden="true" />
             </Button>
-            <Button href="/migration" variant="secondary" size="lg">
+            <Button href="https://portal.shrotihost.in/submitticket.php" variant="secondary" size="lg">
               Migrate my site free
             </Button>
           </div>

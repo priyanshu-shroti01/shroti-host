@@ -26,7 +26,7 @@ export function SpotlightCard({
     <div
       ref={ref}
       onMouseMove={onMouseMove}
-      className={`group relative overflow-hidden rounded-2xl border border-border bg-card transition-all duration-[250ms] ease-[cubic-bezier(0.33,1,0.68,1)] hover:-translate-y-1 hover:border-brand-purple/40 hover:shadow-[0_0_0_1px_rgb(168_16_199/0.15),0_12px_28px_-10px_rgb(168_16_199/0.3)] ${className}`}
+      className={`group relative overflow-hidden rounded-[28px] border-2 border-border bg-card shadow-[var(--shadow-card)] transition-all duration-[250ms] ease-[cubic-bezier(0.33,1,0.68,1)] hover:-translate-y-1 hover:border-brand-purple/40 hover:shadow-[0_0_0_1px_rgb(168_16_199/0.15),0_12px_28px_-10px_rgb(168_16_199/0.3)] ${className}`}
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"

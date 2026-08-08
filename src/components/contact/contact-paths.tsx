@@ -28,7 +28,7 @@ const paths = [
     label: "Migration",
     body: "Moving from another host — free on every plan.",
     cta: "Request free migration",
-    href: "/migration",
+    href: "https://portal.shrotihost.in/submitticket.php",
   },
   {
     id: "technical",
