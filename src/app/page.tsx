@@ -19,12 +19,18 @@ export default function Home() {
     <>
       <Hero />
 
-      {/* Pricing — RankHostZone puts plans directly under the hero; matching that here. */}
+      {/* Pricing — RankHostZone's homepage puts plans directly under the hero. */}
       <Section id="pricing">
         <HostingPlans />
       </Section>
 
+      {/* Trust strip — sits right under pricing, matching RankHostZone's stats row placement. */}
       <TrustedTech />
+
+      {/* Products — "Here's everything we offer." */}
+      <Section id="products">
+        <ProductEcosystem />
+      </Section>
 
       {/* Hosting Advisor — "Not sure which plan fits?" */}
       <Section id="advisor" className="bg-surface/30">
@@ -40,25 +46,20 @@ export default function Home() {
         <ThreeSteps />
       </Section>
 
-      {/* Products — "Here's everything we offer." */}
-      <Section id="products">
-        <ProductEcosystem />
-      </Section>
-
       <Section id="why">
         <WhyChoose />
       </Section>
 
-      {/* Infrastructure — proof behind WhyChoose's "Deploy" claim */}
-      <Section id="infrastructure" className="bg-surface/30">
-        <Infrastructure />
-      </Section>
-
-      <Section id="comparison">
+      <Section id="comparison" className="bg-surface/30">
         <ComparisonTable />
       </Section>
 
-      <Section id="developers">
+      {/* Infrastructure — the honest version of a "live server monitor" section: a real request-path diagram instead of invented uptime numbers. */}
+      <Section id="infrastructure">
+        <Infrastructure />
+      </Section>
+
+      <Section id="developers" className="bg-surface/30">
         <DeveloperFeatures />
       </Section>
 
