@@ -6,79 +6,87 @@
 /* ShrotiHost Design Tokens — see docs/planning/15_COLOR_SYSTEM.md, 16_TYPOGRAPHY.md */
 
 :root {
+  color-scheme: light;
+
+  /* Surfaces — light is the default brand theme (matches the reference
+     site's opaque, shadow-elevated card language; no glass/blur). */
+  --color-bg: #ffffff;
+  --color-surface: #f7f5fa;
+  --color-surface-raised: #ffffff;
+  --color-card: #ffffff;
+  --color-border: #e6e1ec;
+  --color-border-strong: #d3cadd;
+
+  /* Text */
+  --color-text-primary: #15111c;
+  --color-text-secondary: #4b4655;
+  --color-text-muted: #726c7d;
+  --color-text-disabled: #a8a2b3;
+  --color-text-inverse: #ffffff;
+
+  /* Brand — official ShrotiHost purple from logo assets */
+  --color-brand-purple: #a810c7;
+  --color-brand-purple-hover: #c817ea;
+  --color-brand-purple-active: #8b0da3;
+  --color-brand-blue: #1f87e8;
+
+  /* Semantic */
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-error: #dc2626;
+  --color-info: #1f87e8;
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #a810c7 0%, #1f87e8 100%);
+  --gradient-glow: radial-gradient(circle at 50% 0%, rgb(168 16 199 / 0.1), transparent 60%);
+
+  /* Elevation — solid shadow-based depth, no backdrop blur */
+  --shadow-card: 0 1px 3px rgb(21 17 28 / 0.06), 0 1px 2px rgb(21 17 28 / 0.04);
+  --shadow-raised: 0 4px 16px rgb(21 17 28 / 0.08), 0 2px 4px rgb(21 17 28 / 0.04);
+  --shadow-popular: 0 16px 48px rgb(168 16 199 / 0.28), 0 6px 16px rgb(21 17 28 / 0.12);
+}
+
+[data-theme="dark"] {
   color-scheme: dark;
 
-  /* Surfaces (dark theme is the default brand theme) */
   --color-bg: #0a0a0f;
   --color-surface: #131318;
-  /* Card and raised-surface tokens are semi-transparent — paired with the
-     backdrop-filter rule below, this is what makes every card, dropdown,
-     and panel built on bg-card / bg-surface-raised a frosted-glass surface
-     site-wide, without editing each component individually. --color-bg and
-     --color-surface stay opaque: those are page-level canvas, not floating
-     glass panels, and section-alternation classes like bg-surface/30
-     already apply their own opacity on top of it. */
-  --color-surface-raised: rgb(25 25 33 / 0.65);
-  --color-card: rgb(22 22 29 / 0.6);
+  --color-surface-raised: #191921;
+  --color-card: #17171f;
   --color-border: rgb(255 255 255 / 0.14);
   --color-border-strong: rgb(255 255 255 / 0.22);
 
-  /* Text */
   --color-text-primary: #f5f5f7;
   --color-text-secondary: #a1a1ab;
   --color-text-muted: #87878f;
   --color-text-disabled: #4b4b52;
   --color-text-inverse: #0a0a0f;
 
-  /* Brand — official ShrotiHost purple from logo assets */
   --color-brand-purple: #a810c7;
   --color-brand-purple-hover: #c817ea;
   --color-brand-purple-active: #8b0da3;
   --color-brand-blue: #3fa7ff;
 
-  /* Semantic */
   --color-success: #22c55e;
   --color-warning: #f5a524;
   --color-error: #f0576b;
   --color-info: #3fa7ff;
 
-  /* Gradients */
   --gradient-hero: linear-gradient(135deg, #a810c7 0%, #3fa7ff 100%);
   --gradient-glow: radial-gradient(circle at 50% 0%, rgb(168 16 199 / 0.25), transparent 60%);
-}
 
-[data-theme="light"] {
-  color-scheme: light;
-
-  --color-bg: #ffffff;
-  --color-surface: #f6f6f8;
-  --color-surface-raised: rgb(255 255 255 / 0.7);
-  --color-card: rgb(255 255 255 / 0.62);
-  --color-border: rgb(10 10 15 / 0.12);
-  --color-border-strong: rgb(10 10 15 / 0.18);
-
-  --color-text-primary: #0f0f14;
-  --color-text-secondary: #52525b;
-  --color-text-muted: #71717a;
-  --color-text-disabled: #a1a1aa;
-  --color-text-inverse: #ffffff;
-
-  --color-brand-purple: #a810c7;
-  --color-brand-purple-hover: #c817ea;
-  --color-brand-purple-active: #8b0da3;
-  --color-brand-blue: #1f87e8;
-
-  --color-success: #15803d;
-  --color-warning: #b45309;
-  --color-error: #dc2626;
-  --color-info: #1f87e8;
-
-  --gradient-glow: radial-gradient(circle at 50% 0%, rgb(168 16 199 / 0.12), transparent 60%);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.3);
+  --shadow-raised: 0 4px 16px rgb(0 0 0 / 0.35);
+  --shadow-popular: 0 16px 48px rgb(168 16 199 / 0.35), 0 6px 16px rgb(0 0 0 / 0.4);
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-jakarta), var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-raised: var(--shadow-raised);
+  --shadow-popular: var(--shadow-popular);
 
   --color-bg: var(--color-bg);
   --color-surface: var(--color-surface);
@@ -210,17 +218,6 @@
 body {
   background: var(--color-bg);
   color: var(--color-text-primary);
-}
-
-/* Glassmorphism: bg-card / bg-surface-raised are semi-transparent tokens
-   (see :root above) — this is what actually blurs whatever sits behind
-   every card, dropdown, and panel built on them. Excludes elements that
-   opt out via data-glass="off" (e.g. terminal-style mockups that should
-   stay a solid, real-looking black rather than frosted). */
-.bg-card:not([data-glass="off"]),
-.bg-surface-raised:not([data-glass="off"]) {
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
 
 ::selection {

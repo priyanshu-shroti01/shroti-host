@@ -13,6 +13,7 @@ import { StartupProgram } from "@/components/home/startup-program";
 import { HostingPlans } from "@/components/home/hosting-plans";
 import { DomainSearch } from "@/components/home/domain-search";
 import { Testimonials } from "@/components/home/testimonials";
+import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 import { Section } from "@/components/ui/section";
 
@@ -78,6 +79,10 @@ export default function Home() {
 
       <Section id="testimonials">
         <Testimonials />
+      </Section>
+
+      <Section id="faq" className="bg-surface/30">
+        <Faq />
       </Section>
 
       {/* CTA — "Start now." */}

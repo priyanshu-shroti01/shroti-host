@@ -4,22 +4,24 @@ import Link from "next/link";
 import { useState, type AnchorHTMLAttributes, type ButtonHTMLAttributes, type MouseEvent, type ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "ghost";
-type Size = "md" | "lg";
+type Size = "sm" | "md" | "lg" | "xl";
 
 const base =
-  "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition-all duration-[180ms] ease-[cubic-bezier(0.33,1,0.68,1)] focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none active:duration-100";
+  "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold transition-all duration-[180ms] ease-[cubic-bezier(0.33,1,0.68,1)] focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none active:duration-100";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-brand-purple text-white shadow-[0_1px_0_rgb(255_255_255/0.08)_inset] hover:bg-brand-purple-hover hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_8px_24px_-6px_rgb(168_16_199/0.55)] active:bg-brand-purple-active active:translate-y-0 active:scale-[0.98]",
+    "bg-[image:var(--gradient-hero)] text-white shadow-[0_4px_20px_-4px_rgb(168_16_199/0.45)] hover:-translate-y-0.5 hover:scale-[1.02] hover:brightness-110 hover:shadow-[0_8px_28px_-6px_rgb(168_16_199/0.55)] active:translate-y-0 active:scale-[0.98] active:brightness-95",
   secondary:
-    "border border-border-strong text-text-primary hover:border-brand-purple hover:text-brand-purple hover:-translate-y-0.5 active:scale-[0.98]",
+    "border-2 border-border-strong bg-card text-text-primary hover:border-brand-purple hover:text-brand-purple hover:-translate-y-0.5 active:scale-[0.98]",
   ghost: "text-text-secondary hover:text-text-primary hover:bg-surface active:scale-[0.98]",
 };
 
 const sizes: Record<Size, string> = {
+  sm: "h-9 px-5 text-xs",
   md: "h-11 px-6 text-sm",
   lg: "h-13 px-7 text-base",
+  xl: "h-15 px-9 text-lg",
 };
 
 type Ripple = { x: number; y: number; id: number };

@@ -64,10 +64,11 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
           const save = savePercent(plan);
 
           return (
-            <Reveal key={plan.name} delay={i * 0.08}>
+            <Reveal key={plan.name} delay={i * 0.08} className={plan.recommended ? "lg:scale-105" : undefined}>
+              <div data-theme={plan.recommended ? "dark" : undefined}>
               <Card
-                className={`flex h-full flex-col transition-transform duration-300 hover:-translate-y-1 ${
-                  plan.recommended ? "border-brand-purple ring-1 ring-brand-purple" : ""
+                className={`flex h-full flex-col transition-all duration-300 hover:-translate-y-1 ${
+                  plan.recommended ? "border-transparent shadow-[var(--shadow-popular)]" : ""
                 }`}
               >
                 {plan.recommended && (
@@ -156,6 +157,7 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                   Choose {plan.name}
                 </Button>
               </Card>
+              </div>
             </Reveal>
           );
         })}
