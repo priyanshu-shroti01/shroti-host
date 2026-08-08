@@ -3,6 +3,8 @@ import { Section } from "@/components/ui/section";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
 import { ContactPaths } from "@/components/contact/contact-paths";
+import { TrustedTech } from "@/components/home/trusted-tech";
+import { FinalCta } from "@/components/home/final-cta";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -25,8 +27,14 @@ export default function ContactPage() {
         </Reveal>
       </Section>
 
-      <Section>
+      <Section className="pb-14 sm:pb-16">
         <ContactPaths />
+      </Section>
+
+      <TrustedTech />
+
+      <Section id="cta" className="bg-surface/30">
+        <FinalCta />
       </Section>
     </>
   );
