@@ -1,10 +1,21 @@
-import { ArrowRight } from "lucide-react";
+"use client";
+
+import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
+import { AnimatedCounter } from "@/components/ui/animated-counter";
+import { StatPill } from "@/components/ui/stat-pill";
+import { unlimitedPlans } from "@/lib/plans";
+import { useCurrency } from "@/components/currency-provider";
 import { SitesGridDemo } from "./sites-grid-demo";
 
+const HERO_FEATURES = ["Unmetered NVMe Storage", "Free SSL Certificate", "Free Migration"];
+
 export function UnlimitedHero() {
+  const { currency, convertDisplay } = useCurrency();
+  const currencySymbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "€";
+
   return (
     <div className="relative">
       <div
@@ -23,9 +34,28 @@ export function UnlimitedHero() {
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <Button href="#compare" size="lg">
-            View Scale plan
+            View Diamond plan
             <ArrowRight size={18} aria-hidden="true" />
           </Button>
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-t border-border pt-6 text-sm">
+          <span className="text-text-secondary">
+            From{" "}
+            <span className="font-semibold text-text-primary">
+              <AnimatedCounter
+                key={currency}
+                value={convertDisplay(unlimitedPlans[0].monthlyPrice)}
+                prefix={currencySymbol}
+                suffix="/mo"
+              />
+            </span>
+          </span>
+          {HERO_FEATURES.map((f) => (
+            <StatPill key={f} icon={Check} iconClassName="text-success">
+              {f}
+            </StatPill>
+          ))}
         </div>
       </Reveal>
 

@@ -1,9 +1,20 @@
-import { ArrowRight } from "lucide-react";
+"use client";
+
+import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
+import { AnimatedCounter } from "@/components/ui/animated-counter";
+import { StatPill } from "@/components/ui/stat-pill";
+import { resellerPlans } from "@/lib/plans";
+import { useCurrency } from "@/components/currency-provider";
+
+const HERO_FEATURES = ["Free WHMCS Billing Software", "DDoS & Imunify360 Protection", "24/7 Priority Support"];
 
 export function ResellerHero() {
+  const { currency, convertDisplay } = useCurrency();
+  const currencySymbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "€";
+
   return (
     <div className="relative">
       <div
@@ -25,6 +36,25 @@ export function ResellerHero() {
             View plans
             <ArrowRight size={18} aria-hidden="true" />
           </Button>
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-t border-border pt-6 text-sm">
+          <span className="text-text-secondary">
+            From{" "}
+            <span className="font-semibold text-text-primary">
+              <AnimatedCounter
+                key={currency}
+                value={convertDisplay(resellerPlans[0].monthlyPrice)}
+                prefix={currencySymbol}
+                suffix="/mo"
+              />
+            </span>
+          </span>
+          {HERO_FEATURES.map((f) => (
+            <StatPill key={f} icon={Check} iconClassName="text-success">
+              {f}
+            </StatPill>
+          ))}
         </div>
       </Reveal>
     </div>
