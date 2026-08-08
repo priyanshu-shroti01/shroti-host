@@ -17,9 +17,9 @@ export const faqs = [
       "Yes. You can move from Bronze to Diamond at any time without migrating your website to a new server.",
   },
   {
-    question: "Do you offer student discounts?",
+    question: "What billing cycles do you offer?",
     answer:
-      "Yes. Verified students get dedicated pricing through our Student Program, including a free launch subdomain.",
+      "Monthly, 3 months, 6 months, or annual — pick whichever fits, with the same renewal price shown upfront on every cycle.",
   },
   {
     question: "What happens after my plan renews?",

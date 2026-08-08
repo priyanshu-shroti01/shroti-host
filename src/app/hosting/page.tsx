@@ -4,6 +4,7 @@ import { HostingHero } from "@/components/hosting/hosting-hero";
 import { HostingConfigurator } from "@/components/hosting/hosting-configurator";
 import { Infrastructure } from "@/components/home/infrastructure";
 import { HostingPlans } from "@/components/home/hosting-plans";
+import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 
 export const metadata: Metadata = {
@@ -20,19 +21,24 @@ export default function HostingPage() {
         <HostingHero />
       </Section>
 
-      <Section id="configure" className="bg-surface/30">
-        <HostingConfigurator />
-      </Section>
-
-      <Section id="infrastructure">
-        <Infrastructure />
-      </Section>
-
-      <Section className="bg-surface/30">
+      {/* Pricing directly under the hero, matching RankHostZone's product-page order. */}
+      <Section id="pricing" className="bg-surface/30">
         <HostingPlans />
       </Section>
 
-      <Section id="cta">
+      <Section id="configure">
+        <HostingConfigurator />
+      </Section>
+
+      <Section id="infrastructure" className="bg-surface/30">
+        <Infrastructure />
+      </Section>
+
+      <Section id="faq">
+        <Faq />
+      </Section>
+
+      <Section id="cta" className="bg-surface/30">
         <FinalCta />
       </Section>
     </>

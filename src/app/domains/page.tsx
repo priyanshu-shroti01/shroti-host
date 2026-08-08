@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/section";
 import { DomainsHero } from "@/components/domains/domains-hero";
+import { TrustedTech } from "@/components/home/trusted-tech";
 import { ExtensionGrid } from "@/components/domains/extension-grid";
 import { DomainBenefits } from "@/components/domains/domain-benefits";
 import { FinalCta } from "@/components/home/final-cta";
@@ -18,6 +19,8 @@ export default function DomainsPage() {
       <Section className="pt-16 sm:pt-24" containerClassName="max-w-5xl">
         <DomainsHero />
       </Section>
+
+      <TrustedTech />
 
       <Section className="bg-surface/30">
         <ExtensionGrid />
