@@ -47,7 +47,11 @@ export function Infrastructure() {
       <div className="mx-auto max-w-2xl text-center">
         <Eyebrow>Infrastructure</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          What&apos;s actually running under your website.
+          What&apos;s{" "}
+          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
+            actually running
+          </span>{" "}
+          under your website.
         </h2>
         <p className="mt-4 text-text-secondary">
           No vague marketing terms — here&apos;s the real path a request takes, layer by layer.

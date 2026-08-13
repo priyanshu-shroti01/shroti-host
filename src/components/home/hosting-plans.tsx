@@ -30,7 +30,9 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
     <div id="compare">
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Simple, honest pricing
+          Simple,{" "}
+          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">honest</span>{" "}
+          pricing
         </h2>
         <p className="mt-4 text-text-secondary">
           Same renewal price, every cycle — no surprise increase later.
