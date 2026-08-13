@@ -491,7 +491,7 @@ export function ChatbotWidget() {
                         <Button href="/hosting" size="md" onClick={() => setOpen(false)}>
                           Buy Now
                         </Button>
-                        <Button href="#compare" variant="secondary" size="md" onClick={() => setOpen(false)}>
+                        <Button href="/hosting#compare" variant="secondary" size="md" onClick={() => setOpen(false)}>
                           Compare Plans
                         </Button>
                       </div>

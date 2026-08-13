@@ -2,13 +2,32 @@ import type { MetadataRoute } from "next";
 
 const SITE_URL = "https://shrotihost.in";
 
+/** Every indexable page route. Add new pages here when adding them to src/app. */
+const routes: { path: string; changeFrequency: "weekly" | "monthly" | "yearly"; priority: number }[] = [
+  { path: "", changeFrequency: "weekly", priority: 1 },
+  { path: "/hosting", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/wordpress-hosting", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/unlimited-hosting", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/reseller-hosting", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/master-reseller-hosting", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/alpha-reseller-hosting", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/domains", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/vps", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/about", changeFrequency: "monthly", priority: 0.5 },
+  { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
+  { path: "/status", changeFrequency: "monthly", priority: 0.4 },
+  { path: "/legal/terms", changeFrequency: "yearly", priority: 0.2 },
+  { path: "/legal/privacy", changeFrequency: "yearly", priority: 0.2 },
+  { path: "/legal/refund-policy", changeFrequency: "yearly", priority: 0.2 },
+  { path: "/legal/aup", changeFrequency: "yearly", priority: 0.2 },
+];
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: SITE_URL,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-  ];
+  const lastModified = new Date();
+  return routes.map(({ path, changeFrequency, priority }) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified,
+    changeFrequency,
+    priority,
+  }));
 }
