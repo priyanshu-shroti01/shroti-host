@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Mail, MessageCircle } from "lucide-react";
 import { Logo } from "./logo";
 import { Container } from "@/components/ui/container";
 import { footerNav } from "@/lib/navigation";
@@ -16,6 +16,26 @@ export function Footer() {
             <p className="mt-4 max-w-xs text-sm text-text-muted">
               Premium, developer-friendly hosting for students, startups, and growing businesses.
             </p>
+            <ul className="mt-5 space-y-2.5">
+              <li>
+                <a
+                  href="mailto:support@shrotihost.in"
+                  className="inline-flex items-center gap-2 text-sm text-text-muted transition-colors hover:text-text-primary"
+                >
+                  <Mail size={14} aria-hidden="true" />
+                  support@shrotihost.in
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://wa.me/919582129099"
+                  className="inline-flex items-center gap-2 text-sm text-text-muted transition-colors hover:text-text-primary"
+                >
+                  <MessageCircle size={14} aria-hidden="true" />
+                  Chat on WhatsApp
+                </a>
+              </li>
+            </ul>
           </div>
 
           {Object.entries(footerNav).map(([section, links]) => (

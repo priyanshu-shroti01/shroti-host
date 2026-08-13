@@ -2,10 +2,18 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, CreditCard, Handshake, LifeBuoy, ShoppingCart, Truck, Wrench } from "lucide-react";
+import { ArrowRight, CreditCard, Handshake, LifeBuoy, MessageCircle, ShoppingCart, Truck, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const paths = [
+  {
+    id: "whatsapp",
+    icon: MessageCircle,
+    label: "WhatsApp",
+    body: "The fastest way to reach a human — chat with us directly on WhatsApp.",
+    cta: "Chat on WhatsApp",
+    href: "https://wa.me/919582129099",
+  },
   {
     id: "sales",
     icon: ShoppingCart,
@@ -70,6 +78,8 @@ export function ContactPaths() {
             onClick={() => setSelected(p.id)}
             aria-pressed={selected === p.id}
             className={`flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-all duration-200 ${
+              p.id === "whatsapp" ? "col-span-2 flex-row justify-center sm:col-span-3" : ""
+            } ${
               selected === p.id
                 ? "border-brand-purple bg-brand-purple/10 text-brand-purple"
                 : "border-border text-text-secondary hover:border-border-strong hover:text-text-primary"
