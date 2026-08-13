@@ -29,6 +29,28 @@ React state, so it costs zero re-renders. If adding a new hover-glow effect
 anywhere, follow this pattern (CSS vars + direct style mutation) rather than
 `useState` + re-render on every mouse move.
 
+## 3D tilt (spatial surfaces)
+
+A deliberate addition to the motion vocabulary from the 3D redesign, not an
+ad-hoc flourish: `Tilt3D` (`src/components/ui/tilt-3d.tsx`) is the one
+sanctioned pointer-tilt primitive. Same architecture as `SpotlightCard`
+(CSS vars written on `pointermove`, zero re-renders), mouse pointers only,
+static wrapper under reduced motion, `maxTilt` hard cap ≤ 6°.
+
+Where it's justified, and the one-sentence reason for each:
+
+- **Interactive cards the visitor acts on** (hero deploy card, pricing plan
+  cards): hover = node activation, expressed spatially — the surface
+  acknowledges the pointer as a physical presence.
+- **The 3D infrastructure scene** (`infra-stack-3d.tsx`): camera depth —
+  pointer parallax reads as orbiting a physical object, consistent with
+  `scene-transitions.md`'s camera language. This is the only sanctioned use
+  on a non-interactive (aria-hidden) element.
+
+Rules: tilt replaces, never stacks with, the standard card lift — a surface
+gets one spatial hover response, not several. Don't add tilt to a new
+surface type without adding its justification here first.
+
 ## Form inputs
 
 - Focus state: brand-purple caret color where the input is doubling as a

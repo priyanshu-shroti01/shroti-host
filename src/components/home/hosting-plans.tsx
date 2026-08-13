@@ -64,9 +64,11 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
           return (
             <Reveal key={plan.name} delay={i * 0.08} className={`h-full ${plan.recommended ? "lg:scale-105" : ""}`}>
               <div data-theme={plan.recommended ? "dark" : undefined} className="h-full">
-              <Tilt3D maxTilt={3} depth className="group h-full" innerClassName="h-full">
+              {/* One spatial hover effect only: the documented Tilt3D vocabulary.
+                  No stacked lift/pop — see docs/micro-interactions.md "3D tilt". */}
+              <Tilt3D maxTilt={3} className="h-full" innerClassName="h-full">
               <Card
-                className={`flex h-full flex-col [transform-style:preserve-3d] transition-all duration-300 hover:-translate-y-1 ${
+                className={`flex h-full flex-col ${
                   plan.recommended ? "border-transparent shadow-[var(--shadow-popular)]" : ""
                 }`}
               >
@@ -85,7 +87,7 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                 <h3 className="text-xl font-semibold text-text-primary">{plan.name}</h3>
                 <p className="mt-1 text-sm text-text-muted">{plan.tagline}</p>
 
-                <div className="mt-6 flex items-baseline gap-2 transition-transform duration-300 ease-out group-hover:[transform:translateZ(26px)]">
+                <div className="mt-6 flex items-baseline gap-2">
                   <span className="text-4xl font-semibold text-text-primary">
                     <AnimatedCounter
                       key={`${plan.name}-${cycle}-${currency}`}

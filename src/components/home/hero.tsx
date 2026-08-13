@@ -195,9 +195,12 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-28">
-      {/* Atmosphere: brand glow from above + a foreshortened grid floor below,
-          so the tilting deploy card reads as sitting in a dimensional space.
-          Both are existing tokens, kept faint enough to be felt, not noticed. */}
+      {/* Atmosphere: brand glow from above (the same gradient-glow every other
+          hero uses) + a foreshortened grid floor below. The floor is a static
+          texture — the shipped grid motif from final-cta/domain-search carried
+          into perspective — not motion; it never animates, so the motion
+          system's "ambient elements that respond to nothing" rule doesn't
+          apply. Both use existing tokens, faint enough to be felt, not noticed. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
       <div
         aria-hidden="true"

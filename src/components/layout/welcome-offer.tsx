@@ -103,13 +103,13 @@ export function WelcomeOffer() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="welcome-offer-title"
-            initial={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 12 }}
-            animate={reducedMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-            exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
+            initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+            exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
             transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={onKeyDown}
-            className="relative w-full max-w-md overflow-hidden rounded-3xl border-2 border-border bg-bg shadow-2xl"
+            className="relative w-full max-w-md overflow-hidden rounded-2xl border border-border bg-bg shadow-2xl"
           >
             <div
               className="pointer-events-none absolute inset-x-0 top-0 h-40"
@@ -144,11 +144,7 @@ export function WelcomeOffer() {
                     <span className="text-xs text-text-muted">Code</span>
                     <code className="font-mono text-sm font-bold text-text-primary">{promo.code}</code>
                   </span>
-                  <button
-                    type="button"
-                    onClick={copyCode}
-                    className="inline-flex h-11 items-center gap-1.5 rounded-xl border-2 border-border px-3.5 text-sm font-semibold text-text-secondary transition-colors hover:border-brand-purple/40 hover:text-text-primary"
-                  >
+                  <Button type="button" variant="secondary" size="md" onClick={copyCode}>
                     {copied ? (
                       <>
                         <Check size={15} className="text-success" aria-hidden="true" />
@@ -160,7 +156,7 @@ export function WelcomeOffer() {
                         Copy
                       </>
                     )}
-                  </button>
+                  </Button>
                 </div>
               )}
 

@@ -44,6 +44,11 @@
   --shadow-card: 0 1px 3px rgb(21 17 28 / 0.06), 0 1px 2px rgb(21 17 28 / 0.04);
   --shadow-raised: 0 4px 16px rgb(21 17 28 / 0.08), 0 2px 4px rgb(21 17 28 / 0.04);
   --shadow-popular: 0 16px 48px rgb(168 16 199 / 0.28), 0 6px 16px rgb(21 17 28 / 0.12);
+  /* Glows — state signals (activation, live data), not elevation tiers */
+  --glow-active: 0 0 40px rgb(168 16 199 / 0.4);
+  --glow-packet: 0 0 12px 3px rgb(31 135 232 / 0.55);
+  /* Upward shadow for bottom-pinned bars */
+  --shadow-overhang: 0 -4px 20px rgb(21 17 28 / 0.12);
 }
 
 [data-theme="dark"] {
@@ -78,6 +83,9 @@
   --shadow-card: 0 1px 3px rgb(0 0 0 / 0.3);
   --shadow-raised: 0 4px 16px rgb(0 0 0 / 0.35);
   --shadow-popular: 0 16px 48px rgb(168 16 199 / 0.35), 0 6px 16px rgb(0 0 0 / 0.4);
+  --glow-active: 0 0 40px rgb(168 16 199 / 0.45);
+  --glow-packet: 0 0 12px 3px rgb(63 167 255 / 0.6);
+  --shadow-overhang: 0 -4px 20px rgb(0 0 0 / 0.4);
 }
 
 @theme inline {
@@ -219,9 +227,12 @@
   }
 }
 
+/* Applied to a full-beam-height wrapper whose child dot sits at its top:
+   translateY(100%) walks the dot exactly one beam-length down using only
+   compositor properties (never `top` — see docs/motion-system.md). */
 @keyframes packet-travel {
   0% {
-    top: 0%;
+    transform: translateY(0);
     opacity: 0;
   }
   8% {
@@ -231,7 +242,7 @@
     opacity: 1;
   }
   100% {
-    top: 100%;
+    transform: translateY(100%);
     opacity: 0;
   }
 }

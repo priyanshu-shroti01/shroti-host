@@ -70,7 +70,7 @@ export function MobileStickyCta() {
           animate={reducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
           exit={reducedMotion ? { opacity: 0 } : { y: 72, opacity: 0 }}
           transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
-          className="fixed inset-x-0 bottom-0 z-50 border-t border-border-strong bg-surface-raised/95 px-4 py-2.5 shadow-[0_-4px_20px_rgb(21_17_28/0.12)] backdrop-blur lg:hidden"
+          className="fixed inset-x-0 bottom-0 z-50 border-t border-border-strong bg-surface-raised/95 px-4 py-2.5 shadow-[var(--shadow-overhang)] backdrop-blur lg:hidden"
         >
           <div className="flex items-center justify-between gap-3 pr-14">
             <p className="min-w-0 text-sm font-semibold text-text-primary">

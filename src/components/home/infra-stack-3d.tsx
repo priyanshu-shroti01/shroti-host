@@ -34,7 +34,8 @@ export function InfraStack3D({ hoverIndex }: { hoverIndex: number | null }) {
 
   // Self-narration: step the highlight down one layer per packet-fifth so the
   // glow roughly rides the descending packet. Hover always wins; reduced
-  // motion gets a calm, fully-lit static stack instead.
+  // motion renders the stack static in its default state (no cycling, no
+  // packet), with the accessible list beside it carrying the full story.
   useEffect(() => {
     if (reducedMotion) return;
     const id = setInterval(() => {
@@ -47,6 +48,9 @@ export function InfraStack3D({ hoverIndex }: { hoverIndex: number | null }) {
 
   return (
     <div aria-hidden="true" className="hidden lg:block">
+      {/* Camera depth, not decoration: pointer parallax on the one literal 3D
+          object the site renders reads as orbiting it — the sanctioned
+          non-interactive Tilt3D use (see docs/micro-interactions.md "3D tilt"). */}
       <Tilt3D maxTilt={4} depth>
       <div className="flex h-[440px] items-center justify-center [transform-style:preserve-3d]">
         <div
@@ -55,7 +59,7 @@ export function InfraStack3D({ hoverIndex }: { hoverIndex: number | null }) {
         >
           {/* Contact shadow under the stack */}
           <div
-            className="absolute inset-[-18px] rounded-[40px]"
+            className="absolute inset-[-18px] rounded-full"
             style={{
               transform: "translateZ(-30px)",
               background: "radial-gradient(closest-side, rgb(21 17 28 / 0.3), transparent 78%)",
@@ -73,23 +77,26 @@ export function InfraStack3D({ hoverIndex }: { hoverIndex: number | null }) {
                 initial={reducedMotion ? false : { opacity: 0, z: plateZ + 150 }}
                 whileInView={{ opacity: 1, z: plateZ }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: i * 0.1, ease: [0.33, 1, 0.68, 1] }}
+                // Duration re-evaluates on re-render, so even if the reduced-motion
+                // hook resolves true after mount (it starts false for one frame),
+                // the entry collapses to an instant jump instead of animating.
+                transition={{ duration: reducedMotion ? 0 : 0.6, delay: reducedMotion ? 0 : i * 0.1, ease: [0.33, 1, 0.68, 1] }}
                 style={{ z: plateZ }}
                 className="absolute inset-0 [transform-style:preserve-3d]"
               >
                 {/* Slab thickness — same silhouette a few px lower, darker,
                     so each layer reads as a physical plate, not a sticker. */}
                 <div
-                  className={`absolute inset-0 rounded-3xl transition-opacity duration-300 ${dimmed ? "opacity-30" : ""}`}
+                  className={`absolute inset-0 rounded-2xl transition-opacity duration-300 ${dimmed ? "opacity-30" : ""}`}
                   style={{
                     transform: "translateZ(-7px)",
                     background: "color-mix(in srgb, var(--color-text-primary) 16%, var(--color-surface))",
                   }}
                 />
                 <div
-                  className={`absolute inset-0 rounded-3xl border-2 transition-all duration-300 ${
+                  className={`absolute inset-0 rounded-2xl border-2 transition-all duration-300 ${
                     active
-                      ? "border-brand-purple/70 shadow-[0_0_40px_rgb(168_16_199/0.4)]"
+                      ? "border-brand-purple/70 shadow-[var(--glow-active)]"
                       : "border-[color-mix(in_srgb,var(--color-brand-purple)_28%,var(--color-border-strong))]"
                   } ${dimmed ? "opacity-40" : ""}`}
                   style={{
@@ -125,7 +132,7 @@ export function InfraStack3D({ hoverIndex }: { hoverIndex: number | null }) {
           {/* Request packet riding the stack axis, top plate → base. */}
           {!reducedMotion && (
             <div
-              className="absolute left-1/2 top-1/2 h-3.5 w-3.5 rounded-full bg-brand-blue shadow-[0_0_16px_5px_rgb(63_167_255/0.6)]"
+              className="absolute left-1/2 top-1/2 h-3.5 w-3.5 rounded-full bg-brand-blue shadow-[var(--glow-packet)]"
               style={{ animation: `stack-descend ${PACKET_LOOP_MS}ms ease-in-out infinite` }}
             />
           )}

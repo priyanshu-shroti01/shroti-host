@@ -9,7 +9,7 @@ export function Logo({ className = "" }: { className?: string }) {
         alt="ShrotiHost"
         width={150}
         height={30}
-        priority
+        preload
         className="h-8 w-auto dark:hidden"
       />
       <Image
@@ -17,7 +17,7 @@ export function Logo({ className = "" }: { className?: string }) {
         alt="ShrotiHost"
         width={150}
         height={30}
-        priority
+        preload
         className="hidden h-8 w-auto dark:block"
       />
     </Link>

@@ -31,7 +31,7 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <div
               style={{
                 display: "flex",

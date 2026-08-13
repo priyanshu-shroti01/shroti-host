@@ -51,15 +51,18 @@ export function ServerRackIllustration({ className = "" }: { className?: string 
         const isTop = i === SLAB_YS.length - 1;
         return (
           <g key={y0}>
+            {/* Side faces mix in text-primary so the slab body keeps contrast
+                against the card it sits on in both themes (same approach as
+                the 3D stack's slab-thickness fill). */}
             <path
               d={left}
-              fill="var(--color-surface)"
+              fill="color-mix(in srgb, var(--color-text-primary) 14%, var(--color-surface))"
               stroke="var(--color-border-strong)"
               strokeWidth="1.5"
             />
             <path
               d={right}
-              fill="var(--color-card)"
+              fill="color-mix(in srgb, var(--color-text-primary) 7%, var(--color-card))"
               stroke="var(--color-border-strong)"
               strokeWidth="1.5"
             />

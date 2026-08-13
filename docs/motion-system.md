@@ -10,6 +10,7 @@ or it's decoration (see `animation-principles.md`).
 |---|---|---|
 | Cursor | Network packet (ShrotiHost's signature — see `cursor-system.md`) | The cursor *is* a request moving through infrastructure, not a pointer |
 | Hover | Node activation | Confirms "this is a real, distinct thing you can act on" |
+| Hover over a spatial surface | 3D tilt (`Tilt3D`) — replaces, never stacks with, the standard lift | Node activation expressed spatially; on the 3D infra scene it's camera depth. See `micro-interactions.md` "3D tilt" for the sanctioned uses |
 | Click | Ripple + the action's real consequence | Confirms the input registered before the consequence resolves |
 | Scroll | Camera dolly (position/zoom change), never a fade | Scroll is spatial movement through a story, not a slideshow advance |
 | Section change | Morph (shared element continuity) | The site is one continuous space, not stacked documents |

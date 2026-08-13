@@ -73,9 +73,11 @@ export function Infrastructure() {
               [0, 2.6, 5.2].map((delay, i) => (
                 <span
                   key={i}
-                  className="absolute left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-brand-blue shadow-[0_0_8px_2px_rgb(63_167_255/0.6)]"
+                  className="absolute inset-0"
                   style={{ animation: "packet-travel 3.6s linear infinite", animationDelay: `${delay}s` }}
-                />
+                >
+                  <span className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 rounded-full bg-brand-blue shadow-[var(--glow-packet)]" />
+                </span>
               ))}
           </div>
 
