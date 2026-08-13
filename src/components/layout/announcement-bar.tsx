@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Clock, GraduationCap, Percent, Tag, X } from "lucide-react";
+import { Check, Clock, Copy, GraduationCap, Percent, Tag, X } from "lucide-react";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 import { homepagePromo, type PromoBannerConfig, type PromoIcon } from "@/lib/promo";
 
@@ -53,7 +53,19 @@ function PromoCountdown({ target }: { target: string }) {
 
 export function AnnouncementBar({ promo = homepagePromo }: { promo?: PromoBannerConfig }) {
   const [visible, setVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
   const dismissKey = `announcement-${promo.id}-dismissed`;
+
+  async function copyCode() {
+    if (!promo.code) return;
+    try {
+      await navigator.clipboard.writeText(promo.code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard unavailable — the code stays visible to copy by hand.
+    }
+  }
 
   useEffect(() => {
     if (!promo.active) return;
@@ -85,10 +97,20 @@ export function AnnouncementBar({ promo = homepagePromo }: { promo?: PromoBanner
         </span>
       )}
       {promo.code && (
-        <span className="inline-flex items-center gap-1 rounded-full border border-white/30 px-2 py-0.5 text-xs">
+        <button
+          type="button"
+          onClick={copyCode}
+          aria-label={copied ? "Promo code copied" : `Copy promo code ${promo.code}`}
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/30 px-2.5 py-0.5 text-xs transition-colors hover:border-white/60 hover:bg-white/10"
+        >
           <span className="text-white/70">Code</span>
           <code className="font-mono font-semibold">{promo.code}</code>
-        </span>
+          {copied ? (
+            <Check size={12} aria-hidden="true" />
+          ) : (
+            <Copy size={12} className="text-white/70" aria-hidden="true" />
+          )}
+        </button>
       )}
       {promo.expiresAt && <PromoCountdown target={promo.expiresAt} />}
       <button

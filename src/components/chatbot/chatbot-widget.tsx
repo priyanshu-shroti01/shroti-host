@@ -111,13 +111,21 @@ export function ChatbotWidget() {
   }, [open]);
 
   // One-time proactive nudge, like Intercom/Crisp's greeting bubble — shown
-  // once per browser session, never once the widget's been opened.
+  // once per browser session, never once the widget's been opened. If the
+  // welcome-offer dialog is up when the timer lands, re-arm and try again
+  // later — two proactive prompts at once is one too many.
   useEffect(() => {
     if (sessionStorage.getItem(GREETING_STORAGE_KEY)) return;
-    const timer = setTimeout(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const fire = () => {
+      if (document.body.classList.contains("has-welcome-offer")) {
+        timer = setTimeout(fire, 4000);
+        return;
+      }
       sessionStorage.setItem(GREETING_STORAGE_KEY, "1");
       setShowGreeting(true);
-    }, GREETING_DELAY_MS);
+    };
+    timer = setTimeout(fire, GREETING_DELAY_MS);
     return () => clearTimeout(timer);
   }, []);
 
@@ -177,7 +185,7 @@ export function ChatbotWidget() {
 
   return (
     <>
-      <div className="group fixed bottom-5 right-5 z-[60] flex items-center sm:bottom-6 sm:right-6">
+      <div className="group fixed bottom-5 right-5 z-[60] flex items-center transition-[bottom] duration-300 sm:bottom-6 sm:right-6 [.has-mobile-cta_&]:bottom-[4.75rem] lg:[.has-mobile-cta_&]:bottom-6">
         <AnimatePresence>
           {showGreeting && !open && (
             <motion.div
@@ -260,7 +268,7 @@ export function ChatbotWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.96 }}
             transition={{ duration: 0.2, ease: [0.33, 1, 0.68, 1] }}
-            className="fixed bottom-24 right-5 z-[60] flex h-[32rem] max-h-[75vh] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border-strong bg-bg shadow-2xl sm:bottom-28 sm:right-6"
+            className="fixed bottom-24 right-5 z-[60] flex h-[32rem] max-h-[75vh] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border-strong bg-bg shadow-2xl sm:bottom-28 sm:right-6 [.has-mobile-cta_&]:bottom-[8.5rem] lg:[.has-mobile-cta_&]:bottom-28"
           >
             <div className="flex items-center gap-3 border-b border-border bg-surface px-5 py-4">
               {screen !== "menu" ? (

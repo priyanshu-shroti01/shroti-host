@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { ArrowRightLeft, Check, MessageCircle, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
+import { Tilt3D } from "@/components/ui/tilt-3d";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { sharedPlans, cycleMonths, savePercent, type Cycle, type Plan } from "@/lib/plans";
 import { useCurrency } from "@/components/currency-provider";
@@ -19,7 +20,9 @@ const cycleLabels: Record<Cycle, string> = {
 };
 
 export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
-  const [cycle, setCycle] = useState<Cycle>("annual");
+  // Monthly by default — the entry price is the anchor that converts;
+  // annual totals read 12x more expensive at first glance.
+  const [cycle, setCycle] = useState<Cycle>("monthly");
   const { currency, convertDisplay } = useCurrency();
   const currencySymbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "€";
 
@@ -59,10 +62,11 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
           const save = savePercent(plan);
 
           return (
-            <Reveal key={plan.name} delay={i * 0.08} className={plan.recommended ? "lg:scale-105" : undefined}>
-              <div data-theme={plan.recommended ? "dark" : undefined}>
+            <Reveal key={plan.name} delay={i * 0.08} className={`h-full ${plan.recommended ? "lg:scale-105" : ""}`}>
+              <div data-theme={plan.recommended ? "dark" : undefined} className="h-full">
+              <Tilt3D maxTilt={3} depth className="group h-full" innerClassName="h-full">
               <Card
-                className={`flex h-full flex-col transition-all duration-300 hover:-translate-y-1 ${
+                className={`flex h-full flex-col [transform-style:preserve-3d] transition-all duration-300 hover:-translate-y-1 ${
                   plan.recommended ? "border-transparent shadow-[var(--shadow-popular)]" : ""
                 }`}
               >
@@ -81,7 +85,7 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                 <h3 className="text-xl font-semibold text-text-primary">{plan.name}</h3>
                 <p className="mt-1 text-sm text-text-muted">{plan.tagline}</p>
 
-                <div className="mt-6 flex items-baseline gap-2">
+                <div className="mt-6 flex items-baseline gap-2 transition-transform duration-300 ease-out group-hover:[transform:translateZ(26px)]">
                   <span className="text-4xl font-semibold text-text-primary">
                     <AnimatedCounter
                       key={`${plan.name}-${cycle}-${currency}`}
@@ -119,10 +123,26 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                   Choose {plan.name}
                 </Button>
               </Card>
+              </Tilt3D>
               </div>
             </Reveal>
           );
         })}
+      </div>
+
+      {/* Assurance strip — every claim here is one the plans already make; this row just puts them at the decision point. */}
+      <div className="mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-3">
+        {[
+          { icon: ShieldCheck, label: "Same renewal price, every cycle" },
+          { icon: ArrowRightLeft, label: "Free migration, handled for you" },
+          { icon: Zap, label: "Instant activation" },
+          { icon: MessageCircle, label: "24/7 priority support" },
+        ].map((item) => (
+          <span key={item.label} className="inline-flex items-center gap-2 text-sm text-text-secondary">
+            <item.icon size={15} className="shrink-0 text-success" aria-hidden="true" />
+            {item.label}
+          </span>
+        ))}
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ import {
   UploadCloud,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tilt3D } from "@/components/ui/tilt-3d";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const EXAMPLE_DOMAINS = ["yourbrand.com", "myagency.in", "startup.dev"];
@@ -194,7 +195,26 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-28">
-      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
+      {/* Atmosphere: brand glow from above + a foreshortened grid floor below,
+          so the tilting deploy card reads as sitting in a dimensional space.
+          Both are existing tokens, kept faint enough to be felt, not noticed. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-64 opacity-30 [mask-image:linear-gradient(to_top,black,transparent)]"
+        style={{ perspective: "600px" }}
+      >
+        <div
+          className="absolute -inset-x-[20%] -bottom-[60%] -top-[40%]"
+          style={{
+            transform: "rotateX(62deg)",
+            backgroundImage:
+              "linear-gradient(to right, var(--color-border-strong) 1px, transparent 1px), linear-gradient(to bottom, var(--color-border-strong) 1px, transparent 1px)",
+            backgroundSize: "44px 44px",
+          }}
+        />
+      </div>
+      <div className="relative mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
         <div className="text-center lg:text-left">
           <span className="inline-flex items-center gap-2 rounded-full border-2 border-border bg-card px-4 py-1.5 text-xs font-bold text-text-secondary shadow-[var(--shadow-card)]">
             <span className="relative flex h-2 w-2">
@@ -234,7 +254,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
+        <Tilt3D maxTilt={3.5} className="mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
           <div className="overflow-hidden rounded-2xl border border-border-strong bg-card shadow-2xl">
             <form onSubmit={handleSubmit} className="flex items-center gap-3 border-b border-border px-5 py-4">
               <Globe size={16} className="shrink-0 text-text-muted" aria-hidden="true" />
@@ -349,7 +369,7 @@ export function Hero() {
               </AnimatePresence>
             </div>
           </div>
-        </div>
+        </Tilt3D>
       </div>
     </section>
   );

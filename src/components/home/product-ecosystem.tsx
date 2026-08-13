@@ -14,6 +14,7 @@ import {
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
+import { ServerRackIllustration } from "@/components/ui/server-rack-illustration";
 
 const featured = {
   icon: Server,
@@ -79,7 +80,8 @@ export function ProductEcosystem() {
         <Reveal className="lg:col-span-2 lg:row-span-2">
           <SpotlightCard className="h-full">
             <Link href={featured.href} className="flex h-full flex-col justify-between p-8">
-              <div>
+              <ServerRackIllustration className="pointer-events-none absolute -bottom-6 -right-4 w-52 opacity-90 transition-transform duration-300 ease-out group-hover:-translate-y-1.5 sm:w-64" />
+              <div className="relative">
                 <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-purple/25 to-brand-blue/20 text-brand-purple transition-transform duration-200 group-hover:rotate-6 group-hover:scale-110">
                   <featured.icon size={26} aria-hidden="true" />
                 </div>
@@ -89,7 +91,7 @@ export function ProductEcosystem() {
                 <h3 className="mt-5 text-xl font-semibold text-text-primary">{featured.title}</h3>
                 <p className="mt-2 max-w-sm text-sm text-text-secondary">{featured.description}</p>
               </div>
-              <span className="mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple">
+              <span className="relative mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple">
                 Explore plans
                 <ArrowUpRight size={16} aria-hidden="true" />
               </span>

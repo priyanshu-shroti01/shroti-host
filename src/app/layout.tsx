@@ -7,6 +7,8 @@ import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ChatbotWidgetLoader } from "@/components/chatbot/chatbot-widget-loader";
+import { MobileStickyCta } from "@/components/layout/mobile-sticky-cta";
+import { WelcomeOffer } from "@/components/layout/welcome-offer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -116,6 +118,8 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           <ChatbotWidgetLoader />
+          <MobileStickyCta />
+          <WelcomeOffer />
         </CurrencyProvider>
       </body>
     </html>

@@ -198,6 +198,27 @@
   }
 }
 
+/* Request packet descending through the 3D infrastructure stack (see
+   infra-stack-3d.tsx). Travels the stack's Z axis from above the top plate
+   (Internet) to just below the base plate (your website). Under reduced
+   motion the global rule collapses this to its final frame — opacity 0. */
+@keyframes stack-descend {
+  0% {
+    transform: translate(-50%, -50%) translateZ(240px);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateZ(-10px);
+    opacity: 0;
+  }
+}
+
 @keyframes packet-travel {
   0% {
     top: 0%;
