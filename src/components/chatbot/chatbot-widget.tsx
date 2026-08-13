@@ -264,6 +264,12 @@ export function ChatbotWidget() {
       <AnimatePresence>
         {open && (
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="ShrotiHost Assistant"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setOpen(false);
+            }}
             initial={{ opacity: 0, y: 16, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.96 }}

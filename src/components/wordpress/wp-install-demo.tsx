@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Download, Lock, Palette, Puzzle, Zap } from "lucide-react";
+import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const themes = [
   { name: "Editorial", from: "from-brand-purple/60", to: "to-brand-blue/40" },
@@ -22,24 +23,33 @@ const STEPS = [
 const HOLD_DURATION = 2600;
 
 export function WpInstallDemo() {
+  const reducedMotion = usePrefersReducedMotion();
   const [activeStep, setActiveStep] = useState(0);
   const [themeIndex, setThemeIndex] = useState(0);
   const isLive = activeStep >= STEPS.length;
 
+  // Reduced motion: hold the finished state instead of looping the install
+  // forever (same short-circuit as the homepage hero's deploy demo).
   useEffect(() => {
+    if (reducedMotion) {
+      // One-time environment sync, not a render-driven update.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveStep(STEPS.length);
+      return;
+    }
     if (isLive) {
       const t = setTimeout(() => setActiveStep(0), HOLD_DURATION);
       return () => clearTimeout(t);
     }
     const t = setTimeout(() => setActiveStep((s) => s + 1), STEPS[activeStep].duration);
     return () => clearTimeout(t);
-  }, [activeStep, isLive]);
+  }, [activeStep, isLive, reducedMotion]);
 
   useEffect(() => {
-    if (activeStep !== 1) return;
+    if (activeStep !== 1 || reducedMotion) return;
     const interval = setInterval(() => setThemeIndex((i) => (i + 1) % themes.length), 350);
     return () => clearInterval(interval);
-  }, [activeStep]);
+  }, [activeStep, reducedMotion]);
 
   return (
     <div className="mx-auto max-w-lg overflow-hidden rounded-2xl border border-border-strong bg-card shadow-2xl">

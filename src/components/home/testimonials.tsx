@@ -62,6 +62,7 @@ export function Testimonials() {
                 {Array.from({ length: 5 }).map((_, star) => (
                   <Star key={star} size={14} fill="currentColor" aria-hidden="true" />
                 ))}
+                <span className="sr-only">Rated 5 out of 5 stars</span>
               </div>
               <p className="mt-3 text-text-secondary">&ldquo;{t.quote}&rdquo;</p>
               <div className="mt-6">

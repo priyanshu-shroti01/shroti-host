@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,
@@ -34,6 +34,9 @@ export function Header() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const mobileWasOpenRef = useRef(false);
 
   useEffect(() => {
     function onScroll() {
@@ -46,10 +49,41 @@ export function Header() {
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
+    if (mobileOpen) {
+      // The overlay is a modal: move focus in on open, back to the trigger on
+      // close, so keyboard users are never stranded behind the opaque layer.
+      mobileWasOpenRef.current = true;
+      mobileMenuRef.current?.querySelector<HTMLElement>("[aria-label='Close menu']")?.focus();
+    } else if (mobileWasOpenRef.current) {
+      // Only restore focus on a real close — never on initial mount.
+      mobileWasOpenRef.current = false;
+      hamburgerRef.current?.focus({ preventScroll: true });
+    }
     return () => {
       document.body.style.overflow = "";
     };
   }, [mobileOpen]);
+
+  function onMobileMenuKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    if (e.key === "Escape") {
+      setMobileOpen(false);
+      return;
+    }
+    if (e.key !== "Tab") return;
+    const focusables = mobileMenuRef.current?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusables || focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
 
   return (
     <header
@@ -179,6 +213,7 @@ export function Header() {
           aria-label="Open menu"
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen(true)}
+          ref={hamburgerRef}
         >
           <Menu size={22} aria-hidden="true" />
         </button>
@@ -187,6 +222,11 @@ export function Header() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            ref={mobileMenuRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu"
+            onKeyDown={onMobileMenuKeyDown}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

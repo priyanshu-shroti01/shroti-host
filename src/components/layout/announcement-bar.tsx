@@ -32,7 +32,7 @@ function PromoCountdown({ target }: { target: string }) {
 
   if (reducedMotion) {
     return (
-      <span className="text-xs text-white/80">
+      <span className="text-xs text-white/90">
         Offer ends {new Date(target).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
       </span>
     );
@@ -45,7 +45,10 @@ function PromoCountdown({ target }: { target: string }) {
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <span className="font-mono text-xs text-white/90">
+    <span
+      className="font-mono text-xs text-white/90"
+      aria-label={`Offer ends in ${hours} hours ${minutes} minutes`}
+    >
       {pad(hours)}:{pad(minutes)}:{pad(seconds)}
     </span>
   );
@@ -103,12 +106,12 @@ export function AnnouncementBar({ promo = homepagePromo }: { promo?: PromoBanner
           aria-label={copied ? "Promo code copied" : `Copy promo code ${promo.code}`}
           className="inline-flex items-center gap-1.5 rounded-full border border-white/30 px-2.5 py-0.5 text-xs transition-colors hover:border-white/60 hover:bg-white/10"
         >
-          <span className="text-white/70">Code</span>
+          <span className="text-white/90">Code</span>
           <code className="font-mono font-semibold">{promo.code}</code>
           {copied ? (
             <Check size={12} aria-hidden="true" />
           ) : (
-            <Copy size={12} className="text-white/70" aria-hidden="true" />
+            <Copy size={12} className="text-white/90" aria-hidden="true" />
           )}
         </button>
       )}

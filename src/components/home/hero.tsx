@@ -270,7 +270,7 @@ export function Hero() {
                   onFocus={stopAutoType}
                   placeholder="yourbrand.com"
                   aria-label="Your domain name"
-                  className="min-w-0 flex-1 bg-transparent font-mono text-sm text-text-primary placeholder:text-text-muted focus:outline-none sm:text-base"
+                  className="min-w-0 flex-1 rounded-md bg-transparent font-mono text-sm text-text-primary placeholder:text-text-muted sm:text-base"
                 />
               ) : (
                 <span className="min-w-0 flex-1 truncate font-mono text-sm text-text-primary sm:text-base">

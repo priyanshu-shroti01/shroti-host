@@ -46,6 +46,7 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
               key={c}
               type="button"
               onClick={() => setCycle(c)}
+              aria-pressed={cycle === c}
               className={`rounded-full px-4 py-2 text-sm font-medium transition-colors sm:px-5 ${
                 cycle === c ? "bg-brand-purple text-white" : "text-text-secondary hover:text-text-primary"
               }`}

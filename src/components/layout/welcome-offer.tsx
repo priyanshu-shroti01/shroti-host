@@ -37,16 +37,19 @@ export function WelcomeOffer() {
     return () => clearTimeout(timer);
   }, [promo.active, promo.kind, storageKey]);
 
-  // Scroll lock + initial focus while open. The body class lets the chatbot
-  // defer its greeting nudge until this dialog is gone (see chatbot-widget).
+  // Scroll lock + initial focus while open, with focus returned to wherever
+  // it was on close. The body class lets the chatbot defer its greeting nudge
+  // until this dialog is gone (see chatbot-widget).
   useEffect(() => {
     if (!open) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
     document.body.style.overflow = "hidden";
     document.body.classList.add("has-welcome-offer");
     dialogRef.current?.querySelector<HTMLElement>("[data-autofocus]")?.focus();
     return () => {
       document.body.style.overflow = "";
       document.body.classList.remove("has-welcome-offer");
+      previouslyFocused?.focus?.({ preventScroll: true });
     };
   }, [open]);
 
@@ -144,7 +147,7 @@ export function WelcomeOffer() {
                     <span className="text-xs text-text-muted">Code</span>
                     <code className="font-mono text-sm font-bold text-text-primary">{promo.code}</code>
                   </span>
-                  <Button type="button" variant="secondary" size="md" onClick={copyCode}>
+                  <Button type="button" variant="secondary" size="md" onClick={copyCode} aria-live="polite">
                     {copied ? (
                       <>
                         <Check size={15} className="text-success" aria-hidden="true" />

@@ -113,9 +113,15 @@ export default function RootLayout({
       </head>
       <body className="flex min-h-full flex-col overflow-x-hidden bg-bg text-text-primary">
         <CurrencyProvider>
+          <a
+            href="#main"
+            className="sr-only z-[100] rounded-full bg-brand-purple px-5 py-2.5 font-bold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+          >
+            Skip to content
+          </a>
           <AnnouncementBar />
           <Header />
-          <main className="flex-1">{children}</main>
+          <main id="main" className="flex-1">{children}</main>
           <Footer />
           <ChatbotWidgetLoader />
           <MobileStickyCta />
