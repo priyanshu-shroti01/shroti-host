@@ -3,16 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
+import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
+import { Tilt3D } from "@/components/ui/tilt-3d";
 import { WpInstallDemo } from "./wp-install-demo";
 
 export function WpHero() {
   return (
     <div className="relative overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ background: "var(--gradient-glow)" }}
-        aria-hidden="true"
-      />
+      <HeroAtmosphere />
       <Container className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
         <Reveal>
           <Badge>WordPress Hosting</Badge>
@@ -33,8 +31,12 @@ export function WpHero() {
             </Button>
           </div>
         </Reveal>
+        {/* The install demo is the dominant visual — tilt makes it a physical
+            object in the hero space, same treatment as the homepage deploy card. */}
         <Reveal delay={0.1}>
-          <WpInstallDemo />
+          <Tilt3D maxTilt={3.5}>
+            <WpInstallDemo />
+          </Tilt3D>
         </Reveal>
       </Container>
     </div>

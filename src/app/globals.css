@@ -206,13 +206,15 @@
   }
 }
 
-/* Request packet descending through the 3D infrastructure stack (see
-   infra-stack-3d.tsx). Travels the stack's Z axis from above the top plate
-   (Internet) to just below the base plate (your website). Under reduced
-   motion the global rule collapses this to its final frame — opacity 0. */
+/* Request packet travelling the Z axis of an isometric scene (infra stack,
+   hero scenes). Parameterized per element via --packet-from/--packet-to so
+   one keyframe serves every scene; defaults preserve the infra stack's
+   top-plate → base run. from > to descends, from < to ascends. Under
+   reduced motion the global rule collapses this to its final frame —
+   opacity 0. */
 @keyframes stack-descend {
   0% {
-    transform: translate(-50%, -50%) translateZ(240px);
+    transform: translate(-50%, -50%) translateZ(var(--packet-from, 240px));
     opacity: 0;
   }
   12% {
@@ -222,8 +224,44 @@
     opacity: 1;
   }
   100% {
-    transform: translate(-50%, -50%) translateZ(-10px);
+    transform: translate(-50%, -50%) translateZ(var(--packet-to, -10px));
     opacity: 0;
+  }
+}
+
+/* Unlimited-hosting hero: a ghost plate rising off the top of the stack and
+   dissolving — "add a site without adding a bill". GPU-only. */
+@keyframes iso-rise-fade {
+  0% {
+    transform: translateZ(100px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: translateZ(178px);
+    opacity: 0;
+  }
+}
+
+/* Domains hero: TLD chips orbit the globe node. The wrapper spins in the
+   scene plane; each chip counter-spins at the same rate composed with the
+   static billboard transform (the exact inverse of the scene's isometric
+   rotation) so its text always faces the camera. Both clamp to a coherent
+   static frame under reduced motion. */
+@keyframes orbit-spin {
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes orbit-billboard {
+  from {
+    transform: rotateZ(0deg) rotateZ(42deg) rotateX(-56deg);
+  }
+  to {
+    transform: rotateZ(-360deg) rotateZ(42deg) rotateX(-56deg);
   }
 }
 

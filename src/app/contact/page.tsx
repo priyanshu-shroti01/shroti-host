@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Section } from "@/components/ui/section";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
+import { SupportScene } from "@/components/scenes/support-scene";
 import { ContactPaths } from "@/components/contact/contact-paths";
 import { TrustedTech } from "@/components/home/trusted-tech";
 import { FinalCta } from "@/components/home/final-cta";
@@ -16,15 +17,20 @@ export default function ContactPage() {
   return (
     <>
       <Section className="pt-16 sm:pt-24 pb-0">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <Badge tone="neutral">Contact</Badge>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
-            What&apos;s this about?
-          </h1>
-          <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary">
-            Pick a category and we&apos;ll route you to the right place.
-          </p>
-        </Reveal>
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
+          <Reveal className="text-center lg:text-left">
+            <Badge tone="neutral">Contact</Badge>
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
+              What&apos;s this about?
+            </h1>
+            <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary lg:mx-0">
+              Pick a category and we&apos;ll route you to the right place.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1} className="hidden lg:block">
+            <SupportScene />
+          </Reveal>
+        </div>
       </Section>
 
       <Section className="pb-14 sm:pb-16">

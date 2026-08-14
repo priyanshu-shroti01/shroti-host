@@ -6,6 +6,8 @@ import { Check, Clock, Loader2, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { Magnetic } from "@/components/ui/magnetic";
+import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
+import { DomainsScene } from "@/components/scenes/domains-scene";
 import { useCurrency } from "@/components/currency-provider";
 
 const WHMCS_CART_URL = "https://portal.shrotihost.in/cart.php";
@@ -183,12 +185,13 @@ export function DomainsHero() {
   const hasResults = results && (results.exact.length > 0 || results.suggestions.length > 0);
 
   return (
-    <div className="relative">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ background: "var(--gradient-glow)" }}
-        aria-hidden="true"
-      />
+    <div className="relative overflow-hidden">
+      <HeroAtmosphere />
+      {/* The TLD network orbiting beside the search — flanking visual on wide
+          screens only, behind the content and never over the results dropdown. */}
+      <div className="pointer-events-none absolute right-0 top-0 hidden origin-top-right scale-75 opacity-80 xl:block">
+        <DomainsScene />
+      </div>
       <Reveal className="relative mx-auto max-w-3xl text-center">
         <h1 className="text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
           Find your name.

@@ -18,6 +18,7 @@ import {
   UploadCloud,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Tilt3D } from "@/components/ui/tilt-3d";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
@@ -195,28 +196,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-28">
-      {/* Atmosphere: brand glow from above (the same gradient-glow every other
-          hero uses) + a foreshortened grid floor below. The floor is a static
-          texture — the shipped grid motif from final-cta/domain-search carried
-          into perspective — not motion; it never animates, so the motion
-          system's "ambient elements that respond to nothing" rule doesn't
-          apply. Both use existing tokens, faint enough to be felt, not noticed. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-64 opacity-30 [mask-image:linear-gradient(to_top,black,transparent)]"
-        style={{ perspective: "600px" }}
-      >
-        <div
-          className="absolute -inset-x-[20%] -bottom-[60%] -top-[40%]"
-          style={{
-            transform: "rotateX(62deg)",
-            backgroundImage:
-              "linear-gradient(to right, var(--color-border-strong) 1px, transparent 1px), linear-gradient(to bottom, var(--color-border-strong) 1px, transparent 1px)",
-            backgroundSize: "44px 44px",
-          }}
-        />
-      </div>
+      <HeroAtmosphere />
       <div className="relative mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
         <div className="text-center lg:text-left">
           <span className="inline-flex items-center gap-2 rounded-full border-2 border-border bg-card px-4 py-1.5 text-xs font-bold text-text-secondary shadow-[var(--shadow-card)]">
