@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
 import { UnlimitedHero } from "@/components/unlimited/unlimited-hero";
 import { Infrastructure } from "@/components/home/infrastructure";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 export default function UnlimitedHostingPage() {
   return (
     <>
-      <Section className="pt-16 sm:pt-24">
+      <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <UnlimitedHero />
       </Section>
 

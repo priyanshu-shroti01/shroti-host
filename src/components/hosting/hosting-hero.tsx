@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
 import { Magnetic } from "@/components/ui/magnetic";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { StatPill } from "@/components/ui/stat-pill";
 import { HostingScene } from "@/components/scenes/hosting-scene";
 import { commonFeatures, sharedPlans } from "@/lib/plans";
@@ -17,8 +16,7 @@ export function HostingHero() {
   const currencySymbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "€";
 
   return (
-    <div className="relative overflow-hidden">
-      <HeroAtmosphere />
+    <div className="relative">
       <div className="relative mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
         <Reveal className="text-center lg:text-left">
           <Badge>Shared Hosting</Badge>

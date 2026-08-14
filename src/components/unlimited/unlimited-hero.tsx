@@ -2,14 +2,12 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
-import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { UnlimitedScene } from "@/components/scenes/unlimited-scene";
 import { SitesGridDemo } from "./sites-grid-demo";
 
 export function UnlimitedHero() {
   return (
-    <div className="relative overflow-hidden">
-      <HeroAtmosphere />
+    <div className="relative">
       <div className="relative mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
         <Reveal className="text-center lg:text-left">
           <Badge>Unlimited Hosting</Badge>

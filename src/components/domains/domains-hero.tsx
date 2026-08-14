@@ -6,7 +6,6 @@ import { Check, Clock, Loader2, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { Magnetic } from "@/components/ui/magnetic";
-import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { DomainsScene } from "@/components/scenes/domains-scene";
 import { useCurrency } from "@/components/currency-provider";
 
@@ -185,8 +184,7 @@ export function DomainsHero() {
   const hasResults = results && (results.exact.length > 0 || results.suggestions.length > 0);
 
   return (
-    <div className="relative overflow-hidden">
-      <HeroAtmosphere />
+    <div className="relative">
       {/* The TLD network orbiting beside the search — flanking visual on wide
           screens only, behind the content and never over the results dropdown. */}
       <div className="pointer-events-none absolute right-0 top-0 hidden origin-top-right scale-75 opacity-80 xl:block">

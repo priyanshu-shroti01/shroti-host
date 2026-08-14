@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
 import { HostingHero } from "@/components/hosting/hosting-hero";
 import { HostingConfigurator } from "@/components/hosting/hosting-configurator";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 export default function HostingPage() {
   return (
     <>
-      <Section className="pt-16 sm:pt-24">
+      <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <HostingHero />
       </Section>
 

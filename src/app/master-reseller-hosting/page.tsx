@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
 import { MasterResellerHero } from "@/components/reseller/master-reseller-hero";
 import { MasterResellerBenefits } from "@/components/reseller/master-reseller-benefits";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 export default function MasterResellerHostingPage() {
   return (
     <>
-      <Section className="pt-16 sm:pt-24">
+      <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <MasterResellerHero />
       </Section>
 

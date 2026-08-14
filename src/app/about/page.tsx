@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Clock3, Sparkles, Star } from "lucide-react";
 import { Section, Eyebrow } from "@/components/ui/section";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <Section className="pt-16 sm:pt-24 pb-0">
+      <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20 pb-0">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
           <Reveal className="text-center lg:text-left">
             <Badge tone="neutral">About</Badge>

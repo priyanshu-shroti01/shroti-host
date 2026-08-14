@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
 import { DomainsHero } from "@/components/domains/domains-hero";
 import { TrustedTech } from "@/components/home/trusted-tech";
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export default function DomainsPage() {
   return (
     <>
-      <Section className="pt-16 sm:pt-24" containerClassName="max-w-5xl">
+      <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20" containerClassName="max-w-5xl">
         <DomainsHero />
       </Section>
 

@@ -86,6 +86,7 @@ export function Header() {
   }
 
   return (
+    <>
     <header
       id="top"
       className={`sticky top-0 z-50 transition-colors duration-300 ${
@@ -218,7 +219,14 @@ export function Header() {
           <Menu size={22} aria-hidden="true" />
         </button>
       </div>
+    </header>
 
+      {/* Mobile menu overlay — deliberately OUTSIDE <header>: the scrolled
+          header's backdrop-blur makes it the containing block for fixed
+          descendants (the same backdrop-filter bug class fixed site-wide
+          before), which trapped this fixed inset-0 overlay inside the
+          header bar after any scroll. As a sibling it positions against
+          the real viewport in every scroll state. */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -231,7 +239,7 @@ export function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-bg lg:hidden"
+            className="fixed inset-0 z-[70] flex flex-col overflow-y-auto bg-bg lg:hidden"
           >
             <div className="flex h-18 shrink-0 items-center justify-between px-6">
               <Logo />
@@ -353,6 +361,6 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }

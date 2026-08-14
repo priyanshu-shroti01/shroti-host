@@ -3,14 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
-import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Tilt3D } from "@/components/ui/tilt-3d";
 import { WpInstallDemo } from "./wp-install-demo";
 
 export function WpHero() {
   return (
-    <div className="relative overflow-hidden">
-      <HeroAtmosphere />
+    <div className="relative">
       <Container className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
         <Reveal>
           <Badge>WordPress Hosting</Badge>

@@ -2,13 +2,11 @@ import { ArrowRight, LifeBuoy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
-import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { VpsScene } from "@/components/scenes/vps-scene";
 
 export function VpsHero() {
   return (
-    <div className="relative overflow-hidden">
-      <HeroAtmosphere />
+    <div className="relative">
       <div className="relative mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
         <Reveal className="text-center lg:text-left">
           <Badge tone="neutral">Coming Soon</Badge>

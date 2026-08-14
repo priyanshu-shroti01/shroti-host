@@ -6,15 +6,21 @@ export function Section({
   className = "",
   containerClassName = "",
   id,
+  backdrop,
 }: {
   children: ReactNode;
   className?: string;
   containerClassName?: string;
   id?: string;
+  /** Full-bleed layer (e.g. HeroAtmosphere) rendered behind the Container,
+   *  spanning the whole section including its padding — atmosphere must
+   *  never render inside the Container or it reads as a boxed tint. */
+  backdrop?: ReactNode;
 }) {
   return (
-    <section id={id} className={`py-20 sm:py-28 ${className}`}>
-      <Container className={containerClassName}>{children}</Container>
+    <section id={id} className={`relative py-20 sm:py-28 ${backdrop ? "overflow-hidden" : ""} ${className}`}>
+      {backdrop}
+      <Container className={`relative ${containerClassName}`}>{children}</Container>
     </section>
   );
 }
