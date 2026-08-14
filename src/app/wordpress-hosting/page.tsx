@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { PlanSpecTable } from "@/components/hosting/plan-spec-table";
+import { hostingSpecGroups } from "@/lib/plan-specs";
 import { hostingProductJsonLd } from "@/lib/seo";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
@@ -34,6 +36,10 @@ export default function WordPressHostingPage() {
 
       <Section id="pricing" className="bg-surface/30">
         <HostingPlans plans={wordpressPlans} />
+      </Section>
+
+      <Section id="specs">
+        <PlanSpecTable plans={wordpressPlans} groups={hostingSpecGroups(wordpressPlans)} />
       </Section>
 
       <Section className="py-14 sm:py-16">

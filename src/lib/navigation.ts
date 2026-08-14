@@ -63,6 +63,8 @@ export const footerNav = {
     { label: "Master Reseller Hosting", href: "/master-reseller-hosting" },
     { label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting" },
     { label: "VPS (coming soon)", href: "/vps" },
+    { label: "WHMCS Gateway Fees Module", href: "/whmcs-gateway-fees-allocator" },
+    { label: "WHMCS WhatsApp Module", href: "/whmcs-whatsapp-notification-module" },
   ],
   Company: [
     { label: "About", href: "/about" },

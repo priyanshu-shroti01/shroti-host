@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { PlanSpecTable } from "@/components/hosting/plan-spec-table";
+import { resellerSpecGroups } from "@/lib/plan-specs";
 import { hostingProductJsonLd } from "@/lib/seo";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
@@ -34,6 +36,10 @@ export default function ResellerHostingPage() {
 
       <Section id="pricing" className="bg-surface/30">
         <HostingPlans plans={resellerPlans} />
+      </Section>
+
+      <Section id="specs">
+        <PlanSpecTable plans={resellerPlans} groups={resellerSpecGroups(resellerPlans)} />
       </Section>
 
       <Section className="py-14 sm:py-16">

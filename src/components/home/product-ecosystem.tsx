@@ -69,7 +69,7 @@ export function ProductEcosystem() {
     <div>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          One platform, everything you need to launch
+          One platform, <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">everything</span> you need to launch
         </h2>
         <p className="mt-4 text-text-secondary">
           Designed to work together, not bolted on as afterthoughts.

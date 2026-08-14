@@ -42,7 +42,7 @@ export function WhyChoose() {
       <div className="mx-auto max-w-2xl text-center">
         <Eyebrow>Why ShrotiHost</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Enterprise performance, honest pricing.
+          Enterprise performance, <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">honest pricing</span>.
         </h2>
         <p className="mt-4 text-text-secondary">
           We compete on experience, performance, and trust — not a race to the bottom on price.

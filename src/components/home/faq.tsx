@@ -57,7 +57,7 @@ export function Faq() {
       />
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Frequently Asked Questions
+          Frequently Asked <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">Questions</span>
         </h2>
       </div>
 

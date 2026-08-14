@@ -85,7 +85,7 @@ export function HostingAdvisor() {
       <div className="mx-auto max-w-2xl text-center">
         <Eyebrow>Hosting Advisor</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Not sure which plan fits?
+          Not sure <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">which plan fits</span>?
         </h2>
         <p className="mt-4 text-text-secondary">
           Answer three quick questions and we&apos;ll recommend a plan.

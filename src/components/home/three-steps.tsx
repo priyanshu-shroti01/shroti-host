@@ -27,7 +27,7 @@ export function ThreeSteps() {
     <div>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Get online in 3 simple steps
+          Get online in <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">3 simple steps</span>
         </h2>
         <p className="mt-4 text-text-secondary">No technical knowledge needed.</p>
       </div>

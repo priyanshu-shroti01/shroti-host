@@ -18,7 +18,7 @@ export function ComparisonTable() {
     <div>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          ShrotiHost vs. typical shared hosting
+          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">ShrotiHost</span> vs. typical shared hosting
         </h2>
         <p className="mt-4 text-text-secondary">
           What you actually get, compared to the industry default.

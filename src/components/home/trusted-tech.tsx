@@ -39,12 +39,15 @@ export function TrustedTech() {
       <p className="mt-8 text-center text-xs font-medium uppercase tracking-widest text-text-muted">
         Powered by an infrastructure stack you can trust
       </p>
-      <div className="mt-6">
-        <Marquee durationSeconds={32}>
+      {/* Ghost-text marquee — outlined display type with a vertical fade, the
+          reference sites' signature "big tactile infrastructure" cue, in our
+          own brand stroke color and with our real stack names. */}
+      <div className="mt-4">
+        <Marquee durationSeconds={46}>
           {tech.map((name) => (
             <span
               key={name}
-              className="shrink-0 text-lg font-semibold tracking-tight text-text-secondary/70 grayscale transition-all hover:text-text-primary hover:grayscale-0 sm:text-xl"
+              className="shrink-0 text-5xl font-extrabold uppercase tracking-tight text-transparent transition-colors duration-300 [-webkit-text-stroke:1.5px_color-mix(in_srgb,var(--color-text-primary)_45%,transparent)] [mask-image:linear-gradient(to_top,transparent_0%,black_60%)] hover:[-webkit-text-stroke:1.5px_var(--color-brand-purple)] sm:text-7xl"
             >
               {name}
             </span>

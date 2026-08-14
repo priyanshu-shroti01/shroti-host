@@ -49,7 +49,7 @@ export function Testimonials() {
     <div>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Trusted by builders across India
+          Trusted by builders <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">across India</span>
         </h2>
         <p className="mt-4 text-text-secondary">Real, verified reviews from Trustpilot.</p>
       </div>

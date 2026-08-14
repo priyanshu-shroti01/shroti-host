@@ -105,7 +105,7 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                   </span>
                 </div>
                 <div className="mt-1 flex items-center gap-2">
-                  <p className="text-xs text-text-muted">Billed {cycleLabels[cycle].toLowerCase()}</p>
+                  <p className="text-xs text-text-muted">Billed {cycleLabels[cycle].toLowerCase()} · excl. taxes</p>
                   <Badge tone="success" className="text-[10px]">
                     Save {save}%
                   </Badge>

@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { Hero } from "@/components/home/hero";
 import { TrustedTech } from "@/components/home/trusted-tech";
+import { EverythingIncluded } from "@/components/home/everything-included";
 import { ThreeSteps } from "@/components/home/three-steps";
 import { ProductEcosystem } from "@/components/home/product-ecosystem";
 import { WhyChoose } from "@/components/home/why-choose";
@@ -34,6 +35,11 @@ export default function Home() {
       {/* Pricing — RankHostZone's homepage puts plans directly under the hero. */}
       <Section id="pricing">
         <HostingPlans />
+      </Section>
+
+      {/* Every-plan baseline — RankHostZone's "Every Plan Gets All This" grid. */}
+      <Section id="everything" className="bg-surface/30">
+        <EverythingIncluded />
       </Section>
 
       {/* Trust strip — sits right under pricing, matching RankHostZone's stats row placement. */}

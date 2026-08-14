@@ -27,7 +27,7 @@ export function DeveloperFeatures() {
       <Reveal className="min-w-0">
         <Eyebrow>For Developers</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Ship the way you already work.
+          Ship the way you <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">already work</span>.
         </h2>
         <p className="mt-4 max-w-md text-text-secondary">
           Full SSH access, Git deploys, and a real terminal — not just a file manager.

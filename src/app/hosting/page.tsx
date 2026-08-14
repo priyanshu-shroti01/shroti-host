@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { PlanSpecTable } from "@/components/hosting/plan-spec-table";
+import { hostingSpecGroups } from "@/lib/plan-specs";
 import { sharedPlans } from "@/lib/plans";
 import { hostingProductJsonLd } from "@/lib/seo";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
@@ -35,6 +37,10 @@ export default function HostingPage() {
       {/* Pricing directly under the hero, matching RankHostZone's product-page order. */}
       <Section id="pricing" className="bg-surface/30">
         <HostingPlans />
+      </Section>
+
+      <Section id="specs">
+        <PlanSpecTable plans={sharedPlans} groups={hostingSpecGroups(sharedPlans)} />
       </Section>
 
       <Section id="configure">

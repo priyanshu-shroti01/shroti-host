@@ -71,6 +71,9 @@ export function Footer() {
               {method}
             </span>
           ))}
+          <span className="w-full text-center text-xs text-text-muted sm:w-auto">
+            Prices exclude applicable taxes, calculated at checkout
+          </span>
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">

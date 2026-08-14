@@ -16,6 +16,8 @@ const routes: { path: string; changeFrequency: "weekly" | "monthly" | "yearly"; 
   { path: "/alpha-reseller-hosting", changeFrequency: "weekly", priority: 0.8 },
   { path: "/domains", changeFrequency: "weekly", priority: 0.8 },
   { path: "/vps", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/whmcs-gateway-fees-allocator", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/whmcs-whatsapp-notification-module", changeFrequency: "monthly", priority: 0.6 },
   { path: "/about", changeFrequency: "monthly", priority: 0.5 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
   { path: "/status", changeFrequency: "monthly", priority: 0.4 },

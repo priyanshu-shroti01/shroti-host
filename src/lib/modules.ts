@@ -32,7 +32,7 @@ export type WhmcsModule = {
   pricing?: ModulePricing[];
   trial?: string;
   setup: string;
-  /** Purchase happens on the existing live product page until direct cart links are wired up. */
+  /** Purchase routes through the support desk until direct cart links exist. */
   purchaseUrl: string;
 };
 
@@ -74,7 +74,7 @@ export const modules: WhmcsModule[] = [
     ],
     trial: "7-day free trial",
     setup: "Configured in minutes from the WHMCS admin panel",
-    purchaseUrl: "https://shrotihost.in/whmcs-gateway-fees-allocator/",
+    purchaseUrl: "https://portal.shrotihost.in/submitticket.php",
   },
   {
     slug: "whatsapp-notification",
@@ -127,7 +127,7 @@ export const modules: WhmcsModule[] = [
     ],
     trial: "Free trial available",
     setup: "5-minute installation with included support",
-    purchaseUrl: "https://shrotihost.in/whmcs-whatsapp-notification-module/",
+    purchaseUrl: "https://portal.shrotihost.in/submitticket.php",
   },
 ];
 
