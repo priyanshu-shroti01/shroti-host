@@ -1,28 +1,18 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/section";
-import { LegalPlaceholder } from "@/components/legal/legal-placeholder";
+import { LegalDocument } from "@/components/legal/legal-document";
+import { privacyPolicy } from "@/lib/legal-content";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  robots: { index: false, follow: true },
+  description: "What data ShrotiHost collects, how it's used and protected, and your rights under India's DPDP Act 2023. We never sell your data.",
   alternates: { canonical: "/legal/privacy" },
 };
 
-const sections = [
-  "Information We Collect",
-  "How We Use Information",
-  "Data Sharing & Third Parties",
-  "Cookies",
-  "Data Security",
-  "Your Rights",
-  "Data Retention",
-  "Contact for Privacy Concerns",
-];
-
-export default function PrivacyPage() {
+export default function Page() {
   return (
     <Section className="pt-16 sm:pt-24">
-      <LegalPlaceholder title="Privacy Policy" sections={sections} />
+      <LegalDocument doc={privacyPolicy} />
     </Section>
   );
 }

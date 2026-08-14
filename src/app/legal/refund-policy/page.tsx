@@ -1,25 +1,18 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/section";
-import { LegalPlaceholder } from "@/components/legal/legal-placeholder";
+import { LegalDocument } from "@/components/legal/legal-document";
+import { refundPolicy } from "@/lib/legal-content";
 
 export const metadata: Metadata = {
   title: "Refund Policy",
-  robots: { index: false, follow: true },
+  description: "ShrotiHost's 7-day money-back guarantee on first hosting purchases — eligibility, non-refundable items, and how to request a refund.",
   alternates: { canonical: "/legal/refund-policy" },
 };
 
-const sections = [
-  "Eligibility for Refunds",
-  "Refund Timeframes",
-  "Non-Refundable Items",
-  "How to Request a Refund",
-  "Processing Time",
-];
-
-export default function RefundPolicyPage() {
+export default function Page() {
   return (
     <Section className="pt-16 sm:pt-24">
-      <LegalPlaceholder title="Refund Policy" sections={sections} />
+      <LegalDocument doc={refundPolicy} />
     </Section>
   );
 }

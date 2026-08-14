@@ -1,5 +1,6 @@
 import {
   ArrowRightLeft,
+  BookOpen,
   Building2,
   Globe,
   Layers,
@@ -47,6 +48,7 @@ export const primaryNav: NavItem[] = [
     ],
   },
   { label: "About", icon: Building2, href: "/about" },
+  { label: "Blog", icon: BookOpen, href: "/blog" },
   { label: "Contact", icon: Mail, href: "/contact" },
 ];
 
@@ -64,6 +66,7 @@ export const footerNav = {
   ],
   Company: [
     { label: "About", href: "/about" },
+    { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
     { label: "Status", href: "/status" },
   ],

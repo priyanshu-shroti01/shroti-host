@@ -1,30 +1,18 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/section";
-import { LegalPlaceholder } from "@/components/legal/legal-placeholder";
+import { LegalDocument } from "@/components/legal/legal-document";
+import { termsOfService } from "@/lib/legal-content";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  robots: { index: false, follow: true },
+  description: "ShrotiHost's terms of service — account registration, billing, fair use, service delivery, and your responsibilities, in plain language.",
   alternates: { canonical: "/legal/terms" },
 };
 
-const sections = [
-  "Acceptance of Terms",
-  "Service Description",
-  "Account Responsibilities",
-  "Payment & Billing",
-  "Acceptable Use",
-  "Service Availability",
-  "Limitation of Liability",
-  "Termination",
-  "Governing Law",
-  "Changes to These Terms",
-];
-
-export default function TermsPage() {
+export default function Page() {
   return (
     <Section className="pt-16 sm:pt-24">
-      <LegalPlaceholder title="Terms of Service" sections={sections} />
+      <LegalDocument doc={termsOfService} />
     </Section>
   );
 }

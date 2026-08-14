@@ -101,6 +101,8 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Checkout lives on the portal subdomain — warm the connection early. */}
+        <link rel="preconnect" href="https://portal.shrotihost.in" />
         <ThemeScript />
         <script
           type="application/ld+json"

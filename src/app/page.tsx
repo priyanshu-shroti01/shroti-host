@@ -1,18 +1,30 @@
+import dynamic from "next/dynamic";
 import { Hero } from "@/components/home/hero";
 import { TrustedTech } from "@/components/home/trusted-tech";
-import { HostingAdvisor } from "@/components/home/hosting-advisor";
 import { ThreeSteps } from "@/components/home/three-steps";
 import { ProductEcosystem } from "@/components/home/product-ecosystem";
 import { WhyChoose } from "@/components/home/why-choose";
-import { Infrastructure } from "@/components/home/infrastructure";
 import { ComparisonTable } from "@/components/home/comparison-table";
-import { DeveloperFeatures } from "@/components/home/developer-features";
 import { HostingPlans } from "@/components/home/hosting-plans";
-import { DomainSearch } from "@/components/home/domain-search";
 import { Testimonials } from "@/components/home/testimonials";
 import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 import { Section } from "@/components/ui/section";
+
+// Below-fold interactive sections load as deferred chunks — they're still
+// server-rendered, but their hydration JS stays out of the critical path.
+const HostingAdvisor = dynamic(() =>
+  import("@/components/home/hosting-advisor").then((m) => m.HostingAdvisor)
+);
+const DomainSearch = dynamic(() =>
+  import("@/components/home/domain-search").then((m) => m.DomainSearch)
+);
+const Infrastructure = dynamic(() =>
+  import("@/components/home/infrastructure").then((m) => m.Infrastructure)
+);
+const DeveloperFeatures = dynamic(() =>
+  import("@/components/home/developer-features").then((m) => m.DeveloperFeatures)
+);
 
 export default function Home() {
   return (

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRightLeft, Check, MessageCircle, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRightLeft, BadgeCheck, Check, MessageCircle, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/ui/reveal";
@@ -109,6 +110,11 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                     Save {save}%
                   </Badge>
                 </div>
+                {/* The renewal number is the industry's favorite hiding place —
+                    printing it here is the whole trust play. */}
+                <p className="mt-1.5 text-xs font-medium text-success">
+                  Renews at the same price — no increase later
+                </p>
 
                 <ul className="mt-6 flex-1 space-y-2.5">
                   {plan.features.map((feature) => (
@@ -120,13 +126,16 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                 </ul>
 
                 <Button
-                  href="/hosting"
+                  href="https://portal.shrotihost.in/cart.php"
                   variant={plan.recommended ? "primary" : "secondary"}
                   size="lg"
                   className="mt-8 w-full"
                 >
                   Choose {plan.name}
                 </Button>
+                <p className="mt-3 text-center text-xs text-text-muted">
+                  Secure checkout · UPI, cards &amp; net banking
+                </p>
               </Card>
               </Tilt3D>
               </div>
@@ -135,10 +144,18 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
         })}
       </div>
 
-      {/* Assurance strip — every claim here is one the plans already make; this row just puts them at the decision point. */}
+      {/* Assurance strip — every claim here is one the plans (or the refund
+          policy) actually make; this row just puts them at the decision point. */}
       <div className="mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-3">
+        <Link
+          href="/legal/refund-policy"
+          className="inline-flex items-center gap-2 text-sm text-text-secondary underline-offset-2 hover:text-text-primary hover:underline"
+        >
+          <ShieldCheck size={15} className="shrink-0 text-success" aria-hidden="true" />
+          7-day money-back guarantee
+        </Link>
         {[
-          { icon: ShieldCheck, label: "Same renewal price, every cycle" },
+          { icon: BadgeCheck, label: "Same renewal price, every cycle" },
           { icon: ArrowRightLeft, label: "Free migration, handled for you" },
           { icon: Zap, label: "Instant activation" },
           { icon: MessageCircle, label: "24/7 priority support" },

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { hostingProductJsonLd } from "@/lib/seo";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
 import { ResellerHero } from "@/components/reseller/reseller-hero";
@@ -16,9 +17,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/reseller-hosting" },
 };
 
+const productJsonLd = hostingProductJsonLd({
+  name: "Reseller Hosting",
+  description: "White-label reseller hosting with WHM, free WHMCS billing, and JetBackup.",
+  path: "/reseller-hosting",
+  plans: resellerPlans,
+});
+
 export default function ResellerHostingPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <ResellerHero />
       </Section>

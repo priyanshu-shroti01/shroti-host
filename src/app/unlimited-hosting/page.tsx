@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { hostingProductJsonLd } from "@/lib/seo";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
 import { UnlimitedHero } from "@/components/unlimited/unlimited-hero";
@@ -15,9 +16,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/unlimited-hosting" },
 };
 
+const productJsonLd = hostingProductJsonLd({
+  name: "Unlimited Hosting",
+  description: "Unmetered NVMe storage and bandwidth for agencies and multi-site owners.",
+  path: "/unlimited-hosting",
+  plans: unlimitedPlans,
+});
+
 export default function UnlimitedHostingPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <UnlimitedHero />
       </Section>

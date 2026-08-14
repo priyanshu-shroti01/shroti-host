@@ -57,7 +57,23 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
+        {/* Payment methods — text badges, no third-party logos to misrender.
+            Only methods the WHMCS portal actually accepts belong here. */}
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-2 border-t border-border pt-8">
+          <span className="text-xs font-medium uppercase tracking-wide text-text-muted">
+            Secure payments
+          </span>
+          {["UPI", "Visa", "Mastercard", "RuPay", "Net Banking"].map((method) => (
+            <span
+              key={method}
+              className="rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-text-secondary"
+            >
+              {method}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
           <p className="text-sm text-text-muted">© {year} ShrotiHost. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <p className="text-sm text-text-muted">Made for students, developers, and builders.</p>

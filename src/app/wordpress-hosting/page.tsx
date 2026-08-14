@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { hostingProductJsonLd } from "@/lib/seo";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
 import { WpHero } from "@/components/wordpress/wp-hero";
@@ -16,9 +17,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/wordpress-hosting" },
 };
 
+const productJsonLd = hostingProductJsonLd({
+  name: "WordPress Hosting",
+  description: "Managed WordPress hosting with LiteSpeed Cache, one-click installs, and free migration.",
+  path: "/wordpress-hosting",
+  plans: wordpressPlans,
+});
+
 export default function WordPressHostingPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <WpHero />
       </Section>
