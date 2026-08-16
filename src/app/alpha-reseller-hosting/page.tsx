@@ -7,7 +7,7 @@ import { Section } from "@/components/ui/section";
 import { AlphaResellerHero } from "@/components/reseller/alpha-reseller-hero";
 import { AlphaResellerBenefits } from "@/components/reseller/alpha-reseller-benefits";
 import { Infrastructure } from "@/components/home/infrastructure";
-import { HostingPlans } from "@/components/home/hosting-plans";
+import { HostingPlans, storeGroups } from "@/components/home/hosting-plans";
 import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 import { alphaResellerPlans } from "@/lib/plans";
@@ -35,7 +35,7 @@ export default function AlphaResellerHostingPage() {
       </Section>
 
       <Section id="pricing" className="bg-surface/30">
-        <HostingPlans plans={alphaResellerPlans} />
+        <HostingPlans plans={alphaResellerPlans} orderUrl={storeGroups.alphaReseller} />
       </Section>
 
       <Section id="specs">

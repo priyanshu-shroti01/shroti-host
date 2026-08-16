@@ -7,7 +7,7 @@ import { Section } from "@/components/ui/section";
 import { MasterResellerHero } from "@/components/reseller/master-reseller-hero";
 import { MasterResellerBenefits } from "@/components/reseller/master-reseller-benefits";
 import { Infrastructure } from "@/components/home/infrastructure";
-import { HostingPlans } from "@/components/home/hosting-plans";
+import { HostingPlans, storeGroups } from "@/components/home/hosting-plans";
 import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 import { masterResellerPlans } from "@/lib/plans";
@@ -35,7 +35,7 @@ export default function MasterResellerHostingPage() {
       </Section>
 
       <Section id="pricing" className="bg-surface/30">
-        <HostingPlans plans={masterResellerPlans} />
+        <HostingPlans plans={masterResellerPlans} orderUrl={storeGroups.masterReseller} />
       </Section>
 
       <Section id="specs">

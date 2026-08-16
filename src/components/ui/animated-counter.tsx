@@ -20,6 +20,14 @@ export function AnimatedCounter({
   const inView = useInView(ref, { once: true, margin: "0px" });
   const motionValue = useMotionValue(0);
   const spring = useSpring(motionValue, { duration: 500, bounce: 0 });
+  // Foreign-currency prices can be fractional ($0.47) — keep the target's
+  // precision so we never animate a real price down to "$0".
+  const decimals = Number.isInteger(value) ? 0 : 2;
+  const fmt = (n: number) =>
+    `${prefix}${n.toLocaleString("en-US", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    })}${suffix}`;
 
   useEffect(() => {
     if (!inView) return;
@@ -29,20 +37,22 @@ export function AnimatedCounter({
       spring.jump(value);
       motionValue.jump(value);
       if (ref.current) {
-        ref.current.textContent = `${prefix}${Math.round(value).toLocaleString("en-US")}${suffix}`;
+        ref.current.textContent = fmt(value);
       }
       return;
     }
     motionValue.set(value);
-  }, [inView, value, motionValue, spring, reducedMotion, prefix, suffix]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fmt is derived from value/prefix/suffix
+  }, [inView, value, motionValue, spring, reducedMotion, prefix, suffix, decimals]);
 
   useEffect(() => {
     return spring.on("change", (latest) => {
       if (ref.current) {
-        ref.current.textContent = `${prefix}${Math.round(latest).toLocaleString("en-US")}${suffix}`;
+        ref.current.textContent = fmt(latest);
       }
     });
-  }, [spring, prefix, suffix]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fmt is derived from prefix/suffix/decimals
+  }, [spring, prefix, suffix, decimals]);
 
   return (
     <span ref={ref} className={className}>

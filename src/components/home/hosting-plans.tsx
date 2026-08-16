@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tilt3D } from "@/components/ui/tilt-3d";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { sharedPlans, cycleMonths, savePercent, type Cycle, type Plan } from "@/lib/plans";
+import { formatPrice } from "@/lib/currency";
 import { useCurrency } from "@/components/currency-provider";
 
 const cycleLabels: Record<Cycle, string> = {
@@ -20,7 +21,30 @@ const cycleLabels: Record<Cycle, string> = {
   annual: "Annual",
 };
 
-export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
+/**
+ * WHMCS store groups (portal.shrotihost.in/index.php/store/<group>). Each
+ * hosting line deep-links to its own group so the shopper lands on the
+ * catalog they were just reading, not the generic cart.
+ */
+export const WHMCS_STORE = "https://portal.shrotihost.in/index.php/store";
+export const storeGroups = {
+  shared: `${WHMCS_STORE}/shared-hosting`,
+  wordpress: `${WHMCS_STORE}/wordpress-hosting`,
+  unlimited: `${WHMCS_STORE}/unlimited-hosting`,
+  reseller: `${WHMCS_STORE}/reseller-hosting`,
+  masterReseller: `${WHMCS_STORE}/master-reseller`,
+  // No dedicated group in WHMCS yet — closest catalog is master reseller.
+  alphaReseller: `${WHMCS_STORE}/master-reseller`,
+} as const;
+
+export function HostingPlans({
+  plans = sharedPlans,
+  orderUrl = storeGroups.shared,
+}: {
+  plans?: Plan[];
+  /** WHMCS store URL the "Choose <plan>" buttons send shoppers to. */
+  orderUrl?: string;
+}) {
   // Monthly by default — the entry price is the anchor that converts;
   // annual totals read 12x more expensive at first glance.
   const [cycle, setCycle] = useState<Cycle>("monthly");
@@ -100,8 +124,7 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                     />
                   </span>
                   <span className="text-sm text-text-muted line-through">
-                    {currencySymbol}
-                    {Math.round(convertDisplay(regularTotal)).toLocaleString("en-US")}
+                    {formatPrice(regularTotal, currency)}
                   </span>
                 </div>
                 <div className="mt-1 flex items-center gap-2">
@@ -126,7 +149,7 @@ export function HostingPlans({ plans = sharedPlans }: { plans?: Plan[] }) {
                 </ul>
 
                 <Button
-                  href="https://portal.shrotihost.in/cart.php"
+                  href={orderUrl}
                   variant={plan.recommended ? "primary" : "secondary"}
                   size="lg"
                   className="mt-8 w-full"

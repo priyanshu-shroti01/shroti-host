@@ -7,7 +7,7 @@ import { Section } from "@/components/ui/section";
 import { WpHero } from "@/components/wordpress/wp-hero";
 import { WpFeatures } from "@/components/wordpress/wp-features";
 import { Infrastructure } from "@/components/home/infrastructure";
-import { HostingPlans } from "@/components/home/hosting-plans";
+import { HostingPlans, storeGroups } from "@/components/home/hosting-plans";
 import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 import { wordpressPlans } from "@/lib/plans";
@@ -35,7 +35,7 @@ export default function WordPressHostingPage() {
       </Section>
 
       <Section id="pricing" className="bg-surface/30">
-        <HostingPlans plans={wordpressPlans} />
+        <HostingPlans plans={wordpressPlans} orderUrl={storeGroups.wordpress} />
       </Section>
 
       <Section id="specs">

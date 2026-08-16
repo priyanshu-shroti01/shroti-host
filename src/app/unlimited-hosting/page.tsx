@@ -6,7 +6,7 @@ import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
 import { UnlimitedHero } from "@/components/unlimited/unlimited-hero";
 import { Infrastructure } from "@/components/home/infrastructure";
-import { HostingPlans } from "@/components/home/hosting-plans";
+import { HostingPlans, storeGroups } from "@/components/home/hosting-plans";
 import { Faq } from "@/components/home/faq";
 import { FinalCta } from "@/components/home/final-cta";
 import { unlimitedPlans } from "@/lib/plans";
@@ -34,7 +34,7 @@ export default function UnlimitedHostingPage() {
       </Section>
 
       <Section id="pricing" className="bg-surface/30">
-        <HostingPlans plans={unlimitedPlans} />
+        <HostingPlans plans={unlimitedPlans} orderUrl={storeGroups.unlimited} />
       </Section>
 
       <Section id="specs">
