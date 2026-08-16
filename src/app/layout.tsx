@@ -130,7 +130,7 @@ export default function RootLayout({
           </a>
           <AnnouncementBar />
           <Header />
-          <main id="main" className="flex-1">{children}</main>
+          <main id="main" className="flex-1 overflow-x-clip">{children}</main>
           <Footer />
           <ChatbotWidgetLoader />
           <MobileStickyCta />
