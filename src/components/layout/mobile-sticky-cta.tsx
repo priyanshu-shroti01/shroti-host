@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCurrency } from "@/components/currency-provider";
+import { formatPrice } from "@/lib/currency";
 import { sharedPlans } from "@/lib/plans";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
@@ -34,7 +35,7 @@ const PLAN_PAGES = new Set([
 export function MobileStickyCta() {
   const pathname = usePathname();
   const reducedMotion = usePrefersReducedMotion();
-  const { currency, convertDisplay } = useCurrency();
+  const { currency } = useCurrency();
   const [scrolledEnough, setScrolledEnough] = useState(false);
   const [dismissed, setDismissed] = useState(true);
 
@@ -59,8 +60,6 @@ export function MobileStickyCta() {
     return () => document.body.classList.remove("has-mobile-cta");
   }, [visible]);
 
-  const currencySymbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "€";
-  const fromPrice = convertDisplay(sharedPlans[0].monthlyPrice);
 
   return (
     <AnimatePresence>
@@ -74,8 +73,7 @@ export function MobileStickyCta() {
         >
           <div className="flex items-center justify-between gap-3 pr-14">
             <p className="min-w-0 text-sm font-semibold text-text-primary">
-              Hosting from {currencySymbol}
-              {Math.round(fromPrice).toLocaleString("en-US")}/mo
+              Hosting from {formatPrice(sharedPlans[0].monthlyPrice, currency)}/mo
             </p>
             <Button href="/hosting#compare" size="sm" className="shrink-0">
               Get Started
