@@ -4,6 +4,7 @@ import { Section } from "@/components/ui/section";
 import { DomainsHero } from "@/components/domains/domains-hero";
 import { TrustedTech } from "@/components/home/trusted-tech";
 import { ExtensionGrid } from "@/components/domains/extension-grid";
+import { getDomainPricing } from "@/lib/domain-pricing.server";
 import { DomainBenefits } from "@/components/domains/domain-benefits";
 import { FinalCta } from "@/components/home/final-cta";
 
@@ -14,7 +15,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/domains" },
 };
 
-export default function DomainsPage() {
+// Live TLD pricing is exported from WHMCS daily — regenerate at most once a day.
+export const revalidate = 86400;
+
+export default async function DomainsPage() {
+  const { domains } = await getDomainPricing();
   return (
     <>
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20" containerClassName="max-w-5xl">
@@ -24,7 +29,7 @@ export default function DomainsPage() {
       <TrustedTech />
 
       <Section className="bg-surface/30">
-        <ExtensionGrid />
+        <ExtensionGrid domains={domains} />
       </Section>
 
       <Section className="py-14 sm:py-16">

@@ -20,6 +20,14 @@ export const storeGroups = {
   unlimited: `${WHMCS_STORE}/unlimited-hosting`,
   reseller: `${WHMCS_STORE}/reseller-hosting`,
   masterReseller: `${WHMCS_STORE}/master-reseller`,
-  // No dedicated group in WHMCS yet — closest catalog is master reseller.
-  alphaReseller: `${WHMCS_STORE}/master-reseller`,
+  alphaReseller: `${WHMCS_STORE}/alpha-reseller-hosting`,
 } as const;
+
+/**
+ * Direct product URL for a plan inside a store group. WHMCS product slugs are
+ * the lower-cased plan names (bronze / gold / platinum / diamond), kept in
+ * sync by /home/shrotihost/whmcs-tools/sync-products.php.
+ */
+export function productUrl(group: string, planName: string): string {
+  return `${group}/${planName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+}

@@ -12,7 +12,7 @@ import { Tilt3D } from "@/components/ui/tilt-3d";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { sharedPlans, cycleMonths, savePercent, type Cycle, type Plan } from "@/lib/plans";
 import { formatPrice } from "@/lib/currency";
-import { storeGroups } from "@/lib/whmcs";
+import { productUrl, storeGroups } from "@/lib/whmcs";
 import { useCurrency } from "@/components/currency-provider";
 
 const cycleLabels: Record<Cycle, string> = {
@@ -134,7 +134,7 @@ export function HostingPlans({
                 </ul>
 
                 <Button
-                  href={orderUrl}
+                  href={productUrl(orderUrl, plan.name)}
                   variant={plan.recommended ? "primary" : "secondary"}
                   size="lg"
                   className="mt-8 w-full"

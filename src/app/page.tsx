@@ -14,6 +14,8 @@ import { Section } from "@/components/ui/section";
 
 // Below-fold interactive sections load as deferred chunks — they're still
 // server-rendered, but their hydration JS stays out of the critical path.
+import { getDomainPricing } from "@/lib/domain-pricing.server";
+
 const HostingAdvisor = dynamic(() =>
   import("@/components/home/hosting-advisor").then((m) => m.HostingAdvisor)
 );
@@ -27,7 +29,11 @@ const DeveloperFeatures = dynamic(() =>
   import("@/components/home/developer-features").then((m) => m.DeveloperFeatures)
 );
 
-export default function Home() {
+// Live TLD pricing is exported from WHMCS daily — regenerate at most once a day.
+export const revalidate = 86400;
+
+export default async function Home() {
+  const { domains } = await getDomainPricing();
   return (
     <>
       <Hero />
@@ -57,7 +63,7 @@ export default function Home() {
 
       {/* Domains — a concrete next action once you've seen price */}
       <Section id="domains">
-        <DomainSearch />
+        <DomainSearch domains={domains} />
       </Section>
 
       <Section id="steps" className="bg-surface/30">

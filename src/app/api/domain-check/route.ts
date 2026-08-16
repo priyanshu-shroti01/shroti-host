@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { allDomains } from "@/lib/domains";
+import { getDomainPricing } from "@/lib/domain-pricing.server";
 
 /**
  * Live domain availability + pricing check.
@@ -40,8 +40,9 @@ function sanitizeInput(raw: string): { base: string; explicitTld: string | null 
   return { base: cleaned.slice(0, firstDot), explicitTld: cleaned.slice(firstDot) };
 }
 
-function priceFor(tld: string): number | null {
-  return allDomains.find((d) => d.tld === tld)?.registerInr ?? null;
+async function priceFor(tld: string): Promise<number | null> {
+  const { domains } = await getDomainPricing();
+  return domains.find((d) => d.tld === tld)?.registerInr ?? null;
 }
 
 async function checkAvailability(domain: string): Promise<boolean | null> {
@@ -66,7 +67,7 @@ async function checkAvailability(domain: string): Promise<boolean | null> {
 async function checkOne(base: string, tld: string): Promise<CheckResult> {
   const domain = `${base}${tld}`;
   const available = await checkAvailability(domain);
-  return { domain, tld, available, priceInr: priceFor(tld) };
+  return { domain, tld, available, priceInr: await priceFor(tld) };
 }
 
 function buildSuggestionBases(base: string): string[] {

@@ -6,29 +6,29 @@ import { Search } from "lucide-react";
 import { Eyebrow } from "@/components/ui/section";
 import { Badge } from "@/components/ui/badge";
 import { useCurrency } from "@/components/currency-provider";
-import { allDomains, domainCategories, type DomainCategory } from "@/lib/domains";
+import { allDomains, domainCategories, type DomainCategory, type DomainPrice } from "@/lib/domains";
 
 const WHMCS_CART_URL = "https://portal.shrotihost.in/cart.php";
 const badgeTone = { "Hot!": "purple", "Sale!": "success", "New!": "blue" } as const;
 
-export function ExtensionGrid() {
+export function ExtensionGrid({ domains = allDomains }: { domains?: DomainPrice[] }) {
   const [category, setCategory] = useState<DomainCategory | "All">("All");
   const [query, setQuery] = useState("");
   const { format } = useCurrency();
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase().replace(/^\./, "");
-    return allDomains.filter((d) => {
+    return domains.filter((d) => {
       const matchesCategory = category === "All" || d.category === category;
       const matchesQuery = !q || d.tld.toLowerCase().includes(q);
       return matchesCategory && matchesQuery;
     });
-  }, [category, query]);
+  }, [domains, category, query]);
 
   return (
     <div>
       <div className="mx-auto max-w-2xl text-center">
-        <Eyebrow>All {allDomains.length} extensions</Eyebrow>
+        <Eyebrow>All {domains.length} extensions</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
           Every extension we sell, priced upfront.
         </h2>

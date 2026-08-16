@@ -8,14 +8,13 @@ import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
 import { Magnetic } from "@/components/ui/magnetic";
 import { useCurrency } from "@/components/currency-provider";
-import { allDomains } from "@/lib/domains";
+import { allDomains, type DomainPrice } from "@/lib/domains";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const WHMCS_CART_URL = "https://portal.shrotihost.in/cart.php";
 const FEATURED_TLDS = [".com", ".in", ".org", ".net", ".co", ".xyz", ".online", ".shop"];
-const featuredDomains = allDomains.filter((d) => FEATURED_TLDS.includes(d.tld));
-
-export function DomainSearch() {
+export function DomainSearch({ domains = allDomains }: { domains?: DomainPrice[] }) {
+  const featuredDomains = FEATURED_TLDS.map((t) => domains.find((d) => d.tld === t)).filter((d): d is DomainPrice => !!d);
   const [query, setQuery] = useState("");
   const [checking, setChecking] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
