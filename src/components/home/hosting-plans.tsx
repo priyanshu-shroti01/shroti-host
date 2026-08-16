@@ -12,6 +12,7 @@ import { Tilt3D } from "@/components/ui/tilt-3d";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { sharedPlans, cycleMonths, savePercent, type Cycle, type Plan } from "@/lib/plans";
 import { formatPrice } from "@/lib/currency";
+import { storeGroups } from "@/lib/whmcs";
 import { useCurrency } from "@/components/currency-provider";
 
 const cycleLabels: Record<Cycle, string> = {
@@ -20,22 +21,6 @@ const cycleLabels: Record<Cycle, string> = {
   semiAnnual: "6 Months",
   annual: "Annual",
 };
-
-/**
- * WHMCS store groups (portal.shrotihost.in/index.php/store/<group>). Each
- * hosting line deep-links to its own group so the shopper lands on the
- * catalog they were just reading, not the generic cart.
- */
-export const WHMCS_STORE = "https://portal.shrotihost.in/index.php/store";
-export const storeGroups = {
-  shared: `${WHMCS_STORE}/shared-hosting`,
-  wordpress: `${WHMCS_STORE}/wordpress-hosting`,
-  unlimited: `${WHMCS_STORE}/unlimited-hosting`,
-  reseller: `${WHMCS_STORE}/reseller-hosting`,
-  masterReseller: `${WHMCS_STORE}/master-reseller`,
-  // No dedicated group in WHMCS yet — closest catalog is master reseller.
-  alphaReseller: `${WHMCS_STORE}/master-reseller`,
-} as const;
 
 export function HostingPlans({
   plans = sharedPlans,
