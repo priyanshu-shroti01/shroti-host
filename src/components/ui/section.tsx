@@ -18,8 +18,16 @@ export function Section({
   backdrop?: ReactNode;
 }) {
   return (
-    <section id={id} className={`relative py-20 sm:py-28 ${backdrop ? "overflow-hidden" : ""} ${className}`}>
-      {backdrop}
+    <section id={id} className={`relative py-20 sm:py-28 ${className}`}>
+      {/* Clip only the backdrop layer — never the section itself. The
+          atmosphere floor overflows and needs clipping, but section content
+          (e.g. the domain-search results dropdown) must be free to extend
+          past the section edge. */}
+      {backdrop && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+          {backdrop}
+        </div>
+      )}
       <Container className={`relative ${containerClassName}`}>{children}</Container>
     </section>
   );
