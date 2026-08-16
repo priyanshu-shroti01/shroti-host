@@ -168,8 +168,11 @@ export function DomainsHero() {
   }
 
   function handleSubmit(e: React.FormEvent) {
-    if (checking || !query.trim()) return;
+    // preventDefault before any guard: an early return must never fall through
+    // to the browser's native GET submit, or Enter on an empty/mid-check form
+    // dumps the visitor onto the WHMCS cart with a blank query.
     e.preventDefault();
+    if (checking || !query.trim()) return;
     saveRecent(query.trim());
     setChecking(true);
     setTimeout(() => formRef.current?.submit(), 650);

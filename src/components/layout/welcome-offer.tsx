@@ -10,11 +10,11 @@ import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 const OPEN_DELAY_MS = 2500;
 
 /**
- * Session-once welcome offer dialog — the RankHostZone welcome-popup
+ * Once-per-campaign welcome offer dialog — the RankHostZone welcome-popup
  * pattern, restrained to this site's voice: the real, active promo from
  * `lib/promo.ts` (never an invented discount), one appearance per browser
- * session, and a fully keyboard-operable dialog (ESC, backdrop, focus
- * trapped inside while open).
+ * per campaign id (a new promo id naturally re-shows once), and a fully
+ * keyboard-operable dialog (ESC, backdrop, focus trapped inside while open).
  *
  * Fires at 2.5s, deliberately before the chatbot's 6s greeting nudge so the
  * two never appear at once.
@@ -29,9 +29,21 @@ export function WelcomeOffer() {
 
   useEffect(() => {
     if (!promo.active || promo.kind !== "promo") return;
-    if (sessionStorage.getItem(storageKey)) return;
+    // localStorage (not sessionStorage): a dismissal holds across visits, so
+    // returning visitors aren't re-interrupted every session for the same
+    // campaign. If storage is unavailable, skip the popup rather than nag on
+    // every page view.
+    try {
+      if (localStorage.getItem(storageKey)) return;
+    } catch {
+      return;
+    }
     const timer = setTimeout(() => {
-      sessionStorage.setItem(storageKey, "1");
+      try {
+        localStorage.setItem(storageKey, "1");
+      } catch {
+        // Storage write failed — still show it this once.
+      }
       setOpen(true);
     }, OPEN_DELAY_MS);
     return () => clearTimeout(timer);
@@ -123,7 +135,7 @@ export function WelcomeOffer() {
               type="button"
               onClick={close}
               aria-label="Close offer"
-              className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-surface hover:text-text-primary"
+              className="absolute right-4 top-4 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-surface hover:text-text-primary"
             >
               <X size={16} aria-hidden="true" />
             </button>

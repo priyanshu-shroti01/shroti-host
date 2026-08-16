@@ -41,8 +41,11 @@ export function TrustedTech() {
       </p>
       {/* Ghost-text marquee — outlined display type with a vertical fade, the
           reference sites' signature "big tactile infrastructure" cue, in our
-          own brand stroke color and with our real stack names. */}
-      <div className="mt-4">
+          own brand stroke color and with our real stack names. Purely
+          decorative (the caption above carries the meaning), so the whole
+          strip is hidden from assistive tech — otherwise screen readers hit
+          the stack names twice via the marquee's seamless-loop clone. */}
+      <div className="mt-4" aria-hidden="true">
         <Marquee durationSeconds={46}>
           {tech.map((name) => (
             <span
