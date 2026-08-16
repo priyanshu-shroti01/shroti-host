@@ -1,0 +1,36 @@
+# ShrotiHost
+
+> Premium, developer-friendly web hosting for students, developers, startups, and businesses in India. Shared, WordPress, unlimited, and reseller hosting plus domain registration — free SSL, LiteSpeed, NVMe storage, daily backups, and free migration on every plan. Same renewal price, every cycle.
+
+## Hosting plans
+
+- [Shared Hosting](https://shrotihost.in/hosting): Bronze, Gold, Platinum, and Diamond plans on LiteSpeed and NVMe storage, from entry-level to 10+ websites.
+- [WordPress Hosting](https://shrotihost.in/wordpress-hosting): Hosting tuned for WordPress and WooCommerce with LiteSpeed caching.
+- [Unlimited Hosting](https://shrotihost.in/unlimited-hosting): One plan covering as many sites as you run.
+- [Reseller Hosting](https://shrotihost.in/reseller-hosting): White-label hosting business starter with WHM and cPanel accounts.
+- [Master Reseller Hosting](https://shrotihost.in/master-reseller-hosting): Create and manage resellers of your own.
+- [Alpha Reseller Hosting](https://shrotihost.in/alpha-reseller-hosting): Top reseller tier with maximum resources.
+- [VPS Hosting](https://shrotihost.in/vps): Coming soon.
+
+## Domains
+
+- [Domain Search & Registration](https://shrotihost.in/domains): Search, compare extensions, and register with upfront register and renewal pricing for every TLD sold.
+
+## Products
+
+- [WHMCS Gateway Fees & Allocator Module](https://shrotihost.in/whmcs-gateway-fees-allocator): WHMCS module that adds gateway fees and allocates payments automatically.
+- [WHMCS WhatsApp Notification Module](https://shrotihost.in/whmcs-whatsapp-notification-module): WHMCS module that sends client notifications over WhatsApp.
+
+## Company
+
+- [About](https://shrotihost.in/about): Mission, story, and the team behind ShrotiHost. Serving customers since 2023.
+- [Blog](https://shrotihost.in/blog): Guides on hosting a website in India, NVMe hosting, shared vs reseller hosting, starting a hosting business, WordPress speed, and choosing a domain name.
+- [Contact](https://shrotihost.in/contact): Sales, support, migration, technical, partnership, and billing channels, including WhatsApp.
+- [Status](https://shrotihost.in/status): Service status page (live monitoring preview).
+
+## Legal
+
+- [Terms of Service](https://shrotihost.in/legal/terms)
+- [Privacy Policy](https://shrotihost.in/legal/privacy)
+- [Refund Policy](https://shrotihost.in/legal/refund-policy)
+- [Acceptable Use Policy](https://shrotihost.in/legal/aup)

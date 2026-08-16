@@ -44,3 +44,4 @@ docs/planning/Shrotihost.zip
 
 # playwright mcp output
 .playwright-mcp/
+.gstack/

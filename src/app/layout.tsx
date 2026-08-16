@@ -114,6 +114,13 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-full flex-col overflow-x-hidden bg-bg text-text-primary">
+        {/* Scroll-reveal components server-render with inline opacity/transform
+            hiding states that only JS animates away. Without JS those styles
+            never clear, so force them visible — scoped to inline styles, which
+            is exactly where framer-motion writes them. */}
+        <noscript>
+          <style>{`[style*="opacity"],[style*="transform"]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <CurrencyProvider>
           <a
             href="#main"

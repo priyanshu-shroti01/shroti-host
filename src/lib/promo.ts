@@ -1,9 +1,9 @@
 export type PromoIcon = "graduation-cap" | "tag" | "percent" | "clock";
 
 export type PromoBannerConfig = {
-  /** Unique campaign key — also drives the sessionStorage dismiss key, so a
-   *  new campaign (new id) naturally re-shows the bar to users who dismissed
-   *  a previous one. */
+  /** Unique campaign key — also drives the storage dismiss keys, so a
+   *  new campaign (new id) naturally re-shows the bar and welcome dialog to
+   *  users who dismissed a previous one. */
   id: string;
   /** Kill switch — set false to hide without deleting the config. */
   active: boolean;
