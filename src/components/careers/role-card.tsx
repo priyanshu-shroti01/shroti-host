@@ -1,14 +1,12 @@
-import { ArrowUpRight, MapPin, Briefcase, MessageCircle } from "lucide-react";
+import { MapPin, Briefcase } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { CAREERS_EMAIL, CAREERS_WHATSAPP, type CareerRole } from "@/lib/careers";
+import { ApplySection } from "@/components/careers/apply-form";
+import type { CareerRole } from "@/lib/careers";
 
 const teamTone = { Support: "success", Engineering: "purple", Growth: "blue" } as const;
 
 export function RoleCard({ role }: { role: CareerRole }) {
-  const mailto = `mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent(`Application: ${role.title}`)}`;
-  const wa = `${CAREERS_WHATSAPP}?text=${encodeURIComponent(`Hi! I'd like to apply for the ${role.title} role.`)}`;
 
   return (
     <Card className="flex h-full flex-col">
@@ -48,16 +46,8 @@ export function RoleCard({ role }: { role: CareerRole }) {
         </div>
       </div>
 
-      <div className="mt-6 flex flex-1 flex-wrap items-end gap-3">
-        <Button href={mailto} size="md">
-          Apply by email
-          <ArrowUpRight size={16} aria-hidden="true" />
-        </Button>
-        <Button href={wa} variant="secondary" size="md">
-          <MessageCircle size={16} aria-hidden="true" />
-          Apply on WhatsApp
-        </Button>
-      </div>
+      <div className="flex-1" />
+      <ApplySection roleSlug={role.slug} roleTitle={role.title} />
     </Card>
   );
 }
