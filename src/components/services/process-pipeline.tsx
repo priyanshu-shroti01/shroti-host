@@ -49,19 +49,20 @@ export function ProcessPipeline({ stages }: { stages: PipelineStage[] }) {
   };
 
   return (
-    <ol
-      ref={ref}
-      className="relative mx-auto grid max-w-md gap-0 sm:max-w-none sm:grid-cols-3 lg:flex lg:items-stretch lg:justify-center"
-    >
+    // Vertical connected list up to lg, horizontal pipeline from lg — the
+    // connector is present at every width (a pipeline that isn't connected
+    // stops explaining anything).
+    <ol ref={ref} className="relative mx-auto grid max-w-md gap-0 lg:flex lg:max-w-none lg:items-stretch lg:justify-center">
       {stages.map((stage, i) => {
         const state = stateOf(i);
         return (
           <li key={stage.title} className="relative flex lg:flex-1 lg:basis-0 lg:flex-col lg:items-center">
-            {/* Connector to the previous stage */}
+            {/* Connector to the previous stage. left/top offsets = half the
+                44px (h-11) stage badge, keeping the line centered on it. */}
             {i > 0 && (
               <span
                 aria-hidden="true"
-                className="absolute left-[21px] top-0 h-5 w-0.5 -translate-y-full bg-border sm:hidden lg:left-0 lg:top-[21px] lg:block lg:h-0.5 lg:w-1/2 lg:translate-y-0 lg:-translate-x-0"
+                className="absolute left-[22px] top-0 h-5 w-0.5 -translate-y-full bg-border lg:left-0 lg:top-[22px] lg:h-0.5 lg:w-1/2 lg:translate-y-0"
               >
                 <motion.span
                   className="absolute inset-0 origin-top bg-brand-purple/60 lg:origin-left"
@@ -78,7 +79,7 @@ export function ProcessPipeline({ stages }: { stages: PipelineStage[] }) {
                   scale: state === "active" && !reducedMotion ? 1.08 : 1,
                 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className={`relative z-10 inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-300 ${
+                className={`relative z-10 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-300 ${
                   state === "done"
                     ? "border-success/50 bg-success/10 text-success"
                     : state === "active"
@@ -87,12 +88,6 @@ export function ProcessPipeline({ stages }: { stages: PipelineStage[] }) {
                 }`}
               >
                 {state === "done" ? <Check size={18} aria-hidden="true" /> : stage.icon}
-                {state === "active" && !reducedMotion && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-0 animate-ping rounded-full border-2 border-brand-purple/40"
-                  />
-                )}
               </motion.span>
               <div className="min-w-0 pb-4 lg:pb-0">
                 <p
@@ -102,7 +97,7 @@ export function ProcessPipeline({ stages }: { stages: PipelineStage[] }) {
                 >
                   {stage.title}
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-text-secondary lg:mx-auto lg:max-w-[170px]">
+                <p className="mt-1 text-xs leading-relaxed text-text-secondary lg:mx-auto lg:max-w-44">
                   {stage.description}
                 </p>
               </div>

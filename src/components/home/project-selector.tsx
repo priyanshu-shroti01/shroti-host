@@ -84,10 +84,12 @@ export function ProjectSelector() {
   return (
     <Reveal className="mx-auto max-w-4xl">
       <div className="text-center">
+        {/* "next" also keeps this distinct from the Hosting Advisor quiz,
+            which asks "What are you building?" higher on the same page. */}
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          What are you{" "}
+          What are you building{" "}
           <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-            building?
+            next?
           </span>
         </h2>
         <p className="mt-4 text-text-secondary">

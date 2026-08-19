@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { motion } from "framer-motion";
 import { CheckCircle2, Loader2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BUDGET_RANGES, PROJECT_TYPES, TIMELINES } from "@/lib/services";
+import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const CONTACT_EMAIL = "support@shrotihost.in";
 const CONTACT_WHATSAPP = "https://wa.me/919582129099";
@@ -31,6 +33,7 @@ export function EnquiryForm({
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [topError, setTopError] = useState<string | null>(null);
+  const reducedMotion = usePrefersReducedMotion();
 
   const wa = `${CONTACT_WHATSAPP}?text=${encodeURIComponent("Hi! I'd like to discuss a project.")}`;
   const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Project enquiry")}`;
@@ -68,7 +71,14 @@ export function EnquiryForm({
 
   if (state === "done") {
     return (
-      <div className="flex items-start gap-3 rounded-2xl border-2 border-success/30 bg-success/10 p-6">
+      /* Success settle per micro-interactions.md: brief scale/opacity pulse
+         into the success state, instant under reduced motion. */
+      <motion.div
+        initial={reducedMotion ? false : { opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
+        className="flex items-start gap-3 rounded-2xl border-2 border-success/30 bg-success/10 p-6"
+      >
         <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-success" aria-hidden="true" />
         <div>
           <p className="text-base font-semibold text-text-primary">Enquiry received.</p>
@@ -77,19 +87,24 @@ export function EnquiryForm({
             faster on WhatsApp.
           </p>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
     <form onSubmit={onSubmit} className="grid gap-4 rounded-2xl border-2 border-border bg-card p-6">
       {topError && (
-        <p
+        /* Error shake per micro-interactions.md — short, paired with text. */
+        <motion.p
+          key={topError}
           role="alert"
+          initial={false}
+          animate={reducedMotion ? {} : { x: [0, -6, 6, -4, 4, 0] }}
+          transition={{ duration: 0.28, ease: "easeOut" }}
           className="rounded-lg border border-error/30 bg-error/10 px-3 py-2 text-sm text-error"
         >
           {topError}
-        </p>
+        </motion.p>
       )}
       {/* Honeypot — hidden from real users, bots fill it. */}
       <input
@@ -217,7 +232,9 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <label className="block">
+    /* data-error drives the field-level error border (see globals.css) so
+       the input itself changes state, not just the caption below it. */
+    <label className="block" data-error={error ? "" : undefined}>
       <span className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-text-muted">
         {label}
       </span>

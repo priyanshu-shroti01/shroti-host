@@ -80,11 +80,16 @@ export function HostBuildScale() {
         {reducedMotion ? (
           <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/60 to-brand-blue/60" />
         ) : (
+          /* Transform-only travel: the carrier spans the track minus the dot
+             width (right-2.5), so translateX(100%) of its own width lands the
+             dot exactly at the track end — never animate `left` in a loop. */
           <motion.div
-            className="absolute top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-brand-purple shadow-[0_0_12px_var(--color-brand-purple)]"
-            animate={inView ? { left: ["0%", "100%"] } : {}}
+            className="absolute inset-y-0 left-0 right-2.5"
+            animate={inView ? { x: ["0%", "100%"] } : {}}
             transition={{ duration: 4.5, ease: "easeInOut", repeat: Infinity, repeatDelay: 0.8 }}
-          />
+          >
+            <span className="absolute left-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-brand-purple shadow-[0_0_12px_var(--color-brand-purple)]" />
+          </motion.div>
         )}
       </div>
 
@@ -94,7 +99,7 @@ export function HostBuildScale() {
             <SpotlightCard className="h-full">
               <div className="flex h-full flex-col p-7">
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl font-extrabold tracking-tight text-text-primary">
+                  <span className="text-2xl font-bold tracking-tight text-text-primary">
                     {pillar.key}
                   </span>
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 text-brand-purple">

@@ -1,4 +1,5 @@
 import { ArrowRight, MessageCircle, ShieldCheck } from "lucide-react";
+import { Accordion } from "@/components/ui/accordion";
 import { Section, Eyebrow } from "@/components/ui/section";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Reveal } from "@/components/ui/reveal";
@@ -19,7 +20,7 @@ export function ServicePage({ service }: { service: Service }) {
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <div className="mx-auto max-w-3xl text-center">
           <Eyebrow>{service.eyebrow}</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
             {service.headline[0]}{" "}
             <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
               {service.headline[1]}
@@ -117,18 +118,8 @@ export function ServicePage({ service }: { service: Service }) {
             Honest{" "}
             <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">answers</span>
           </h2>
-          <div className="mt-10 space-y-3">
-            {service.faqs.map((faq) => (
-              <details
-                key={faq.q}
-                className="group rounded-2xl border border-border bg-card px-5 py-4 open:border-brand-purple/40"
-              >
-                <summary className="cursor-pointer list-none text-sm font-semibold text-text-primary marker:content-none [&::-webkit-details-marker]:hidden">
-                  {faq.q}
-                </summary>
-                <p className="mt-3 text-sm leading-relaxed text-text-secondary">{faq.a}</p>
-              </details>
-            ))}
+          <div className="mt-10">
+            <Accordion items={service.faqs} />
           </div>
         </div>
       </Section>

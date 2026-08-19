@@ -30,7 +30,7 @@ export default function Page() {
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <div className="mx-auto max-w-2xl text-center">
           <Eyebrow>Portfolio</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
             Built by{" "}
             <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
               ShrotiHost.
