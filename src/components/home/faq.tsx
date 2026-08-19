@@ -61,12 +61,16 @@ export function Faq() {
         </h2>
       </div>
 
-      <div className="mx-auto mt-12 max-w-2xl divide-y divide-border rounded-2xl border border-border">
+      <div className="mx-auto mt-12 max-w-2xl space-y-3">
         {faqs.map((faq, i) => {
           const isOpen = open === i;
           return (
             <Reveal key={faq.question} delay={i * 0.03}>
-              <div>
+              <div
+                className={`rounded-2xl border-2 bg-card shadow-[var(--shadow-card)] transition-colors duration-200 ${
+                  isOpen ? "border-brand-purple/50" : "border-border"
+                }`}
+              >
                 <button
                   type="button"
                   onClick={() => setOpen(isOpen ? null : i)}

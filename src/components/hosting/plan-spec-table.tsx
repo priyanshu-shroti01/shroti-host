@@ -9,6 +9,7 @@ import type { SpecGroup } from "@/lib/plan-specs";
  * markup; horizontal scroll on small screens.
  */
 export function PlanSpecTable({ plans, groups }: { plans: Plan[]; groups: SpecGroup[] }) {
+  const recIndex = plans.findIndex((p) => p.recommended);
   return (
     <div>
       <div className="mx-auto max-w-2xl text-center">
@@ -38,7 +39,9 @@ export function PlanSpecTable({ plans, groups }: { plans: Plan[]; groups: SpecGr
                     key={plan.name}
                     scope="col"
                     className={`px-4 py-3.5 text-center font-semibold ${
-                      plan.recommended ? "text-brand-purple" : "text-text-primary"
+                      plan.recommended
+                        ? "border-t-2 border-brand-purple bg-brand-purple/10 text-brand-purple"
+                        : "text-text-primary"
                     }`}
                   >
                     {plan.name}
@@ -48,7 +51,7 @@ export function PlanSpecTable({ plans, groups }: { plans: Plan[]; groups: SpecGr
             </thead>
             {groups.map((group) => (
               <tbody key={group.title}>
-                <tr className="border-y border-border bg-surface/40">
+                <tr className="border-y border-border bg-surface-raised/40">
                   <th
                     scope="rowgroup"
                     colSpan={plans.length + 1}
@@ -63,10 +66,20 @@ export function PlanSpecTable({ plans, groups }: { plans: Plan[]; groups: SpecGr
                       ? Array.from({ length: plans.length }, () => row.values as string)
                       : row.values;
                   return (
-                    <tr key={row.label} className={i % 2 === 1 ? "bg-surface/20" : undefined}>
+                    <tr
+                      key={row.label}
+                      className={`transition-colors duration-150 hover:bg-brand-purple/5 ${
+                        i % 2 === 1 ? "bg-surface/20" : ""
+                      }`}
+                    >
                       <td className="px-5 py-2.5 text-text-secondary">{row.label}</td>
                       {values.map((value, j) => (
-                        <td key={j} className="px-4 py-2.5 text-center text-text-primary">
+                        <td
+                          key={j}
+                          className={`px-4 py-2.5 text-center text-text-primary ${
+                            j === recIndex ? "bg-brand-purple/[0.06]" : ""
+                          }`}
+                        >
                           {value === "✓" ? (
                             <>
                               <Check size={15} className="mx-auto text-success" aria-hidden="true" />

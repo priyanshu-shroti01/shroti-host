@@ -26,14 +26,14 @@ export function ComparisonTable() {
       </div>
 
       <Reveal delay={0.1}>
-        <div className="mx-auto mt-12 max-w-2xl overflow-hidden overflow-x-auto rounded-2xl border border-border">
+        <div className="mx-auto mt-12 max-w-2xl overflow-hidden overflow-x-auto rounded-2xl border-2 border-border bg-card shadow-[var(--shadow-card)]">
           <table className="w-full min-w-[480px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-border bg-surface/60">
                 <th scope="col" className="px-5 py-3 font-medium text-text-secondary">
                   Feature
                 </th>
-                <th scope="col" className="px-5 py-3 text-center font-semibold text-brand-purple">
+                <th scope="col" className="border-t-2 border-brand-purple bg-brand-purple/10 px-5 py-3 text-center font-semibold text-brand-purple">
                   ShrotiHost
                 </th>
                 <th scope="col" className="px-5 py-3 text-center font-medium text-text-muted">
@@ -43,9 +43,12 @@ export function ComparisonTable() {
             </thead>
             <tbody>
               {rows.map((row, i) => (
-                <tr key={row.feature} className={i % 2 === 1 ? "bg-surface/30" : undefined}>
+                <tr
+                  key={row.feature}
+                  className={`transition-colors duration-150 hover:bg-brand-purple/5 ${i % 2 === 1 ? "bg-surface/30" : ""}`}
+                >
                   <td className="px-5 py-3 text-text-primary">{row.feature}</td>
-                  <td className="px-5 py-3 text-center">
+                  <td className="bg-brand-purple/[0.06] px-5 py-3 text-center">
                     <Check size={16} className="mx-auto text-success" aria-hidden="true" />
                     <span className="sr-only">Included</span>
                   </td>

@@ -36,7 +36,7 @@ export function StatusBoard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "0px" }}
               transition={{ duration: 0.25, delay: i * 0.04 }}
-              className="flex items-center justify-between rounded-xl border border-border bg-surface px-4 py-3"
+              className="flex items-center justify-between rounded-xl border-2 border-border bg-card px-4 py-3 shadow-[var(--shadow-card)] transition-colors duration-150 hover:border-border-strong"
             >
               <span className="text-sm text-text-primary">{s}</span>
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-success">
