@@ -42,13 +42,21 @@ export function renderInline(text: string): ReactNode[] {
   return nodes;
 }
 
+/** Anchor id for a section heading — shared with the table of contents. */
+export function headingId(heading: string): string {
+  return heading.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
 export function PostBody({ post }: { post: BlogPost }) {
   return (
     <div className="space-y-8">
       {post.sections.map((section, i) => (
         <section key={i}>
           {section.heading && (
-            <h2 className="text-xl font-semibold tracking-tight text-text-primary sm:text-2xl">
+            <h2
+              id={headingId(section.heading)}
+              className="scroll-mt-24 text-xl font-semibold tracking-tight text-text-primary sm:text-2xl"
+            >
               {section.heading}
             </h2>
           )}

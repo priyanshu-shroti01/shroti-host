@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { blogPosts } from "@/lib/blog";
+import { allCategories, allTags, blogPosts } from "@/lib/blog";
 
 const SITE_URL = "https://shrotihost.in";
 
@@ -45,9 +45,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...blogPosts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
-      lastModified: new Date(post.date),
+      lastModified: new Date(post.updated ?? post.date),
       changeFrequency: "monthly" as const,
       priority: 0.6,
+    })),
+    ...allCategories().map((c) => ({
+      url: `${SITE_URL}/blog/category/${c.slug}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.4,
+    })),
+    ...allTags().map((t) => ({
+      url: `${SITE_URL}/blog/tag/${t.slug}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.3,
     })),
   ];
 }

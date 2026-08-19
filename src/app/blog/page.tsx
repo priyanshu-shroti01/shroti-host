@@ -5,7 +5,7 @@ import { Section, Eyebrow } from "@/components/ui/section";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Reveal } from "@/components/ui/reveal";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
-import { blogPosts } from "@/lib/blog";
+import { allCategories, blogPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Blog — Hosting Guides & Tutorials",
@@ -28,9 +28,20 @@ export default function BlogIndexPage() {
           <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">online</span>.
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary">
-          Hosting, WordPress, domains, and the business of the web — practical, honest, and written
-          for India.
+          Hosting, domains, VPS, and building for the web — practical, honest, and written for
+          India.
         </p>
+        <nav aria-label="Categories" className="mt-8 flex flex-wrap items-center justify-center gap-2">
+          {allCategories().map((c) => (
+            <Link
+              key={c.slug}
+              href={`/blog/category/${c.slug}`}
+              className="rounded-full border-2 border-border bg-card px-3.5 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple"
+            >
+              {c.name} <span className="text-text-muted">({c.count})</span>
+            </Link>
+          ))}
+        </nav>
       </div>
 
       <div className="mx-auto mt-14 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">

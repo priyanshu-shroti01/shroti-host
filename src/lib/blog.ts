@@ -5,12 +5,23 @@
  * interlink product pages for SEO without a markdown dependency.
  */
 
+import { libraryPosts } from "@/lib/blog-posts";
+
 export type PostSection = {
   heading?: string;
   paragraphs?: string[];
   list?: string[];
   ordered?: boolean;
 };
+
+export type BlogCategory =
+  | "Guides"
+  | "WordPress"
+  | "Business"
+  | "Performance"
+  | "Domains"
+  | "VPS"
+  | "Development";
 
 export type BlogPost = {
   slug: string;
@@ -19,15 +30,19 @@ export type BlogPost = {
   description: string;
   /** ISO date, also shown on the card. */
   date: string;
+  /** ISO date of the last substantive update; shown + fed to dateModified. */
+  updated?: string;
   readMinutes: number;
-  category: "Guides" | "WordPress" | "Business" | "Performance" | "Domains";
+  category: BlogCategory;
+  /** Lowercase, hyphenated topic tags — power /blog/tag/[tag] archives. */
+  tags?: string[];
   sections: PostSection[];
   faq?: { q: string; a: string }[];
   cta: { label: string; href: string; blurb: string };
   related: string[];
 };
 
-export const blogPosts: BlogPost[] = [
+const basePosts: BlogPost[] = [
   {
     slug: "how-to-host-a-website-in-india",
     title: "How to Host a Website in India: The Complete 2026 Guide",
@@ -453,10 +468,53 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
+/** All posts, newest first — the six originals plus the authored library. */
+export const blogPosts: BlogPost[] = [...basePosts, ...libraryPosts].sort((a, b) =>
+  b.date.localeCompare(a.date),
+);
+
 export function getPost(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
 }
 
+/** Manual picks first, then same-category fill, up to four. */
 export function relatedPosts(post: BlogPost): BlogPost[] {
-  return post.related.map((slug) => getPost(slug)).filter((p): p is BlogPost => Boolean(p));
+  const manual = post.related
+    .map((slug) => getPost(slug))
+    .filter((p): p is BlogPost => Boolean(p));
+  const fill = blogPosts.filter(
+    (p) =>
+      p.slug !== post.slug && p.category === post.category && !post.related.includes(p.slug),
+  );
+  return [...manual, ...fill].slice(0, 4);
+}
+
+/** URL-safe slug for category/tag archive routes. */
+export function taxonomySlug(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export function allCategories(): { name: BlogCategory; slug: string; count: number }[] {
+  const seen = new Map<BlogCategory, number>();
+  for (const post of blogPosts) seen.set(post.category, (seen.get(post.category) ?? 0) + 1);
+  return [...seen.entries()]
+    .map(([name, count]) => ({ name, slug: taxonomySlug(name), count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+export function postsByCategory(categorySlug: string): BlogPost[] {
+  return blogPosts.filter((p) => taxonomySlug(p.category) === categorySlug);
+}
+
+export function allTags(): { name: string; slug: string; count: number }[] {
+  const seen = new Map<string, number>();
+  for (const post of blogPosts)
+    for (const tag of post.tags ?? []) seen.set(tag, (seen.get(tag) ?? 0) + 1);
+  return [...seen.entries()]
+    .map(([name, count]) => ({ name, slug: taxonomySlug(name), count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+export function postsByTag(tagSlug: string): BlogPost[] {
+  return blogPosts.filter((p) => (p.tags ?? []).some((t) => taxonomySlug(t) === tagSlug));
 }
