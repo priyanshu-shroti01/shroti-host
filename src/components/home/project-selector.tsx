@@ -95,16 +95,19 @@ export function ProjectSelector() {
         </p>
       </div>
 
+      {/* Plain toggle buttons, not ARIA tabs: the tabs pattern requires
+          arrow-key management; aria-pressed buttons are natively keyboard-
+          complete and announce state correctly. */}
       <div
-        role="tablist"
+        role="group"
         aria-label="Project type"
         className="mt-10 flex flex-wrap items-center justify-center gap-2.5"
       >
         {CHOICES.map((c, i) => (
           <button
             key={c.label}
-            role="tab"
-            aria-selected={i === active}
+            type="button"
+            aria-pressed={i === active}
             onClick={() => setActive(i)}
             className={`rounded-full border-2 px-4 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-brand-purple ${
               i === active
@@ -121,7 +124,6 @@ export function ProjectSelector() {
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={choice.label}
-            role="tabpanel"
             initial={reducedMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
