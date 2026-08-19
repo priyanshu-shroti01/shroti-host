@@ -21,11 +21,11 @@ export function FinalCta() {
         />
         <div className="relative">
           <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Start Your Next Project Today
+            Build What&apos;s Next
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-white/80">
-            Affordable, reliable hosting with free migration and no hidden fees. Launch in
-            minutes, grow without limits.
+            From your first domain to production infrastructure — hosting, development, and one
+            team that carries the whole thing.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Magnetic>
@@ -35,10 +35,17 @@ export function FinalCta() {
                 size="lg"
                 className="!border-white/40 bg-white !text-brand-purple hover:bg-white/90"
               >
-                Launch Your Website
+                Get Hosting
                 <ArrowRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
               </Button>
             </Magnetic>
+            <Button
+              href="/web-development"
+              size="lg"
+              className="bg-white/10 text-white hover:bg-white/20"
+            >
+              Start a Project
+            </Button>
             <Button href="/contact" size="lg" className="bg-white/10 text-white hover:bg-white/20">
               Talk to Us
             </Button>

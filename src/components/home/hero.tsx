@@ -207,19 +207,25 @@ export function Hero() {
             shrotihost.in
           </span>
           <h1 className="mt-5 text-4xl font-extrabold tracking-tighter text-text-primary sm:text-5xl lg:text-[68px] lg:leading-[1.03]">
-            Launch a website.
-            <br /> <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">Watch it happen.</span>
+            Build. Deploy.
+            <br /> <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">Scale.</span>
           </h1>
-          <p className="mt-4 text-lg font-medium text-text-primary">Build. Deploy. Scale.</p>
+          <p className="mt-4 text-lg font-medium text-text-primary">
+            Launch a website. Watch it happen.
+          </p>
           <p className="mx-auto mt-3 max-w-md text-text-secondary lg:mx-0">
-            Type a domain in the demo and press enter — this is the real sequence behind going live.
+            From domains and high-performance hosting to custom websites, applications, and
+            infrastructure — one technology partner for what comes next.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
             <Button href="/hosting#compare" size="lg">
-              View Plans
+              Explore Infrastructure
             </Button>
-            <Button variant="secondary" size="lg" onClick={focusDemo}>
+            <Button href="/web-development" variant="secondary" size="lg">
+              Build With ShrotiHost
+            </Button>
+            <Button variant="ghost" size="lg" onClick={focusDemo}>
               Try the Demo
             </Button>
           </div>
