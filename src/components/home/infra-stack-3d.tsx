@@ -23,14 +23,60 @@ import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
  * beside it is the accessible source of truth.
  */
 
-const PLATE_GAP = 54;
+const PLATE_GAP = 68;
 /** Separation at first sight — a nearly-solid block that then explodes. */
-const COLLAPSED_GAP = 14;
+const COLLAPSED_GAP = 8;
 const PLATE_COUNT = 5;
 /** Matches the `stack-descend` keyframes duration in globals.css. */
 const PACKET_LOOP_MS = 3600;
 
 const plateIcons: LucideIcon[] = [Globe, Cloud, Zap, Shield, Monitor];
+const plateLabels = ["Internet", "Cloudflare CDN", "LiteSpeed", "CloudLinux", "Your website"];
+/** Screen-vertical px per 1px of plate Z in this camera (tuned by eye). */
+const SCREEN_Y_PER_Z = 0.74;
+
+/** Exploded-diagram callout — rides its plate as the stack separates. */
+function CalloutLabel({
+  index,
+  gap,
+  active,
+  reducedMotion,
+}: {
+  index: number;
+  gap: MotionValue<number>;
+  active: boolean;
+  reducedMotion: boolean;
+}) {
+  const layer = PLATE_COUNT - 1 - index;
+  // Vertical position: plate's Z lift mapped to screen Y, centered on layer 2.
+  const y = useTransform(gap, (g) => -(layer - 2) * g * SCREEN_Y_PER_Z);
+  // Labels only exist once the stack has meaningfully come apart —
+  // a collapsed block with five labels would be noise.
+  const opacity = useTransform(gap, [COLLAPSED_GAP, PLATE_GAP * 0.65, PLATE_GAP], [0, 0, 1]);
+  const x = useTransform(gap, [COLLAPSED_GAP, PLATE_GAP], [14, 0]);
+
+  return (
+    <motion.div
+      style={reducedMotion ? { y: -(layer - 2) * PLATE_GAP * SCREEN_Y_PER_Z } : { y, opacity, x }}
+      className="absolute right-0 top-1/2 flex -translate-y-1/2 items-center gap-0"
+    >
+      <span
+        className={`h-px w-7 transition-colors duration-300 ${
+          active ? "bg-brand-purple" : "bg-border-strong"
+        }`}
+      />
+      <span
+        className={`whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-colors duration-300 ${
+          active
+            ? "border-brand-purple/60 bg-brand-purple/15 text-brand-purple"
+            : "border-border-strong bg-card text-text-secondary"
+        }`}
+      >
+        {plateLabels[index]}
+      </span>
+    </motion.div>
+  );
+}
 
 function Plate({
   index,
@@ -114,11 +160,11 @@ export function InfraStack3D({ hoverIndex }: { hoverIndex: number | null }) {
   // 1 by the time it reaches the upper third — then it stays exploded.
   const { scrollYProgress } = useScroll({
     target: sceneRef,
-    offset: ["start 95%", "start 38%"],
+    offset: ["start 92%", "start 34%"],
   });
   const gapSpring = useSpring(useTransform(scrollYProgress, [0, 1], [COLLAPSED_GAP, PLATE_GAP]), {
-    stiffness: 90,
-    damping: 20,
+    stiffness: 80,
+    damping: 19,
   });
 
   // Self-narration: step the highlight down one layer per packet-fifth so the
@@ -139,7 +185,21 @@ export function InfraStack3D({ hoverIndex }: { hoverIndex: number | null }) {
           object the site renders reads as orbiting it — the sanctioned
           non-interactive Tilt3D use (see docs/micro-interactions.md "3D tilt"). */}
       <Tilt3D maxTilt={4} depth>
-      <div className="flex h-[440px] items-center justify-center [transform-style:preserve-3d]">
+      <div className="relative flex h-[440px] items-center justify-center pr-36 [transform-style:preserve-3d]">
+        {/* Exploded-diagram callouts — screen-space, so type stays crisp
+            instead of being skewed by the isometric camera. They fade in as
+            the stack separates and ride their plates via the same spring. */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-36">
+          {plateLabels.map((_, i) => (
+            <CalloutLabel
+              key={i}
+              index={i}
+              gap={gapSpring}
+              active={activeIndex === i}
+              reducedMotion={reducedMotion}
+            />
+          ))}
+        </div>
         <div
           className="relative h-[240px] w-[240px] [transform-style:preserve-3d]"
           style={{ transform: "translateY(70px) rotateX(56deg) rotateZ(-42deg)" }}
@@ -169,7 +229,11 @@ export function InfraStack3D({ hoverIndex }: { hoverIndex: number | null }) {
           {!reducedMotion && (
             <div
               className="absolute left-1/2 top-1/2 h-3.5 w-3.5 rounded-full bg-brand-blue shadow-[var(--glow-packet)]"
-              style={{ animation: `stack-descend ${PACKET_LOOP_MS}ms ease-in-out infinite` }}
+              style={{
+                animation: `stack-descend ${PACKET_LOOP_MS}ms ease-in-out infinite`,
+                // Wider exploded gap → packet starts above the new top plate.
+                ["--packet-from" as string]: `${(PLATE_COUNT - 1) * PLATE_GAP + 22}px`,
+              } as React.CSSProperties}
             />
           )}
         </div>
