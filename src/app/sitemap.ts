@@ -19,6 +19,7 @@ const routes: { path: string; changeFrequency: "weekly" | "monthly" | "yearly"; 
   { path: "/whmcs-gateway-fees-allocator", changeFrequency: "monthly", priority: 0.6 },
   { path: "/whmcs-whatsapp-notification-module", changeFrequency: "monthly", priority: 0.6 },
   { path: "/about", changeFrequency: "monthly", priority: 0.5 },
+  { path: "/careers", changeFrequency: "monthly", priority: 0.5 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
   { path: "/status", changeFrequency: "monthly", priority: 0.4 },
   { path: "/legal/terms", changeFrequency: "yearly", priority: 0.2 },

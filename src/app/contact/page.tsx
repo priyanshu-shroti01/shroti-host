@@ -22,10 +22,11 @@ export default function ContactPage() {
           <Reveal className="text-center lg:text-left">
             <Badge tone="neutral">Contact</Badge>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
-              What&apos;s this about?
+              Talk to a real person.
             </h1>
             <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary lg:mx-0">
-              Pick a category and we&apos;ll route you to the right place.
+              Tell us what it&apos;s about — we&apos;ll route you straight to the right
+              channel, no phone trees.
             </p>
           </Reveal>
           <Reveal delay={0.1} className="hidden lg:block">

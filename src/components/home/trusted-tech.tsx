@@ -1,21 +1,7 @@
-import { Marquee } from "@/components/ui/marquee";
 import { StatPill } from "@/components/ui/stat-pill";
+import { InfraPipeline } from "@/components/home/infra-pipeline";
 import { Check, Clock3, Sparkles, Star } from "lucide-react";
 import { commonFeatures } from "@/lib/plans";
-
-const tech = [
-  "Cloudflare",
-  "LiteSpeed",
-  "CloudLinux",
-  "cPanel",
-  "Node.js",
-  "Python",
-  "PHP",
-  "MariaDB",
-  "Imunify360",
-  "Let's Encrypt",
-  "NVMe SSD",
-];
 
 const FEATURED_COMMON_FEATURES = ["Free SSL", "Daily Backups", "Free Migration"];
 const featuredFeatures = commonFeatures.filter((f) => FEATURED_COMMON_FEATURES.includes(f));
@@ -39,24 +25,11 @@ export function TrustedTech() {
       <p className="mt-8 text-center text-xs font-medium uppercase tracking-widest text-text-muted">
         Powered by an infrastructure stack you can trust
       </p>
-      {/* Ghost-text marquee — outlined display type with a vertical fade, the
-          reference sites' signature "big tactile infrastructure" cue, in our
-          own brand stroke color and with our real stack names. Purely
-          decorative (the caption above carries the meaning), so the whole
-          strip is hidden from assistive tech — otherwise screen readers hit
-          the stack names twice via the marquee's seamless-loop clone. */}
-      <div className="mt-4" aria-hidden="true">
-        <Marquee durationSeconds={46}>
-          {tech.map((name) => (
-            <span
-              key={name}
-              className="shrink-0 text-5xl font-extrabold uppercase tracking-tight text-transparent transition-colors duration-300 [-webkit-text-stroke:1.5px_color-mix(in_srgb,var(--color-text-primary)_45%,transparent)] [mask-image:linear-gradient(to_top,transparent_0%,black_60%)] hover:[-webkit-text-stroke:1.5px_var(--color-brand-purple)] sm:text-7xl"
-            >
-              {name}
-            </span>
-          ))}
-        </Marquee>
-      </div>
+      {/* The stack as a connected request path — each node is a real stage a
+          visitor's request passes through, in actual order. Replaces the old
+          decorative ghost-text marquee (cinematic-product-design: show the
+          pipeline, don't list the names). */}
+      <InfraPipeline />
     </div>
   );
 }
