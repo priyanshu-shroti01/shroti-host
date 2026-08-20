@@ -1,6 +1,6 @@
 "use client";
 
-import { Component, type ReactNode, useEffect, useState } from "react";
+import { Component, type ReactNode, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { InfraStack3D } from "./infra-stack-3d";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
@@ -51,7 +51,9 @@ function supportsWebGL2(): boolean {
 
 export function InfraStackVisual({ hoverIndex }: { hoverIndex: number | null }) {
   const reducedMotion = usePrefersReducedMotion();
+  const hostRef = useRef<HTMLDivElement>(null);
   const [eligible, setEligible] = useState(false);
+  const [near, setNear] = useState(false);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -62,12 +64,36 @@ export function InfraStackVisual({ hoverIndex }: { hoverIndex: number | null }) 
     return () => mql.removeEventListener("change", update);
   }, []);
 
-  if (reducedMotion || failed || !eligible) {
-    return <InfraStack3D hoverIndex={hoverIndex} />;
-  }
+  // Don't even fetch the three.js chunk until the section is within one
+  // viewport of view — the CSS version holds the fort, so page-load JS cost
+  // is zero and the ~260KB gz parse happens on scroll intent instead
+  // (Lighthouse-verified: this kept the WebGL upgrade off the TBT budget).
+  useEffect(() => {
+    const el = hostRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "100% 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const webgl = eligible && near && !reducedMotion && !failed;
   return (
-    <SceneErrorBoundary onError={() => setFailed(true)}>
-      <InfraStackWebGL hoverIndex={hoverIndex} onContextLost={() => setFailed(true)} />
-    </SceneErrorBoundary>
+    <div ref={hostRef}>
+      {webgl ? (
+        <SceneErrorBoundary onError={() => setFailed(true)}>
+          <InfraStackWebGL hoverIndex={hoverIndex} onContextLost={() => setFailed(true)} />
+        </SceneErrorBoundary>
+      ) : (
+        <InfraStack3D hoverIndex={hoverIndex} />
+      )}
+    </div>
   );
 }
