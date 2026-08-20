@@ -37,6 +37,10 @@ import {
 
 /** World scale: 1 unit = 100px of the CSS scene, so constants carry over. */
 const PX = 0.01;
+/** The DOM callouts map plate Z to screen Y at SCREEN_Y_PER_Z (0.74 px/px);
+ *  this camera projects a slightly larger vertical span, so the world gap is
+ *  trimmed until plate screen-spacing matches the labels (measured in QA). */
+const GAP_WORLD_SCALE = 0.78;
 const PLATE_SIZE = 2.4;
 const PLATE_THICKNESS = 0.1;
 /** How far an active plate lifts along the stack axis (16px in CSS). */
@@ -67,6 +71,7 @@ interface StackPalette {
   faceActive: THREE.Color;
   side: THREE.Color;
   grid: THREE.Color;
+  edgeIdle: THREE.Color;
 }
 
 function readPalette(): StackPalette {
@@ -83,11 +88,13 @@ function readPalette(): StackPalette {
   return {
     purple,
     blue,
-    // Same mixes as the CSS plates: card tinted 5% purple idle, 16% active.
+    // Same mixes as the CSS plates: card tinted 5% purple idle, 16% active,
+    // border 28% purple into border-strong.
     faceIdle: card.clone().lerp(purple, 0.05),
     faceActive: card.clone().lerp(purple, 0.16),
     side: surface.clone().lerp(textPrimary, 0.16),
     grid: borderStrong,
+    edgeIdle: borderStrong.clone().lerp(purple, 0.28),
   };
 }
 
@@ -153,6 +160,7 @@ function makeGridGeometry(): THREE.BufferGeometry {
 
 let plateGeometry: THREE.ExtrudeGeometry | null = null;
 let gridGeometry: THREE.BufferGeometry | null = null;
+let edgeGeometry: THREE.EdgesGeometry | null = null;
 
 /* ── The scene ─────────────────────────────────────────────────────────── */
 
@@ -171,6 +179,7 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
   const plateRefs = useRef<(THREE.Group | null)[]>([]);
   const faceMats = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
   const sideMats = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
+  const edgeMats = useRef<(THREE.LineBasicMaterial | null)[]>([]);
   const packetRef = useRef<THREE.Mesh>(null);
   const packetMat = useRef<THREE.MeshBasicMaterial>(null);
   const lifts = useRef<number[]>(new Array(PLATE_COUNT).fill(0));
@@ -179,9 +188,12 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
 
   plateGeometry ??= makePlateGeometry();
   gridGeometry ??= makeGridGeometry();
+  // The CSS plates' defining feature is their 2px purple-tinted border —
+  // reproduce it as edge lines so the layers read as a crisp diagram.
+  edgeGeometry ??= new THREE.EdgesGeometry(plateGeometry, 32);
 
   useFrame((state, delta) => {
-    const gap = getGap() * PX;
+    const gap = getGap() * PX * GAP_WORLD_SCALE;
     const progress = Math.min(
       1,
       Math.max(0, (getGap() - COLLAPSED_GAP) / (PLATE_GAP - COLLAPSED_GAP)),
@@ -204,13 +216,14 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
       const group = plateRefs.current[i];
       const face = faceMats.current[i];
       const side = sideMats.current[i];
-      if (!group || !face || !side) continue;
+      const edge = edgeMats.current[i];
+      if (!group || !face || !side || !edge) continue;
       const layer = PLATE_COUNT - 1 - i; // plate 0 (Internet) on top
       const active = activeIndex === i;
       const dimmed = hoverIndex !== null && hoverIndex !== i;
 
       lifts.current[i] += ((active ? ACTIVE_LIFT : 0) - lifts.current[i]) * ease;
-      glows.current[i] += ((active ? 0.5 : 0.06) - glows.current[i]) * ease;
+      glows.current[i] += ((active ? 0.2 : 0.03) - glows.current[i]) * ease;
       group.position.y = (layer - 2) * gap + lifts.current[i];
 
       face.color.lerp(active ? palette.faceActive : palette.faceIdle, ease);
@@ -219,6 +232,8 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
       const targetOpacity = dimmed ? 0.4 : 0.94;
       face.opacity += (targetOpacity - face.opacity) * ease;
       side.opacity += ((dimmed ? 0.3 : 1) - side.opacity) * ease;
+      edge.color.lerp(active ? palette.purple : palette.edgeIdle, ease);
+      edge.opacity += ((dimmed ? 0.25 : 0.9) - edge.opacity) * ease;
     }
 
     // Request packet riding the stack axis, top plate → base (3.6s loop,
@@ -263,6 +278,14 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
                 transparent
               />
             </mesh>
+            <lineSegments geometry={edgeGeometry!}>
+              <lineBasicMaterial
+                ref={(el) => void (edgeMats.current[i] = el)}
+                color={palette.edgeIdle}
+                transparent
+                opacity={0.9}
+              />
+            </lineSegments>
             {layer === 0 && (
               <lineSegments geometry={gridGeometry!} position={[0, PLATE_THICKNESS / 2 + 0.02, 0]}>
                 <lineBasicMaterial color={palette.grid} transparent opacity={0.3} />
@@ -273,7 +296,9 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
             <Html
               transform
               position={[0, PLATE_THICKNESS / 2 + 0.03, 0]}
-              rotation={[-Math.PI / 2, 0, Math.PI / 2]}
+              // Lie flat on the plate, spun so the glyph's "up" points toward
+              // the camera azimuth and reads upright on screen.
+              rotation={[-Math.PI / 2, 0, -Math.PI / 4]}
               distanceFactor={3.2}
               zIndexRange={[30, 0]}
               pointerEvents="none"
