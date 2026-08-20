@@ -27,11 +27,14 @@ or it's decoration (see `animation-principles.md`).
 - **GSAP (`gsap` + `ScrollTrigger`)** — timelines: multi-step sequences with
   precise relative timing, scroll-scrubbed sequences, anything that needs a
   single coordinated timeline across many DOM refs at once.
-- **Lenis** — not yet installed in this project. Only add it if a page
-  genuinely needs smoothed/eased native scroll (e.g. a heavy pinned scroll
-  sequence); don't add it globally "for feel" — it changes scroll physics
-  everywhere and needs deliberate testing against `prefers-reduced-motion`
-  and keyboard/wheel/touch input parity if adopted.
+- **Lenis** — installed and mounted site-wide (2026-08-20, owner brief
+  opt-in) via `src/components/motion/lenis-root.tsx`: the official GSAP
+  wiring (Lenis raf on `gsap.ticker`, `ScrollTrigger.update` on Lenis
+  scroll, `lagSmoothing(0)`), `anchors: true` plus a focus-follow handler
+  for keyboard users, and a route-change scroll reset (Next 16 no longer
+  resets scroll itself). Reduced motion is handled by Lenis's own
+  `respectReducedMotion` (1:1 input, instant jumps, live-updating).
+  Keyboard/wheel/touch parity is a standing QA item for every release.
 - **SVG path morphing / motion paths** — for literal "this travels along a
   route" moments (the abandoned Concept A "Signal Path" hero used this
   pattern: a glowing point interpolated along an SVG path with waypoint
@@ -44,6 +47,17 @@ or it's decoration (see `animation-principles.md`).
   (8-block infrastructure morph, deploy sequences) stayed in the DOM with
   GSAP/Framer because the element counts are small (≤12) and DOM gives free
   accessibility/hit-testing that Canvas doesn't.
+- **WebGL (three + @react-three/fiber + drei)** — owner-brief opt-in
+  (2026-08-20), superseding the earlier "CSS 3D covers the need" rejection
+  for ONE flagship scene: the exploded infrastructure stack
+  (`infra-stack-webgl.tsx`). Rules of engagement: the CSS-3D version
+  remains a genuinely different fallback path (SSR/first paint, reduced
+  motion, no WebGL2, <lg, context loss — see `infra-stack-loader.tsx`);
+  scroll state flows ScrollTrigger → one framer spring → one `useFrame`
+  writer, never `setState`; labels stay screen-space DOM; the canvas
+  freezes (`frameloop="never"`) outside the viewport. Do not add more
+  WebGL scenes without the same fallback contract and a measured
+  performance budget.
 - **React Spring** — not currently used. Only reach for it over Framer Motion
   if a specific interaction needs physically-modeled spring chaining Framer
   can't express cleanly; don't run two animation libraries doing the same

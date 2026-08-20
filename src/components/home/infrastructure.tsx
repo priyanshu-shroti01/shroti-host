@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Cloud, Globe, HardDrive, Monitor, Shield, Zap } from "lucide-react";
-import { InfraStack3D } from "@/components/home/infra-stack-3d";
+import { InfraStackVisual } from "@/components/home/infra-stack-loader";
 import { Reveal } from "@/components/ui/reveal";
 import { Eyebrow } from "@/components/ui/section";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
@@ -59,7 +59,7 @@ export function Infrastructure() {
       </div>
 
       <div className="mx-auto mt-14 grid max-w-5xl items-center gap-10 lg:grid-cols-2">
-        <InfraStack3D hoverIndex={activeIndex} />
+        <InfraStackVisual hoverIndex={activeIndex} />
 
         <div className="relative mx-auto w-full max-w-md">
           {/* Vertical packet beam — the mobile/single-column visual. On lg the

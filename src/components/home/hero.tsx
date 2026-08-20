@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Tilt3D } from "@/components/ui/tilt-3d";
+import { getLenis } from "@/components/motion/lenis-root";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const EXAMPLE_DOMAINS = ["yourbrand.com", "myagency.in", "startup.dev"];
@@ -164,8 +165,18 @@ export function Hero() {
   }
 
   function focusDemo() {
-    inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    inputRef.current?.focus();
+    const input = inputRef.current;
+    if (!input) return;
+    // Lenis owns scroll physics — native smooth scrollIntoView fights its
+    // interpolation loop. Fall back to native when Lenis isn't mounted.
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(input, { offset: -window.innerHeight / 2 + input.offsetHeight / 2 });
+      input.focus({ preventScroll: true });
+    } else {
+      input.scrollIntoView({ behavior: "smooth", block: "center" });
+      input.focus();
+    }
   }
 
   async function handleShare() {
