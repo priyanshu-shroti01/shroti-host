@@ -341,3 +341,19 @@ body {
 label[data-error] :is(input, select, textarea) {
   border-color: var(--color-error);
 }
+
+/* ── Lenis smoothed native scroll ──────────────────────────────────────
+   Lenis stamps these classes on <html>. Rules from lenis/dist/lenis.css,
+   minus its `height: auto` override — this layout's h-full/min-h-full
+   footer flex depends on the existing heights and native window scroll
+   already works with them. `scroll-behavior: auto` stops CSS smooth
+   scrolling from fighting Lenis's own interpolation. */
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+html.lenis.lenis-stopped {
+  overflow: hidden;
+}
+html.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}

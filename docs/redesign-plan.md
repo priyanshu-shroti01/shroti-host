@@ -66,7 +66,12 @@ right. The redesign deepens three axes the scan showed are shallow:
 ## Later (not this pass)
 
 - Plan-card "anatomy" micro-exploded views on hover (needs design spike).
-- WebGL is explicitly rejected — CSS 3D covers the need at zero bundle cost.
+- ~~WebGL is explicitly rejected — CSS 3D covers the need at zero bundle
+  cost.~~ **Amended 2026-08-20:** the owner brief opted into literal WebGL
+  (the "R3F as opt-in follow-up" path the phase-2 report reserved). The
+  exploded stack now renders via R3F on qualifying desktops with the CSS-3D
+  version as the fallback path — see `docs/motion-system.md` (WebGL entry)
+  and `src/components/home/infra-stack-loader.tsx` for the contract.
 - Live status data feed into the status page scene (needs an uptime API).
 
 ## Budgets

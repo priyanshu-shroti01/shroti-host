@@ -21,6 +21,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated ruflo/claude tooling — not app code, not held to app rules.
+    ".claude/**",
   ]),
 ]);
 

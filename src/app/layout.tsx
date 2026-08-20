@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { ChatbotWidgetLoader } from "@/components/chatbot/chatbot-widget-loader";
 import { MobileStickyCta } from "@/components/layout/mobile-sticky-cta";
 import { WelcomeOffer } from "@/components/layout/welcome-offer";
+import { LenisRoot } from "@/components/motion/lenis-root";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -122,6 +123,9 @@ export default function RootLayout({
           <style>{`[style*="opacity"],[style*="transform"]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
         <CurrencyProvider>
+          {/* Smoothed native scroll + the site's single GSAP ticker loop.
+              Renders nothing; owns window scroll (see docs/motion-system.md). */}
+          <LenisRoot />
           <a
             href="#main"
             className="sr-only z-[100] rounded-full bg-brand-purple px-5 py-2.5 font-bold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"

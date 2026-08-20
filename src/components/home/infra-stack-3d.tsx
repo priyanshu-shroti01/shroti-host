@@ -23,20 +23,22 @@ import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
  * beside it is the accessible source of truth.
  */
 
-const PLATE_GAP = 68;
+export const PLATE_GAP = 68;
 /** Separation at first sight — a nearly-solid block that then explodes. */
-const COLLAPSED_GAP = 8;
-const PLATE_COUNT = 5;
+export const COLLAPSED_GAP = 8;
+export const PLATE_COUNT = 5;
 /** Matches the `stack-descend` keyframes duration in globals.css. */
-const PACKET_LOOP_MS = 3600;
+export const PACKET_LOOP_MS = 3600;
 
-const plateIcons: LucideIcon[] = [Globe, Cloud, Zap, Shield, Monitor];
-const plateLabels = ["Internet", "Cloudflare CDN", "LiteSpeed", "CloudLinux", "Your website"];
+export const plateIcons: LucideIcon[] = [Globe, Cloud, Zap, Shield, Monitor];
+export const plateLabels = ["Internet", "Cloudflare CDN", "LiteSpeed", "CloudLinux", "Your website"];
 /** Screen-vertical px per 1px of plate Z in this camera (tuned by eye). */
 const SCREEN_Y_PER_Z = 0.74;
 
-/** Exploded-diagram callout — rides its plate as the stack separates. */
-function CalloutLabel({
+/** Exploded-diagram callout — rides its plate as the stack separates.
+ *  Shared with the WebGL variant (infra-stack-webgl.tsx) so labels stay
+ *  crisp screen-space DOM in both render paths. */
+export function CalloutLabel({
   index,
   gap,
   active,
