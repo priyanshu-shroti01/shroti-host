@@ -6,7 +6,9 @@ import { Section } from "@/components/ui/section";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Button } from "@/components/ui/button";
 import { PostBody } from "@/components/blog/post-body";
-import { blogPosts, getPost, relatedPosts } from "@/lib/blog";
+import { PostToc } from "@/components/blog/post-toc";
+import { blogPosts, getPost, relatedPosts, taxonomySlug } from "@/lib/blog";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 const SITE_URL = "https://shrotihost.in";
 const dateFormat = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" });
@@ -46,10 +48,18 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    dateModified: post.updated ?? post.date,
     author: { "@type": "Organization", name: "ShrotiHost", url: SITE_URL },
     publisher: { "@type": "Organization", name: "ShrotiHost", url: SITE_URL },
     mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
   };
+
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: post.category, path: `/blog/category/${taxonomySlug(post.category)}` },
+    { name: post.title, path: `/blog/${post.slug}` },
+  ]);
 
   const faqJsonLd = post.faq && {
     "@context": "https://schema.org",
@@ -67,6 +77,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
       {faqJsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
 
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-16">
         <article className="mx-auto max-w-2xl">
@@ -79,21 +90,44 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
           </Link>
 
           <header className="mt-6">
-            <span className="inline-flex rounded-full border border-brand-purple/30 bg-brand-purple/5 px-2.5 py-0.5 text-xs font-medium text-brand-purple">
+            <Link
+              href={`/blog/category/${taxonomySlug(post.category)}`}
+              className="inline-flex rounded-full border border-brand-purple/30 bg-brand-purple/5 px-2.5 py-0.5 text-xs font-medium text-brand-purple transition-colors hover:bg-brand-purple/10"
+            >
               {post.category}
-            </span>
+            </Link>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
               {post.title}
             </h1>
-            <p className="mt-4 flex items-center gap-2 text-sm text-text-muted">
+            <p className="mt-4 flex flex-wrap items-center gap-2 text-sm text-text-muted">
               <Clock3 size={14} aria-hidden="true" />
-              {post.readMinutes} min read · {dateFormat.format(new Date(post.date))} · ShrotiHost team
+              {post.readMinutes} min read · {dateFormat.format(new Date(post.date))}
+              {post.updated && <> · Updated {dateFormat.format(new Date(post.updated))}</>} ·
+              ShrotiHost team
             </p>
           </header>
+
+          <div className="mt-8">
+            <PostToc post={post} />
+          </div>
 
           <div className="mt-10">
             <PostBody post={post} />
           </div>
+
+          {post.tags && post.tags.length > 0 && (
+            <p className="mt-10 flex flex-wrap items-center gap-2">
+              {post.tags.map((tag) => (
+                <Link
+                  key={tag}
+                  href={`/blog/tag/${taxonomySlug(tag)}`}
+                  className="rounded-full border border-border px-3 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple"
+                >
+                  #{tag}
+                </Link>
+              ))}
+            </p>
+          )}
 
           {/* CTA — one honest pitch at the end, matched to the post topic. */}
           <div className="mt-12 rounded-2xl border-2 border-brand-purple/25 bg-card p-6 text-center sm:p-8">

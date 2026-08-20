@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { Hero } from "@/components/home/hero";
+import { HostBuildScale } from "@/components/home/host-build-scale";
 import { TrustedTech } from "@/components/home/trusted-tech";
 import { EverythingIncluded } from "@/components/home/everything-included";
 import { ThreeSteps } from "@/components/home/three-steps";
@@ -28,6 +29,9 @@ const Infrastructure = dynamic(() =>
 const DeveloperFeatures = dynamic(() =>
   import("@/components/home/developer-features").then((m) => m.DeveloperFeatures)
 );
+const ProjectSelector = dynamic(() =>
+  import("@/components/home/project-selector").then((m) => m.ProjectSelector)
+);
 
 // Live TLD pricing is exported from WHMCS daily — regenerate at most once a day.
 export const revalidate = 86400;
@@ -37,6 +41,13 @@ export default async function Home() {
   return (
     <>
       <Hero />
+
+      {/* Brand architecture — HOST / BUILD / SCALE: the one-partner lifecycle,
+          stated before any single product so everything after reads as part
+          of a whole. */}
+      <Section id="host-build-scale" className="bg-surface/30">
+        <HostBuildScale />
+      </Section>
 
       {/* Pricing — RankHostZone's homepage puts plans directly under the hero. */}
       <Section id="pricing">
@@ -91,7 +102,12 @@ export default async function Home() {
         <Testimonials />
       </Section>
 
-      <Section id="faq" className="bg-surface/30">
+      {/* Conversion router — one question, straight to the right funnel. */}
+      <Section id="project-selector" className="bg-surface/30">
+        <ProjectSelector />
+      </Section>
+
+      <Section id="faq">
         <Faq />
       </Section>
 

@@ -1,6 +1,6 @@
 # ShrotiHost
 
-> Premium, developer-friendly web hosting for students, developers, startups, and businesses in India. Shared, WordPress, unlimited, and reseller hosting plus domain registration — free SSL, LiteSpeed, NVMe storage, daily backups, and free migration on every plan. Same renewal price, every cycle.
+> One technology partner from first domain to production: web hosting (shared, WordPress, unlimited, reseller), domain registration, and software development (websites, mobile apps, e-commerce, SaaS, custom software) for students, developers, startups, and businesses in India. Free SSL, LiteSpeed, NVMe storage, daily backups, free migration, and renewal prices that match day-one prices.
 
 ## Hosting plans
 
@@ -15,6 +15,15 @@
 ## Domains
 
 - [Domain Search & Registration](https://shrotihost.in/domains): Search, compare extensions, and register with upfront register and renewal pricing for every TLD sold.
+
+## Development services
+
+- [Web Development](https://shrotihost.in/web-development): Business websites, landing pages, web applications, dashboards, and custom systems — designed, built, and hosted by one team.
+- [App Development](https://shrotihost.in/app-development): Android, iOS, and cross-platform mobile apps with backend, APIs, authentication, and deployment.
+- [E-commerce Development](https://shrotihost.in/ecommerce-development): WooCommerce stores and custom storefronts with payments and shipping, on hosting tuned for the workload.
+- [SaaS Development](https://shrotihost.in/saas-development): MVPs and full SaaS products with accounts, subscription billing, and dashboards.
+- [Custom Software](https://shrotihost.in/custom-software): Internal tools, automation, integrations, and WHMCS modules.
+- [Portfolio](https://shrotihost.in/portfolio): Real products ShrotiHost builds and runs — no stock case studies.
 
 ## Products
 

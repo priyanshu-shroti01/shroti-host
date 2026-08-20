@@ -334,3 +334,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .pipeline-flow { animation: none; background-image: none; background-color: var(--color-border-strong); }
 }
+
+/* Field-level validation state: a label carrying data-error paints its
+   control's border in the error token, pairing the caption with a visible
+   state change on the input itself (micro-interactions error pattern). */
+label[data-error] :is(input, select, textarea) {
+  border-color: var(--color-error);
+}

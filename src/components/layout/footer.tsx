@@ -11,10 +11,11 @@ export function Footer() {
     <footer className="border-t border-border bg-surface">
       <Container className="py-16">
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
-          <div className="col-span-2 sm:col-span-1">
+          <div className="col-span-2 sm:col-span-1 xl:col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-sm text-text-muted">
-              Premium, developer-friendly hosting for students, startups, and growing businesses.
+              Premium hosting and software development for students, startups, and growing
+              businesses — one partner from first domain to production.
             </p>
             <ul className="mt-5 space-y-2.5">
               <li>

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { blogPosts } from "@/lib/blog";
+import { allCategories, allTags, blogPosts } from "@/lib/blog";
 
 const SITE_URL = "https://shrotihost.in";
 
@@ -18,6 +18,12 @@ const routes: { path: string; changeFrequency: "weekly" | "monthly" | "yearly"; 
   { path: "/vps", changeFrequency: "monthly", priority: 0.6 },
   { path: "/whmcs-gateway-fees-allocator", changeFrequency: "monthly", priority: 0.6 },
   { path: "/whmcs-whatsapp-notification-module", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/web-development", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/app-development", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/ecommerce-development", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/saas-development", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/custom-software", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/portfolio", changeFrequency: "monthly", priority: 0.6 },
   { path: "/about", changeFrequency: "monthly", priority: 0.5 },
   { path: "/careers", changeFrequency: "monthly", priority: 0.5 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
@@ -39,9 +45,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...blogPosts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
-      lastModified: new Date(post.date),
+      lastModified: new Date(post.updated ?? post.date),
       changeFrequency: "monthly" as const,
       priority: 0.6,
+    })),
+    ...allCategories().map((c) => ({
+      url: `${SITE_URL}/blog/category/${c.slug}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.4,
+    })),
+    ...allTags().map((t) => ({
+      url: `${SITE_URL}/blog/tag/${t.slug}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.3,
     })),
   ];
 }

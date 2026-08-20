@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
-import { Reveal } from "@/components/ui/reveal";
+import { Accordion } from "@/components/ui/accordion";
 
 export const faqs = [
   {
@@ -47,8 +44,6 @@ const faqJsonLd = {
 };
 
 export function Faq() {
-  const [open, setOpen] = useState<number | null>(0);
-
   return (
     <div>
       <script
@@ -61,48 +56,8 @@ export function Faq() {
         </h2>
       </div>
 
-      <div className="mx-auto mt-12 max-w-2xl space-y-3">
-        {faqs.map((faq, i) => {
-          const isOpen = open === i;
-          return (
-            <Reveal key={faq.question} delay={i * 0.03}>
-              <div
-                className={`rounded-2xl border-2 bg-card shadow-[var(--shadow-card)] transition-colors duration-200 ${
-                  isOpen ? "border-brand-purple/50" : "border-border"
-                }`}
-              >
-                <button
-                  type="button"
-                  onClick={() => setOpen(isOpen ? null : i)}
-                  aria-expanded={isOpen}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
-                >
-                  <span className="text-sm font-medium text-text-primary sm:text-base">
-                    {faq.question}
-                  </span>
-                  <ChevronDown
-                    size={18}
-                    className={`shrink-0 text-text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                    aria-hidden="true"
-                  />
-                </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-6 pb-5 text-sm text-text-secondary">{faq.answer}</div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </Reveal>
-          );
-        })}
+      <div className="mx-auto mt-12 max-w-2xl">
+        <Accordion items={faqs.map((f) => ({ q: f.question, a: f.answer }))} />
       </div>
     </div>
   );
