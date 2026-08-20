@@ -113,6 +113,37 @@ Note: running the CLI auto-starts a background daemon
   orientation, label/plate drift (GAP_WORLD_SCALE 0.78), active glow too
   hot (emissive 0.28→0.2), React 19 ref-write-in-render violation.
 
+## Performance (measured — Lighthouse on the standalone production build)
+
+Baseline main on the same box: mobile 99 (LCP 1.8s, TBT 110ms), desktop
+100 (TBT 0ms). The first branch cut regressed hard — mobile 69-76,
+desktop 67 (TBT 720ms) — attributed to gsap+lenis in the hydration path
+and the three.js chunk parsing at page load. Two fixes (commit 890e406):
+
+1. Lenis+gsap dynamic-import after `requestIdleCallback`, fine-pointer
+   devices only — phones ship zero scroll-machinery bytes and keep fully
+   native scrolling (Lenis leaves touch native regardless).
+2. The WebGL component mounts only when the section is within one
+   viewport (IntersectionObserver, rootMargin 100%) — the three chunk
+   parses on scroll intent, never in the load window.
+
+Final, on a verified-clean serve (every referenced chunk 200): desktop
+**97** (FCP 0.3s, LCP 0.6s, TBT 10ms — parity with main; CLS 0.029 is
+the welcome-offer modal appearing, present on main too). Mobile **85**
+(LCP 2.8s, TBT 400ms) with a JS payload within +12KB of main and no
+heavy libraries — network-trace-verified. Run-to-run variance on this
+shared cPanel box measured ±10 points on identical builds, so treat
+the absolute mobile number as environment noise; the payload evidence
+is the reliable signal. Real-hardware Lighthouse remains the definitive
+check (open item 1).
+
+Measurement hazard worth recording: `next-server` renames its process
+title, so `pkill -f server.js` misses it — a zombie server survived
+several kill attempts and silently served a stale build (EADDRINUSE
+went to /dev/null), which invalidated one intermediate round of
+numbers. Kill by port (`fuser -k 3005/tcp`) and verify every referenced
+chunk serves 200 before trusting a measurement.
+
 ## Honesty ledger
 
 - The scene visualizes the real stack (Cloudflare → LiteSpeed →
@@ -124,8 +155,9 @@ Note: running the CLI auto-starts a background daemon
 ## Remaining work / needs human verification
 
 1. **Real-hardware pass**: fps + thermals on a mid-range laptop and an
-   external monitor; Lighthouse (LCP/CLS/INP) on the production build —
-   the WebGL section is below-fold so LCP should be untouched, verify.
+   external monitor; Lighthouse on real hardware (this box's SwiftShader
+   + shared load adds ±10pts of noise). Server-side LCP is verified
+   untouched (0.6s desktop, below-fold scene).
 2. **OS-level reduced-motion**: automated media emulation is blocked in
    the QA harness (CDP allowlist); toggle it manually once — expected:
    CSS static-exploded path, Lenis 1:1.
