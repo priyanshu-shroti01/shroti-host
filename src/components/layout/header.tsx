@@ -128,6 +128,7 @@ export function Header() {
                 ) : (
                   <Link
                     href={item.href!}
+                    prefetch={false}
                     className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
                       isActive ? "text-brand-purple" : "text-text-secondary hover:text-text-primary"
                     }`}

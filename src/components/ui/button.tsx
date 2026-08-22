@@ -60,6 +60,10 @@ function useRipple() {
 }
 
 type CommonProps = {
+  /** next/link prefetch. Defaults to false (prefetch on hover) — a page full
+   *  of CTAs shouldn't fire a dozen RSC prefetches on load; pass null for
+   *  Next's default viewport prefetch on the one primary CTA that matters. */
+  prefetch?: boolean | null;
   children: ReactNode;
   variant?: Variant;
   size?: Size;
@@ -73,7 +77,7 @@ type ButtonAsLink = CommonProps &
   AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
 
 export function Button(props: ButtonAsButton | ButtonAsLink) {
-  const { children, variant = "primary", size = "md", className = "", ...rest } = props;
+  const { children, variant = "primary", size = "md", className = "", prefetch = false, ...rest } = props;
   const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
   const { ripples, addRipple } = useRipple();
 
@@ -82,6 +86,7 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
     return (
       <Link
         href={props.href}
+        prefetch={prefetch}
         className={classes}
         onClick={(e) => {
           addRipple(e);

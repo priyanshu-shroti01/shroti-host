@@ -230,7 +230,7 @@ export function Hero() {
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-            <Button href="/hosting#compare" size="lg">
+            <Button href="/hosting#compare" size="lg" prefetch={null}>
               Explore Infrastructure
             </Button>
             <Button href="/web-development" variant="secondary" size="lg">

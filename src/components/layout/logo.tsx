@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <Link href="/" className={`inline-flex shrink-0 items-center ${className}`} aria-label="ShrotiHost home">
+    <Link href="/" prefetch={false} className={`inline-flex shrink-0 items-center ${className}`} aria-label="ShrotiHost home">
       <Image
         src="/logo-on-light.svg"
         alt="ShrotiHost"
