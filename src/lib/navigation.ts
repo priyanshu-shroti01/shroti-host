@@ -36,7 +36,6 @@ export const primaryNav: NavItem[] = [
       { label: "Shared Hosting", href: "/hosting", description: "Bronze, Gold, Platinum, and Diamond plans", icon: Server },
       { label: "WordPress Hosting", href: "/wordpress-hosting", description: "Optimized for WordPress & WooCommerce", icon: Globe },
       { label: "Unlimited Hosting", href: "/unlimited-hosting", description: "For agencies and multi-site owners", icon: Users },
-      { label: "Email Hosting", href: "/hosting#compare", description: "Business mailboxes on your domain", icon: Mail },
       { label: "Reseller Hosting", href: "/reseller-hosting", description: "Start your own hosting business", icon: Share2 },
       { label: "Master Reseller Hosting", href: "/master-reseller-hosting", description: "Coming soon — join the waitlist", icon: Building2, comingSoon: true },
       { label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting", description: "Coming soon — join the waitlist", icon: Layers, comingSoon: true },
@@ -76,7 +75,6 @@ export const footerNav = {
     { label: "WordPress Hosting", href: "/wordpress-hosting" },
     { label: "Unlimited Hosting", href: "/unlimited-hosting" },
     { label: "Domains", href: "/domains" },
-    { label: "Email Hosting", href: "/hosting#compare" },
     { label: "VPS Hosting", href: "/vps", comingSoon: true },
   ],
   "Reseller & Modules": [

@@ -4,10 +4,8 @@ import {
   Infinity as InfinityIcon,
   Building2,
   Cloud,
-  Code2,
   Globe2,
   Layers,
-  Mail,
   Server,
   Share2,
   Zap,
@@ -40,10 +38,10 @@ const products = [
     href: "/domains",
   },
   {
-    icon: Mail,
-    title: "Email Hosting",
-    description: "Business mailboxes on your own domain.",
-    href: "/hosting#compare",
+    icon: Share2,
+    title: "Reseller Hosting",
+    description: "Start your own hosting business on our stack.",
+    href: "/reseller-hosting",
   },
   {
     icon: InfinityIcon,
@@ -53,16 +51,7 @@ const products = [
   },
 ];
 
-const wide = {
-  icon: Code2,
-  title: "Developer Hosting",
-  description: "Node.js, Python, PHP, Git, SSH, and cron — ready out of the box on every plan.",
-  href: "/hosting#compare",
-};
 
-const resellerLines = [
-  { icon: Share2, label: "Reseller Hosting", href: "/reseller-hosting" },
-];
 
 const roadmap = [
   { icon: Server, label: "VPS", href: "/vps" },
@@ -107,7 +96,7 @@ export function ProductEcosystem() {
           </SpotlightCard>
         </Reveal>
 
-        {products.slice(0, 2).map((product, i) => (
+        {products.map((product, i) => (
           <Reveal key={product.title} delay={(i + 1) * 0.08}>
             <SpotlightCard className="h-full">
               <Link href={product.href} className="flex h-full flex-col p-6">
@@ -117,40 +106,9 @@ export function ProductEcosystem() {
           </Reveal>
         ))}
 
-        <Reveal delay={0.24} className="lg:col-span-2">
-          <SpotlightCard className="h-full">
-            <Link href={wide.href} className="flex h-full flex-col p-6">
-              <ProductCardBody product={wide} />
-            </Link>
-          </SpotlightCard>
-        </Reveal>
 
-        {products.slice(2).map((product, i) => (
-          <Reveal key={product.title} delay={(i + 3) * 0.08}>
-            <SpotlightCard className="h-full">
-              <Link href={product.href} className="flex h-full flex-col p-6">
-                <ProductCardBody product={product} />
-              </Link>
-            </SpotlightCard>
-          </Reveal>
-        ))}
       </div>
 
-      <Reveal delay={0.16}>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-brand-purple/30 bg-card p-5">
-          <span className="text-xs font-semibold text-brand-purple">Reseller hosting</span>
-          {resellerLines.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="chip"
-            >
-              <item.icon size={13} className="text-brand-purple" aria-hidden="true" />
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      </Reveal>
 
       <Reveal delay={0.24}>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-dashed border-border-strong p-5">
@@ -176,7 +134,7 @@ export function ProductEcosystem() {
   );
 }
 
-function ProductCardBody({ product }: { product: (typeof products)[number] | typeof wide }) {
+function ProductCardBody({ product }: { product: (typeof products)[number] }) {
   return (
     <>
       <div className="flex items-start justify-between">

@@ -6,7 +6,6 @@ import { hostingProductJsonLd } from "@/lib/seo";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section } from "@/components/ui/section";
 import { HostingHero } from "@/components/hosting/hosting-hero";
-import { HostingConfigurator } from "@/components/hosting/hosting-configurator";
 import { Infrastructure } from "@/components/home/infrastructure";
 import { HostingPlans } from "@/components/home/hosting-plans";
 import { Faq } from "@/components/home/faq";
@@ -41,10 +40,6 @@ export default function HostingPage() {
 
       <Section id="specs">
         <PlanSpecTable plans={sharedPlans} groups={hostingSpecGroups(sharedPlans)} />
-      </Section>
-
-      <Section id="configure">
-        <HostingConfigurator />
       </Section>
 
       <Section id="infrastructure" className="bg-surface/30">
