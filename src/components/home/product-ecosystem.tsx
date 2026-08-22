@@ -99,7 +99,7 @@ export function ProductEcosystem() {
         {products.map((product, i) => (
           <Reveal key={product.title} delay={(i + 1) * 0.08}>
             <SpotlightCard className="h-full">
-              <Link href={product.href} className="flex h-full flex-col p-6">
+              <Link href={product.href} prefetch={false} className="flex h-full flex-col p-6">
                 <ProductCardBody product={product} />
               </Link>
             </SpotlightCard>
@@ -116,7 +116,7 @@ export function ProductEcosystem() {
           {roadmap.map((item) => {
             const className = "chip";
             return item.href ? (
-              <Link key={item.label} href={item.href} className={className}>
+              <Link key={item.label} href={item.href} prefetch={false} className={className}>
                 <item.icon size={13} aria-hidden="true" />
                 {item.label}
                 <SoonTag />

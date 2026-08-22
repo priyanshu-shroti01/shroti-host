@@ -160,7 +160,7 @@ export function Header() {
                             }}
                           >
                             <Link
-                              href={link.href}
+                              href={link.href} prefetch={false}
                               className="group/item flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-surface"
                             >
                               {link.icon && (
@@ -316,7 +316,7 @@ export function Header() {
                             {item.items.map((link) => (
                               <Link
                                 key={link.href}
-                                href={link.href}
+                                href={link.href} prefetch={false}
                                 className="py-2 text-sm text-text-secondary"
                                 onClick={() => setMobileOpen(false)}
                               >
@@ -339,7 +339,7 @@ export function Header() {
                 {accountLinks.map((link) => (
                   <Link
                     key={link.label}
-                    href={link.href}
+                    href={link.href} prefetch={false}
                     className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-brand-purple hover:text-text-primary"
                     onClick={() => setMobileOpen(false)}
                   >

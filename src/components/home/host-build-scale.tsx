@@ -113,6 +113,7 @@ export function HostBuildScale() {
                     <li key={link.href + link.label}>
                       <Link
                         href={link.href}
+                        prefetch={false}
                         className="group inline-flex items-center gap-1.5 text-sm font-medium text-text-secondary transition-colors hover:text-brand-purple"
                       >
                         <span

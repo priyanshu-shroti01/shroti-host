@@ -11,6 +11,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Self-hosted deployment: bundle a minimal server into .next/standalone
   output: "standalone",
+  // Apache (mod_brotli + mod_deflate) negotiates encoding per client; Next
+  // pre-gzipping would lock every client to gzip.
+  compress: false,
   poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
