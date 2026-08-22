@@ -205,3 +205,59 @@ table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTabl
 .tld-sale-group,.tld-sale-group-sale,.tld-sale-group-hot,.tld-sale-group-new{background:rgb(245 165 36/.18)!important;color:#ffc96b!important;border:1px solid rgb(245 165 36/.35);border-radius:999px;padding:.1rem .5rem;font-weight:600}
 .tld-sale-group-hot{background:rgb(240 87 107/.18)!important;color:#ff8a9a!important;border-color:rgb(240 87 107/.35)}
 .tld-sale-group-new{background:rgb(63 167 255/.18)!important;color:#7cc3ff!important;border-color:rgb(63 167 255/.35)}
+
+/* ── pass 3: store pricing grid (orderforms/shrotihost/products.tpl) ── */
+.sh-plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-top:1.5rem}
+.sh-plan{position:relative;display:flex;flex-direction:column;background:var(--sh-card);border:2px solid var(--sh-border);border-radius:var(--sh-radius-lg);padding:1.5rem;box-shadow:var(--sh-shadow);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);transition:transform .2s cubic-bezier(.33,1,.68,1),border-color .2s}
+.sh-plan:hover{transform:translateY(-4px);border-color:rgb(168 16 199/.45)}
+.sh-plan--popular{border-color:rgb(168 16 199/.6);box-shadow:0 0 0 1px rgb(168 16 199/.25),0 20px 40px -16px rgb(168 16 199/.45)}
+.sh-plan__badge{height:1.75rem;margin-bottom:.75rem}
+.sh-plan__badge span{display:inline-flex;align-items:center;border-radius:999px;border:2px solid rgb(168 16 199/.25);background:rgb(168 16 199/.12);color:var(--sh-purple);padding:.15rem .7rem;font-size:.72rem;font-weight:700}
+.sh-plan__name{font-size:1.35rem;font-weight:600;margin:0;color:var(--sh-text)}
+.sh-plan__qty{font-size:.78rem;color:var(--sh-muted)}
+.sh-plan__price{margin-top:1.25rem;display:flex;align-items:baseline;flex-wrap:wrap;gap:.4rem}
+.sh-plan__from{width:100%;font-size:.75rem;color:var(--sh-muted)}
+.sh-plan__amount{font-size:2.2rem;font-weight:700;line-height:1;background:var(--sh-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.sh-plan__cycle{font-size:.85rem;color:var(--sh-muted)}
+.sh-plan__setup{width:100%;color:var(--sh-muted)}
+.sh-plan__renew{margin:.5rem 0 0;font-size:.75rem;font-weight:500;color:var(--sh-success)}
+.sh-plan__features{flex:1;margin-top:1.25rem;font-size:.88rem;color:var(--sh-text2)}
+.sh-plan__features p{color:var(--sh-muted);margin-bottom:.75rem}
+.sh-plan__features ul{list-style:none;padding:0;margin:0}
+.sh-plan__features li{position:relative;padding-left:1.5rem;margin-bottom:.5rem;line-height:1.4}
+.sh-plan__features li::before{content:"\\f00c";font-family:"Font Awesome 5 Pro","Font Awesome 5 Free";font-weight:900;position:absolute;left:0;top:.15rem;color:var(--sh-success);font-size:.75rem}
+.sh-plan__cta{margin-top:1.5rem;width:100%;padding:.8rem 1rem!important;font-size:.95rem}
+.sh-plan__note{margin:.6rem 0 0;text-align:center;font-size:.72rem;color:var(--sh-muted)}
+#order-standard_cart .sh-plans .product,#order-standard_cart .sh-plan{margin-bottom:0}
+@media (min-width:1200px){.sh-plans{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:767px){.sh-plans{grid-template-columns:1fr}}
+
+/* ── pass 3: homepage landing ────────────────────────────────────── */
+.sh-hero{position:relative;text-align:center;padding:3.5rem 1rem 3rem;overflow:hidden}
+.sh-hero__glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 55% at 50% 0%,rgb(168 16 199/.22),transparent 70%)}
+.sh-eyebrow{display:inline-flex;align-items:center;border-radius:999px;border:1px solid var(--sh-border-strong);padding:.3rem .9rem;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--sh-purple);position:relative}
+.sh-hero h1{position:relative;font-size:clamp(2rem,4vw,3rem);font-weight:600;letter-spacing:-.02em;margin:1.25rem auto .75rem;max-width:40rem}
+.sh-gradient-text{background:var(--sh-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.sh-hero p{position:relative;color:var(--sh-muted);font-size:1.05rem;max-width:32rem;margin:0 auto}
+.sh-hero__actions{position:relative;display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-top:1.75rem}
+.sh-hero__actions .btn-lg{padding:.8rem 1.6rem;font-size:1rem}
+.sh-section-title{text-align:center;font-size:1.6rem;font-weight:600;letter-spacing:-.01em;margin:2.5rem 0 1.25rem}
+.sh-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem}
+.sh-tile{display:flex;flex-direction:column;background:var(--sh-card);border:2px solid var(--sh-border);border-radius:var(--sh-radius);padding:1.5rem;color:var(--sh-text);box-shadow:var(--sh-shadow);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);transition:transform .2s cubic-bezier(.33,1,.68,1),border-color .2s}
+.sh-tile:hover{transform:translateY(-4px);border-color:rgb(168 16 199/.45);color:var(--sh-text);text-decoration:none}
+.sh-tile__icon{display:inline-flex;width:44px;height:44px;align-items:center;justify-content:center;border-radius:12px;background:linear-gradient(135deg,rgb(168 16 199/.2),rgb(63 167 255/.2));color:var(--sh-purple);font-size:1.2rem}
+.sh-tile h3{font-size:1.05rem;font-weight:600;margin:1rem 0 .35rem}
+.sh-tile p{flex:1;font-size:.88rem;color:var(--sh-muted);margin:0 0 1rem}
+.sh-tile__link{font-size:.88rem;font-weight:600;color:var(--sh-purple)}
+.action-icon-btns a{display:flex;flex-direction:column;align-items:center;gap:.6rem;padding:1.25rem .5rem;border-radius:var(--sh-radius);border:2px solid var(--sh-border);background:var(--sh-card);color:var(--sh-text2)!important;font-weight:500;font-size:.88rem;transition:transform .2s,border-color .2s}
+.action-icon-btns a:hover{transform:translateY(-3px);border-color:rgb(168 16 199/.45);color:var(--sh-text)!important}
+.action-icon-btns .ico-container{margin:0;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgb(255 255 255/.05);color:var(--sh-purple);font-size:1.25rem}
+.action-icon-btns [class*=card-accent-]{border-left-width:2px!important}
+
+/* ── pass 3: dashboard tiles ─────────────────────────────────────── */
+.tiles .tile{display:block;position:relative;background:var(--sh-card)!important;border:2px solid var(--sh-border)!important;border-radius:var(--sh-radius)!important;margin:.4rem;padding:1.25rem;color:var(--sh-text)!important;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);transition:transform .2s,border-color .2s}
+.tiles .tile:hover{transform:translateY(-3px);border-color:rgb(168 16 199/.45)!important}
+.tiles .tile i{color:var(--sh-purple)!important;opacity:1!important;font-size:1.4rem}
+.tiles .tile .stat{font-size:2rem;font-weight:700;background:var(--sh-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.tiles .tile .title{color:var(--sh-muted)!important;font-size:.85rem;font-weight:500}
+.tiles .tile .highlight{display:none}

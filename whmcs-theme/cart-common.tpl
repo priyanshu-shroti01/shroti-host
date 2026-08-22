@@ -2,4 +2,4 @@
 {assetExists file="custom.css"}
 <link rel="stylesheet" type="text/css" href="{$__assetPath__}?v={$versionHash}" />
 {/assetExists}
-<script type="text/javascript" src="{assetPath file='scripts.min.js'}?v={$versionHash}"></script><link rel="stylesheet" type="text/css" href="{$WEB_ROOT}/templates/shrotihost/css/shrotihost.css?v=2" />
+<script type="text/javascript" src="{assetPath file='scripts.min.js'}?v={$versionHash}"></script><link rel="stylesheet" type="text/css" href="{$WEB_ROOT}/templates/shrotihost/css/shrotihost.css?v=3" />
