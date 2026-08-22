@@ -53,7 +53,7 @@ export default function Page() {
                     <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 text-brand-purple">
                       <item.icon size={20} aria-hidden="true" />
                     </div>
-                    <span className="rounded-full border border-border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-text-muted">
+                    <span className="rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-text-muted">
                       {item.kind}
                     </span>
                   </div>

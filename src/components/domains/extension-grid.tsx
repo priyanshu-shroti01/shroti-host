@@ -96,7 +96,7 @@ export function ExtensionGrid({ domains = allDomains }: { domains?: DomainPrice[
               className="group relative flex flex-col items-center gap-1.5 overflow-hidden rounded-2xl border border-border bg-card px-3 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:border-brand-purple hover:shadow-lg"
             >
               {d.badge && (
-                <Badge tone={badgeTone[d.badge]} className="absolute right-2 top-2 px-1.5 py-0.5 text-[10px]">
+                <Badge tone={badgeTone[d.badge]} className="absolute right-2 top-2 px-1.5 py-0.5 text-xs">
                   {d.badge}
                 </Badge>
               )}

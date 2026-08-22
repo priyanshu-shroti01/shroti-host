@@ -49,7 +49,7 @@ export function DomainsScene({ className = "" }: { className?: string }) {
             style={{ left: tld.cx - 28, top: tld.cy - 12, width: 56, height: 24 }}
           >
             <div
-              className="flex h-full w-full items-center justify-center rounded-full border border-border-strong bg-card text-[11px] font-bold text-brand-purple shadow-[var(--shadow-card)]"
+              className="flex h-full w-full items-center justify-center rounded-full border border-border-strong bg-card text-xs font-bold text-brand-purple shadow-[var(--shadow-card)]"
               style={{ animation: `orbit-billboard ${ORBIT_SECONDS}s linear infinite` } as CSSProperties}
             >
               {tld.label}

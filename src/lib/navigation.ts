@@ -77,10 +77,12 @@ export const footerNav = {
     { label: "Unlimited Hosting", href: "/unlimited-hosting" },
     { label: "Domains", href: "/domains" },
     { label: "Email Hosting", href: "/hosting#compare" },
+    { label: "VPS (coming soon)", href: "/vps" },
+  ],
+  "Reseller & Modules": [
     { label: "Reseller Hosting", href: "/reseller-hosting" },
     { label: "Master Reseller Hosting", href: "/master-reseller-hosting" },
     { label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting" },
-    { label: "VPS (coming soon)", href: "/vps" },
     { label: "WHMCS Gateway Fees Module", href: "/whmcs-gateway-fees-allocator" },
     { label: "WHMCS WhatsApp Module", href: "/whmcs-whatsapp-notification-module" },
   ],
@@ -110,7 +112,6 @@ export const footerNav = {
     { label: "Dashboard / Client Portal", href: "https://portal.shrotihost.in/clientarea.php" },
     { label: "Submit a Ticket", href: "https://portal.shrotihost.in/submitticket.php" },
     { label: "Domain Pricing", href: "https://portal.shrotihost.in/index.php/domain/pricing" },
-    { label: "Contact", href: "/contact" },
   ],
 };
 

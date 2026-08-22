@@ -217,7 +217,7 @@ export function Hero() {
             </span>
             shrotihost.in
           </span>
-          <h1 className="mt-5 text-4xl font-extrabold tracking-tighter text-text-primary sm:text-5xl lg:text-[68px] lg:leading-[1.03]">
+          <h1 className="mt-5 text-4xl font-extrabold tracking-tighter text-text-primary sm:text-5xl lg:text-6xl lg:leading-[1.03]">
             Build. Deploy.
             <br /> <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">Scale.</span>
           </h1>

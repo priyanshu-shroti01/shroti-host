@@ -94,19 +94,20 @@ export function HostingAdvisor() {
 
       <div className="mx-auto mt-10 max-w-xl">
         {!isResult && (
-          <div className="mb-4 flex items-center justify-center gap-2">
-            {questions.map((q, i) => (
-              <span
-                key={q.key}
-                className={`h-1.5 w-8 rounded-full transition-colors ${
-                  i <= step ? "bg-brand-purple" : "bg-border"
-                }`}
-                aria-hidden="true"
-              />
-            ))}
-            <span className="ml-2 text-xs text-text-muted">
+          <div className="mb-5 flex flex-col items-center gap-2.5">
+            <div className="flex items-center gap-2" aria-hidden="true">
+              {questions.map((q, i) => (
+                <span
+                  key={q.key}
+                  className={`h-2 w-12 rounded-full transition-colors ${
+                    i <= step ? "bg-brand-purple" : "bg-border"
+                  }`}
+                />
+              ))}
+            </div>
+            <p className="text-xs font-medium text-text-muted" aria-live="polite">
               Step {step + 1} of {questions.length}
-            </span>
+            </p>
           </div>
         )}
 
@@ -118,7 +119,7 @@ export function HostingAdvisor() {
               animate={{ opacity: 1, y: 0 }}
               exit={reducedMotion ? undefined : { opacity: 0, y: -12 }}
               transition={{ duration: reducedMotion ? 0 : duration.card, ease: easing.outCubic }}
-              className="rounded-2xl border border-border bg-card p-8"
+              className="rounded-2xl border border-border bg-card p-8 pb-9"
             >
               <h3 className="text-lg font-semibold text-text-primary">{questions[step].prompt}</h3>
               <div className="mt-5 space-y-2.5">

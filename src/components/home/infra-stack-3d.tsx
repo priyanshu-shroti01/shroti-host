@@ -68,7 +68,7 @@ export function CalloutLabel({
         }`}
       />
       <span
-        className={`whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-colors duration-300 ${
+        className={`whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors duration-300 ${
           active
             ? "border-brand-purple/60 bg-brand-purple/15 text-brand-purple"
             : "border-border-strong bg-card text-text-secondary"

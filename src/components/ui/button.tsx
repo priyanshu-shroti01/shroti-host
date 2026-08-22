@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, type AnchorHTMLAttributes, type ButtonHTMLAttributes, type MouseEvent, type ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "ghost";
-type Size = "sm" | "md" | "lg" | "xl";
+type Size = "sm" | "md" | "lg";
 
 const base =
   "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold transition-all duration-[180ms] ease-[cubic-bezier(0.33,1,0.68,1)] focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none active:duration-100";
@@ -21,7 +21,6 @@ const sizes: Record<Size, string> = {
   sm: "h-9 px-5 text-xs",
   md: "h-11 px-6 text-sm",
   lg: "h-13 px-7 text-base",
-  xl: "h-15 px-9 text-lg",
 };
 
 type Ripple = { x: number; y: number; id: number };

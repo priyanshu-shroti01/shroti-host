@@ -36,7 +36,7 @@ export function SpotlightCard({
         }}
         aria-hidden="true"
       />
-      <div className="relative">{children}</div>
+      <div className="relative h-full">{children}</div>
     </div>
   );
 }

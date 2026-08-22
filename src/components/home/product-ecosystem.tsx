@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ArrowUpRight,
+  Infinity as InfinityIcon,
   Building2,
   Cloud,
   Code2,
@@ -43,6 +44,12 @@ const products = [
     description: "Business mailboxes on your own domain.",
     href: "/hosting#compare",
   },
+  {
+    icon: InfinityIcon,
+    title: "Unlimited Hosting",
+    description: "One plan, as many sites as you run.",
+    href: "/unlimited-hosting",
+  },
 ];
 
 const wide = {
@@ -76,7 +83,7 @@ export function ProductEcosystem() {
         </p>
       </div>
 
-      <div className="mt-14 grid gap-5 lg:grid-cols-4 lg:grid-rows-2">
+      <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
         <Reveal className="lg:col-span-2 lg:row-span-2">
           <SpotlightCard className="h-full">
             <Link href={featured.href} className="flex h-full flex-col justify-between p-8">
@@ -111,15 +118,8 @@ export function ProductEcosystem() {
 
         <Reveal delay={0.24} className="lg:col-span-2">
           <SpotlightCard className="h-full">
-            <Link href={wide.href} className="flex h-full items-center gap-5 p-6">
-              <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 text-brand-purple transition-transform duration-200 group-hover:rotate-6 group-hover:scale-110">
-                <wide.icon size={22} aria-hidden="true" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-base font-semibold text-text-primary">{wide.title}</h3>
-                <p className="mt-1 text-sm text-text-secondary">{wide.description}</p>
-              </div>
-              <ArrowUpRight size={18} className="shrink-0 text-text-muted transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+            <Link href={wide.href} className="flex h-full flex-col p-6">
+              <ProductCardBody product={wide} />
             </Link>
           </SpotlightCard>
         </Reveal>
@@ -137,14 +137,12 @@ export function ProductEcosystem() {
 
       <Reveal delay={0.16}>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-brand-purple/30 bg-card p-5">
-          <span className="text-xs font-medium uppercase tracking-wide text-brand-purple">
-            Reseller Hosting
-          </span>
+          <span className="text-xs font-semibold text-brand-purple">Reseller hosting</span>
           {resellerLines.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className="inline-flex items-center gap-1.5 rounded-full border border-brand-purple/30 bg-brand-purple/5 px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple"
+              className="chip"
             >
               <item.icon size={13} className="text-brand-purple" aria-hidden="true" />
               {item.label}
@@ -155,14 +153,11 @@ export function ProductEcosystem() {
 
       <Reveal delay={0.24}>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-dashed border-border-strong p-5">
-          <span className="text-xs font-medium uppercase tracking-wide text-text-muted">
-            On the roadmap
-          </span>
+          <span className="text-xs font-semibold text-text-muted">On the roadmap</span>
           {roadmap.map((item) => {
-            const className =
-              "inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors";
+            const className = "chip";
             return item.href ? (
-              <Link key={item.label} href={item.href} className={`${className} hover:border-brand-purple hover:text-brand-purple`}>
+              <Link key={item.label} href={item.href} className={className}>
                 <item.icon size={13} aria-hidden="true" />
                 {item.label}
               </Link>
@@ -179,7 +174,7 @@ export function ProductEcosystem() {
   );
 }
 
-function ProductCardBody({ product }: { product: (typeof products)[number] }) {
+function ProductCardBody({ product }: { product: (typeof products)[number] | typeof wide }) {
   return (
     <>
       <div className="flex items-start justify-between">
@@ -188,7 +183,7 @@ function ProductCardBody({ product }: { product: (typeof products)[number] }) {
         </div>
         <ArrowUpRight
           size={18}
-          className="text-text-muted opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand-purple group-hover:opacity-100"
+          className="text-text-muted transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand-purple"
           aria-hidden="true"
         />
       </div>

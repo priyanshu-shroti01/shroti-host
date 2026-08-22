@@ -75,7 +75,7 @@ export function HostingPlans({
           const save = savePercent(plan);
 
           return (
-            <Reveal key={plan.name} delay={i * 0.08} className={`h-full ${plan.recommended ? "lg:scale-105" : ""}`}>
+            <Reveal key={plan.name} delay={i * 0.08} className="h-full">
               <div data-theme={plan.recommended ? "dark" : undefined} className="h-full">
               {/* One spatial hover effect only: the documented Tilt3D vocabulary.
                   No stacked lift/pop — see docs/micro-interactions.md "3D tilt". */}
@@ -85,20 +85,24 @@ export function HostingPlans({
                   plan.recommended ? "border-transparent shadow-[var(--shadow-popular)]" : ""
                 }`}
               >
-                {plan.recommended && (
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.2 }}
-                    className="mb-4 w-fit"
-                  >
-                    <Badge tone="purple">Most Popular</Badge>
-                  </motion.div>
-                )}
+                {/* Fixed-height badge row on every card so headings, prices
+                    and feature lists share one baseline across the row. */}
+                <div className="mb-4 h-7">
+                  {plan.recommended && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.2 }}
+                      className="w-fit"
+                    >
+                      <Badge tone="purple">Most Popular</Badge>
+                    </motion.div>
+                  )}
+                </div>
 
                 <h3 className="text-xl font-semibold text-text-primary">{plan.name}</h3>
-                <p className="mt-1 text-sm text-text-muted">{plan.tagline}</p>
+                <p className="mt-1 min-h-10 text-sm text-text-muted">{plan.tagline}</p>
 
                 <div className="mt-6 flex items-baseline gap-2">
                   <span className="text-4xl font-semibold text-text-primary">
@@ -114,7 +118,7 @@ export function HostingPlans({
                 </div>
                 <div className="mt-1 flex items-center gap-2">
                   <p className="text-xs text-text-muted">Billed {cycleLabels[cycle].toLowerCase()} · excl. taxes</p>
-                  <Badge tone="success" className="text-[10px]">
+                  <Badge tone="success" className="text-xs">
                     Save {save}%
                   </Badge>
                 </div>

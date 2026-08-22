@@ -42,7 +42,7 @@ export function SitesGridDemo() {
             >
               <div className="flex items-center justify-between">
                 <Globe size={14} className="text-brand-purple" aria-hidden="true" />
-                <Badge tone="success" className="text-[10px]">
+                <Badge tone="success" className="text-xs">
                   Live
                 </Badge>
               </div>

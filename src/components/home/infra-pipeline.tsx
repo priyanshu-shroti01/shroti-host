@@ -48,8 +48,8 @@ export function InfraPipeline() {
               >
                 <stage.icon size={15} aria-hidden="true" />
               </span>
-              <span className="text-[11px] font-semibold leading-none text-text-secondary">{stage.label}</span>
-              <span className="text-[10px] leading-none text-text-muted">{stage.sub}</span>
+              <span className="text-xs font-semibold leading-none text-text-secondary">{stage.label}</span>
+              <span className="text-xs leading-none text-text-muted">{stage.sub}</span>
             </div>
           </div>
         ))}

@@ -22,7 +22,7 @@ export function TrustedTech() {
         </StatPill>
       </div>
 
-      <p className="mt-8 text-center text-xs font-medium uppercase tracking-widest text-text-muted">
+      <p className="mt-8 text-center text-xs font-medium text-text-muted">
         Powered by an infrastructure stack you can trust
       </p>
       {/* The stack as a connected request path — each node is a real stage a
