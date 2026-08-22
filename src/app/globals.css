@@ -369,3 +369,38 @@ html.lenis.lenis-smooth [data-lenis-prevent] {
   color: var(--color-text-secondary); transition: color .2s, border-color .2s;
 }
 a.chip:hover { border-color: var(--color-brand-purple); color: var(--color-brand-purple); }
+
+/* ── Logo loader variants (ui/logo-loader.tsx) ──────────────────────── */
+.logo-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  fill-opacity: 0;
+  animation: logo-draw 1.8s cubic-bezier(0.33, 1, 0.68, 1) infinite;
+}
+@keyframes logo-draw {
+  0%   { stroke-dashoffset: 1; fill-opacity: 0; }
+  55%  { stroke-dashoffset: 0; fill-opacity: 0; }
+  75%  { stroke-dashoffset: 0; fill-opacity: 1; }
+  100% { stroke-dashoffset: 0; fill-opacity: 1; }
+}
+.logo-shimmer {
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  background: linear-gradient(110deg,
+    var(--color-brand-purple) 0%, var(--color-brand-purple) 35%,
+    var(--color-brand-blue) 50%,
+    var(--color-brand-purple) 65%, var(--color-brand-purple) 100%);
+  background-size: 250% 100%;
+  animation: logo-shimmer 1.6s linear infinite;
+}
+@keyframes logo-shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.logo-pulse { animation: logo-pulse 1.6s ease-in-out infinite; }
+@keyframes logo-pulse {
+  0%, 100% { opacity: 0.55; filter: drop-shadow(0 0 0 rgb(168 16 199 / 0)); transform: scale(0.97); }
+  50%      { opacity: 1;    filter: drop-shadow(0 0 10px rgb(168 16 199 / 0.55)); transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-draw, .logo-shimmer, .logo-pulse { animation: none; }
+  .logo-draw { stroke-dashoffset: 0; fill-opacity: 1; }
+}
