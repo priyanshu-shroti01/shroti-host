@@ -14,7 +14,7 @@ import { FinalCta } from "@/components/home/final-cta";
 export const metadata: Metadata = {
   title: "Shared Hosting",
   description:
-    "Configure your hosting — storage, traffic, PHP version, and email — matched live to the right plan. LiteSpeed, NVMe, and free migration on every plan.",
+    "Shared hosting on LiteSpeed and NVMe — Bronze, Gold, Platinum and Diamond plans with free SSL, free migration, daily backups and the same renewal price every cycle.",
   alternates: { canonical: "/hosting" },
 };
 

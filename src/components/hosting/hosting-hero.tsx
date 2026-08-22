@@ -21,22 +21,22 @@ export function HostingHero() {
         <Reveal className="text-center lg:text-left">
           <Badge>Shared Hosting</Badge>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
-            Configured for your site, not a generic server.
+            Fast shared hosting, priced honestly.
           </h1>
           <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary lg:mx-0">
-            Pick what you actually need below — storage, traffic, PHP, email — and we&apos;ll match
-            it to a plan instantly.
+            LiteSpeed and NVMe on every tier, free SSL and migration included — and the renewal
+            price is the price you see.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
             <Magnetic>
-              <Button href="#configure" size="lg">
-                Configure now
+              <Button href="#compare" size="lg">
+                See plans
                 <ArrowRight size={18} aria-hidden="true" />
               </Button>
             </Magnetic>
-            <Button href="#compare" variant="secondary" size="lg">
-              Skip to plans
+            <Button href="#specs" variant="secondary" size="lg">
+              Compare every spec
             </Button>
           </div>
 
