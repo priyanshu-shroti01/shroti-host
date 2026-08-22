@@ -5,7 +5,7 @@
 <link href="{$WEB_ROOT}/templates/twenty-one/css/all.min.css?v={$versionHash}" rel="stylesheet">
 <link href="{$WEB_ROOT}/templates/twenty-one/css/theme.min.css?v={$versionHash}" rel="stylesheet">
 <link href="{$WEB_ROOT}/assets/css/fontawesome-all.min.css" rel="stylesheet">
-<link href="{$WEB_ROOT}/templates/shrotihost/css/shrotihost.css?v={$versionHash}" rel="stylesheet">
+<link href="{$WEB_ROOT}/templates/shrotihost/css/shrotihost.css?v=2" rel="stylesheet">
 <link rel="icon" type="image/png" href="{$WEB_ROOT}/templates/shrotihost/img/icon.png">
 <meta name="theme-color" content="#0a0a0f">
 

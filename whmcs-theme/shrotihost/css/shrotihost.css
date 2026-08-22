@@ -173,3 +173,35 @@ label,.control-label,legend{color:var(--sh-text2);font-weight:500}
 .domain-search .input-group .form-control{height:52px;font-size:1.05rem}
 .text-primary{color:var(--sh-purple)!important}.text-success{color:var(--sh-success)!important}.text-danger{color:var(--sh-error)!important}.text-info{color:var(--sh-blue)!important}
 .spinner-border,.fa-spin{color:var(--sh-purple)}
+
+/* ── pass 2: header layout + contrast fixes from live probe ─────── */
+#header .navbar.navbar-light .container{flex-wrap:nowrap;align-items:center;gap:.5rem}
+#header .navbar.navbar-light .navbar-brand{margin-right:.25rem!important}
+#header .navbar.navbar-light .sh-sitenav{flex:0 0 auto;margin-left:.5rem}
+#header .navbar.navbar-light .sh-sitenav a{color:var(--sh-text2)!important;white-space:nowrap}
+#header .navbar.navbar-light .sh-sitenav a:hover{color:#fff!important}
+#header .navbar.navbar-light form.form-inline{flex:0 1 300px;min-width:0;margin-left:auto!important}
+#header .navbar.navbar-light .search{width:100%}
+#header .navbar.navbar-light .navbar-nav.toolbar{flex:0 0 auto;flex-direction:row;align-items:center;white-space:nowrap}
+#header .navbar.navbar-light .navbar-nav.toolbar .nav-item{display:flex;align-items:center}
+#header .navbar.navbar-light .navbar-nav.toolbar .btn.nav-link{color:var(--sh-text2)!important}
+@media (max-width:1199px){#header .navbar.navbar-light form.form-inline{display:none!important}}
+/* store cards: names + prices */
+#order-standard_cart .product header span,#order-standard_cart .product header h3,[id^=product][id$=-name]{color:var(--sh-text)!important}
+#order-standard_cart .product .product-pricing .price{color:var(--sh-text)!important;-webkit-text-fill-color:transparent;background:var(--sh-gradient);-webkit-background-clip:text;background-clip:text}
+@supports not (-webkit-background-clip:text){#order-standard_cart .product .product-pricing .price{-webkit-text-fill-color:initial;background:none;color:var(--sh-text)!important}}
+#order-standard_cart .product .product-pricing .cycle,#order-standard_cart .product .product-pricing small{color:var(--sh-muted)!important;-webkit-text-fill-color:initial}
+/* cart sidebar tabs (Apply Promo Code etc.) */
+#order-standard_cart .nav-link,#order-standard_cart .cart-sidebar .nav-link,#order-standard_cart .nav-tabs .nav-link{color:var(--sh-text2)!important}
+#order-standard_cart .nav-link.active,#order-standard_cart .cart-sidebar .nav-link.active,#order-standard_cart .nav-pills .nav-link.active{background:rgb(168 16 199/.16)!important;color:#fff!important;border-radius:12px}
+/* any table (DataTables without .table class too) */
+table th{color:var(--sh-muted)!important;border-color:var(--sh-border)!important;background:transparent!important}
+table td{color:var(--sh-text2)!important;border-color:var(--sh-border)!important}
+table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_disabled{color:var(--sh-muted)!important}
+.page-item .page-link,.paginate_button .page-link,.dataTables_paginate .paginate_button{color:var(--sh-text2)!important;background:var(--sh-card)!important;border-color:var(--sh-border)!important}
+.page-item.active .page-link,.paginate_button.active .page-link{background:var(--sh-purple)!important;color:#fff!important}
+.page-item.disabled .page-link{color:var(--sh-disabled)!important}
+/* sale/hot badges on domain pricing */
+.tld-sale-group,.tld-sale-group-sale,.tld-sale-group-hot,.tld-sale-group-new{background:rgb(245 165 36/.18)!important;color:#ffc96b!important;border:1px solid rgb(245 165 36/.35);border-radius:999px;padding:.1rem .5rem;font-weight:600}
+.tld-sale-group-hot{background:rgb(240 87 107/.18)!important;color:#ff8a9a!important;border-color:rgb(240 87 107/.35)}
+.tld-sale-group-new{background:rgb(63 167 255/.18)!important;color:#7cc3ff!important;border-color:rgb(63 167 255/.35)}
