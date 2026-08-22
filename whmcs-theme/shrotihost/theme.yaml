@@ -1,0 +1,11 @@
+# ShrotiHost — client area theme. Child of Twenty-One: every WHMCS page keeps
+# working; only the chrome (head/header/footer) and the skin are ours.
+name: "ShrotiHost"
+description: "ShrotiHost brand theme — dark glass, purple→blue, matches shrotihost.in"
+author: "ShrotiHost"
+properties:
+  serverSidePagination: false
+provides:
+  bootstrap: 4.5.3
+  jquery: 1.12.4
+  fontawesome: 5.10.1
