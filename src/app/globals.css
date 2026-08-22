@@ -395,12 +395,14 @@ a.chip:hover { border-color: var(--color-brand-purple); color: var(--color-brand
   animation: logo-shimmer 1.6s linear infinite;
 }
 @keyframes logo-shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.logo-packet { offset-distance: 0%; offset-rotate: auto; animation: logo-packet 2.4s linear infinite; }
+@keyframes logo-packet { to { offset-distance: 100%; } }
 .logo-pulse { animation: logo-pulse 1.6s ease-in-out infinite; }
 @keyframes logo-pulse {
   0%, 100% { opacity: 0.55; filter: drop-shadow(0 0 0 rgb(168 16 199 / 0)); transform: scale(0.97); }
   50%      { opacity: 1;    filter: drop-shadow(0 0 10px rgb(168 16 199 / 0.55)); transform: scale(1); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .logo-draw, .logo-shimmer, .logo-pulse { animation: none; }
+  .logo-draw, .logo-shimmer, .logo-pulse, .logo-packet { animation: none; }
   .logo-draw { stroke-dashoffset: 0; fill-opacity: 1; }
 }

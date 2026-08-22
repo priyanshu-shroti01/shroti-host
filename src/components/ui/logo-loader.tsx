@@ -67,12 +67,15 @@ export function LogoLoader({
           <svg viewBox={MARK_VIEWBOX} className="h-full w-full overflow-visible" aria-hidden="true">
             <path d={MARK_CLOUD} fill="currentColor" opacity={0.35} />
             <path d={MARK_RIBBON} fill="currentColor" />
-            {/* The packet: travels the ribbon's centreline. Using the ribbon
-                outline itself as the motion path keeps it on-brand without
-                hand-tracing a new curve. */}
-            <circle r="1.1" className="fill-brand-blue" style={{ filter: "drop-shadow(0 0 2px var(--color-brand-blue))" }}>
-              <animateMotion dur="2.4s" repeatCount="indefinite" rotate="auto" path={MARK_RIBBON} />
-            </circle>
+            {/* The packet rides the ribbon outline via CSS offset-path (SMIL
+                animateMotion rendered through React stayed inert in Chrome).
+                Using the ribbon itself as the motion path keeps it on-brand
+                without hand-tracing a new curve. */}
+            <circle
+              r="1.1"
+              className="logo-packet fill-brand-blue"
+              style={{ offsetPath: `path("${MARK_RIBBON}")`, filter: "drop-shadow(0 0 2px var(--color-brand-blue))" }}
+            />
           </svg>
         ) : variant === "draw" ? (
           <svg viewBox={MARK_VIEWBOX} className="h-full w-full overflow-visible" aria-hidden="true">
