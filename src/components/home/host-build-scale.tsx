@@ -48,7 +48,7 @@ const PILLARS = [
     body: "Deployment, optimization, maintenance, and the move to bigger infrastructure — with the same team, not a new vendor.",
     links: [
       { label: "Custom Software", href: "/custom-software" },
-      { label: "VPS Roadmap", href: "/vps" },
+      { label: "VPS (coming soon)", href: "/vps" },
       { label: "Free Migration", href: "/contact" },
     ],
     cta: { label: "Plan the next step", href: "/custom-software" },

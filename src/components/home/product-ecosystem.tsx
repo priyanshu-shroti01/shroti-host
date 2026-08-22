@@ -16,6 +16,7 @@ import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
 import { ServerRackIllustration } from "@/components/ui/server-rack-illustration";
+import { SoonTag } from "@/components/ui/soon-tag";
 
 const featured = {
   icon: Server,
@@ -160,6 +161,7 @@ export function ProductEcosystem() {
               <Link key={item.label} href={item.href} className={className}>
                 <item.icon size={13} aria-hidden="true" />
                 {item.label}
+                <SoonTag />
               </Link>
             ) : (
               <span key={item.label} className={className}>

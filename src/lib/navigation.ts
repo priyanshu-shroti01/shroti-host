@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-export type NavLink = { label: string; href: string; description?: string; icon?: LucideIcon };
+export type NavLink = { label: string; href: string; description?: string; icon?: LucideIcon; comingSoon?: boolean };
 
 export type NavItem = {
   label: string;
@@ -38,9 +38,9 @@ export const primaryNav: NavItem[] = [
       { label: "Unlimited Hosting", href: "/unlimited-hosting", description: "For agencies and multi-site owners", icon: Users },
       { label: "Email Hosting", href: "/hosting#compare", description: "Business mailboxes on your domain", icon: Mail },
       { label: "Reseller Hosting", href: "/reseller-hosting", description: "Start your own hosting business", icon: Share2 },
-      { label: "Master Reseller Hosting", href: "/master-reseller-hosting", description: "Coming soon — join the waitlist", icon: Building2 },
-      { label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting", description: "Coming soon — join the waitlist", icon: Layers },
-      { label: "VPS Hosting", href: "/vps", description: "Plans coming soon", icon: Server },
+      { label: "Master Reseller Hosting", href: "/master-reseller-hosting", description: "Coming soon — join the waitlist", icon: Building2, comingSoon: true },
+      { label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting", description: "Coming soon — join the waitlist", icon: Layers, comingSoon: true },
+      { label: "VPS Hosting", href: "/vps", description: "Coming soon — join the waitlist", icon: Server, comingSoon: true },
     ],
   },
   {
@@ -77,12 +77,12 @@ export const footerNav = {
     { label: "Unlimited Hosting", href: "/unlimited-hosting" },
     { label: "Domains", href: "/domains" },
     { label: "Email Hosting", href: "/hosting#compare" },
-    { label: "VPS (coming soon)", href: "/vps" },
+    { label: "VPS Hosting", href: "/vps", comingSoon: true },
   ],
   "Reseller & Modules": [
     { label: "Reseller Hosting", href: "/reseller-hosting" },
-    { label: "Master Reseller (coming soon)", href: "/master-reseller-hosting" },
-    { label: "Alpha Reseller (coming soon)", href: "/alpha-reseller-hosting" },
+    { label: "Master Reseller Hosting", href: "/master-reseller-hosting", comingSoon: true },
+    { label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting", comingSoon: true },
     { label: "WHMCS Gateway Fees Module", href: "/whmcs-gateway-fees-allocator" },
     { label: "WHMCS WhatsApp Module", href: "/whmcs-whatsapp-notification-module" },
   ],

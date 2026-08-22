@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { SoonTag } from "@/components/ui/soon-tag";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -168,7 +169,10 @@ export function Header() {
                                 </span>
                               )}
                               <span>
-                                <span className="block text-sm font-medium text-text-primary">{link.label}</span>
+                                <span className="block text-sm font-medium text-text-primary">
+                                  {link.label}
+                                  {link.comingSoon && <SoonTag className="ml-2" />}
+                                </span>
                                 {link.description && (
                                   <span className="mt-0.5 block text-xs text-text-muted">{link.description}</span>
                                 )}
@@ -317,6 +321,7 @@ export function Header() {
                                 onClick={() => setMobileOpen(false)}
                               >
                                 {link.label}
+                                {link.comingSoon && <SoonTag className="ml-2" />}
                               </Link>
                             ))}
                           </div>

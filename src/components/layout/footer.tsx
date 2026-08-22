@@ -3,6 +3,7 @@ import { ArrowUp, Mail, MessageCircle } from "lucide-react";
 import { Logo } from "./logo";
 import { Container } from "@/components/ui/container";
 import { footerNav } from "@/lib/navigation";
+import { SoonTag } from "@/components/ui/soon-tag";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -50,6 +51,7 @@ export function Footer() {
                       className="inline-block text-sm leading-snug text-text-muted transition-colors hover:text-text-primary"
                     >
                       {link.label}
+                      {"comingSoon" in link && link.comingSoon && <SoonTag className="ml-2" />}
                     </Link>
                   </li>
                 ))}
