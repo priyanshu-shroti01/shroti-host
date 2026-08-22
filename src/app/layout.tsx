@@ -17,11 +17,15 @@ const geistSans = Geist({
 });
 
 const geistMono = Geist_Mono({
+  // Not above-the-fold on most pages — load on use, don't block first paint.
+  preload: false,
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
 const jakarta = Plus_Jakarta_Sans({
+  // Not above-the-fold on most pages — load on use, don't block first paint.
+  preload: false,
   variable: "--font-jakarta",
   subsets: ["latin"],
 });
