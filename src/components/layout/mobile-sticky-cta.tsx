@@ -20,9 +20,6 @@ const PLAN_PAGES = new Set([
   "/wordpress-hosting",
   "/unlimited-hosting",
   "/reseller-hosting",
-  "/master-reseller-hosting",
-  "/alpha-reseller-hosting",
-  "/vps",
   "/domains",
 ]);
 

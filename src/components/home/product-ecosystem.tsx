@@ -61,12 +61,12 @@ const wide = {
 
 const resellerLines = [
   { icon: Share2, label: "Reseller Hosting", href: "/reseller-hosting" },
-  { icon: Building2, label: "Master Reseller Hosting", href: "/master-reseller-hosting" },
-  { icon: Layers, label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting" },
 ];
 
 const roadmap = [
   { icon: Server, label: "VPS", href: "/vps" },
+  { icon: Building2, label: "Master Reseller", href: "/master-reseller-hosting" },
+  { icon: Layers, label: "Alpha Reseller", href: "/alpha-reseller-hosting" },
   { icon: Cloud, label: "Cloud Hosting" },
   { icon: Zap, label: "API" },
 ];

@@ -25,10 +25,17 @@ const cycleLabels: Record<Cycle, string> = {
 export function HostingPlans({
   plans = sharedPlans,
   orderUrl = storeGroups.shared,
+  comingSoon = false,
+  lineName = "this line",
 }: {
   plans?: Plan[];
   /** WHMCS store URL the "Choose <plan>" buttons send shoppers to. */
   orderUrl?: string;
+  /** Unreleased line: show the planned tiers, but replace ordering with a
+   *  waitlist (WhatsApp) — nothing links into the store. */
+  comingSoon?: boolean;
+  /** Human name used in the waitlist message, e.g. "Master Reseller Hosting". */
+  lineName?: string;
 }) {
   // Monthly by default — the entry price is the anchor that converts;
   // annual totals read 12x more expensive at first glance.
@@ -47,6 +54,12 @@ export function HostingPlans({
         <p className="mt-4 text-text-secondary">
           Same renewal price, every cycle — no surprise increase later.
         </p>
+        {comingSoon && (
+          <p className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-brand-purple/30 bg-brand-purple/10 px-4 py-1.5 text-sm font-medium text-brand-purple">
+            Coming soon — these are the tiers we&apos;re launching. Join the waitlist and we&apos;ll
+            message you the day it opens.
+          </p>
+        )}
       </div>
 
       <div className="mt-10 flex justify-center">
@@ -88,7 +101,9 @@ export function HostingPlans({
                 {/* Fixed-height badge row on every card so headings, prices
                     and feature lists share one baseline across the row. */}
                 <div className="mb-4 h-7">
-                  {plan.recommended && (
+                  {comingSoon ? (
+                    <Badge tone="neutral">Coming soon</Badge>
+                  ) : plan.recommended && (
                     <motion.div
                       initial={{ scale: 0, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
@@ -137,17 +152,37 @@ export function HostingPlans({
                   ))}
                 </ul>
 
-                <Button
-                  href={productUrl(orderUrl, plan.name)}
-                  variant={plan.recommended ? "primary" : "secondary"}
-                  size="lg"
-                  className="mt-8 w-full"
-                >
-                  Choose {plan.name}
-                </Button>
-                <p className="mt-3 text-center text-xs text-text-muted">
-                  Secure checkout · UPI, cards &amp; net banking
-                </p>
+                {comingSoon ? (
+                  <>
+                    <Button
+                      href={`https://wa.me/919582129099?text=${encodeURIComponent(
+                        `Hi! Please add me to the waitlist for ${lineName} (${plan.name}).`,
+                      )}`}
+                      variant="secondary"
+                      size="lg"
+                      className="mt-8 w-full"
+                    >
+                      Join the waitlist
+                    </Button>
+                    <p className="mt-3 text-center text-xs text-text-muted">
+                      Not orderable yet · we&apos;ll message you when it opens
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      href={productUrl(orderUrl, plan.name)}
+                      variant={plan.recommended ? "primary" : "secondary"}
+                      size="lg"
+                      className="mt-8 w-full"
+                    >
+                      Choose {plan.name}
+                    </Button>
+                    <p className="mt-3 text-center text-xs text-text-muted">
+                      Secure checkout · UPI, cards &amp; net banking
+                    </p>
+                  </>
+                )}
               </Card>
               </Tilt3D>
               </div>

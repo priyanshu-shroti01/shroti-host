@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
@@ -9,7 +9,7 @@ export function AlphaResellerHero() {
     <div className="relative">
       <div className="relative mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
         <Reveal className="text-center lg:text-left">
-          <Badge>Alpha Reseller Hosting</Badge>
+          <Badge tone="neutral">Coming Soon</Badge>
           <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
             The elite tier. Maximum resources.
           </h1>
@@ -18,9 +18,8 @@ export function AlphaResellerHero() {
             for the largest hosting networks we support.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-            <Button href="#compare" size="lg">
-              View plans
-              <ArrowRight size={18} aria-hidden="true" />
+            <Button href={`https://wa.me/919582129099?text=${encodeURIComponent("Hi! Please add me to the Alpha Reseller Hosting waitlist.")}`} size="lg">
+              Join the waitlist
             </Button>
           </div>
         </Reveal>
