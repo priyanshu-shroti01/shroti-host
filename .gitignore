@@ -114,3 +114,24 @@ OPEN_SOURCE_NOTICES.md
 .claude/skills/v3-security-overhaul/
 .claude/skills/v3-swarm-coordination/
 .claude/skills/verification-quality/
+
+# Claude OS (absolute symlinks + generated graph) — recreate with scripts/project-init.sh
+graphify-out/
+.claude/skills/anti-slop
+.claude/skills/component-quality
+.claude/skills/deployment-gates
+.claude/skills/design-direction
+.claude/skills/design-review
+.claude/skills/frontend-standards
+.claude/skills/functional-qa
+.claude/skills/geo
+.claude/skills/graph-knowledge
+.claude/skills/memory
+.claude/skills/production-readiness
+.claude/skills/quality-pipeline
+.claude/skills/secrets-hygiene
+.claude/skills/secure-coding
+.claude/skills/skill-router
+.claude/skills/technical-seo
+.claude/skills/visual-qa
+*.claude-os-new
