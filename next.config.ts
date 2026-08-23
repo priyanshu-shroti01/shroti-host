@@ -28,6 +28,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Keep visited static routes instant on back/forward for 30 min (default 5).
+  experimental: { staleTimes: { static: 1800 } },
   // Self-hosted deployment: bundle a minimal server into .next/standalone
   output: "standalone",
   // Apache (mod_brotli + mod_deflate) negotiates encoding per client; Next

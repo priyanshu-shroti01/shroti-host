@@ -53,6 +53,16 @@ export function InfraStackVisual({ hoverIndex }: { hoverIndex: number | null }) 
   const reducedMotion = usePrefersReducedMotion();
   const hostRef = useRef<HTMLDivElement>(null);
   const [eligible, setEligible] = useState(false);
+  // The CSS fallback stack is `hidden lg:block`, yet it used to mount (and
+  // tick a 720 ms interval) on every phone. Mount it only at lg and up.
+  const [desktop, setDesktop] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 1024px)");
+    const apply = () => setDesktop(mql.matches);
+    apply();
+    mql.addEventListener("change", apply);
+    return () => mql.removeEventListener("change", apply);
+  }, []);
   const [near, setNear] = useState(false);
   // Latches on the first crash / lost context and never clears by design:
   // a GPU that failed once is not retried within the page's lifetime.
@@ -95,9 +105,9 @@ export function InfraStackVisual({ hoverIndex }: { hoverIndex: number | null }) 
         <SceneErrorBoundary onError={() => setFailed(true)}>
           <InfraStackWebGL hoverIndex={hoverIndex} onContextLost={() => setFailed(true)} />
         </SceneErrorBoundary>
-      ) : (
+      ) : desktop ? (
         <InfraStack3D hoverIndex={hoverIndex} />
-      )}
+      ) : null}
     </div>
   );
 }

@@ -348,24 +348,27 @@ body {
    A brand-gradient pulse sweeping along each connector segment.
    background-position only (GPU-cheap); static line under reduced motion. */
 .pipeline-flow {
-  background-image: linear-gradient(
-    90deg,
-    var(--color-border-strong) 0%,
-    var(--color-border-strong) 35%,
-    var(--color-brand-purple) 50%,
-    var(--color-border-strong) 65%,
-    var(--color-border-strong) 100%
-  );
-  background-size: 300% 100%;
-  background-position: 100% 0;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-border-strong);
+}
+/* Sweep on a transformed pseudo-element (compositor-only) instead of
+   animating background-position, which repainted the strip every frame. */
+.pipeline-flow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, var(--color-brand-purple), transparent);
   animation: pipeline-sweep 2.8s linear infinite;
+  will-change: transform;
 }
 @keyframes pipeline-sweep {
-  from { background-position: 100% 0; }
-  to { background-position: 0% 0; }
+  from { transform: translateX(-100%); }
+  to { transform: translateX(400%); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pipeline-flow { animation: none; background-image: none; background-color: var(--color-border-strong); }
+  .pipeline-flow::after { animation: none; display: none; }
 }
 
 /* Field-level validation state: a label carrying data-error paints its
@@ -407,3 +410,33 @@ a.chip:hover { border-color: var(--color-brand-purple); color: var(--color-brand
 .logo-packet { offset-distance: 0%; offset-rotate: auto; animation: logo-packet 2.4s linear infinite; }
 @keyframes logo-packet { to { offset-distance: 100%; } }
 @media (prefers-reduced-motion: reduce) { .logo-packet { animation: none; } }
+
+/* Route-change progress bar (components/navigation-progress.tsx).
+   Transform-only so it keeps moving while the main thread is busy
+   committing the new page. */
+.nav-progress {
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+.nav-progress__bar {
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
+}
+.nav-progress--active {
+  opacity: 1;
+  transition: none;
+}
+.nav-progress--active .nav-progress__bar {
+  animation: nav-progress-grow 6s cubic-bezier(0.1, 0.6, 0.2, 1) forwards;
+}
+@keyframes nav-progress-grow {
+  0% { transform: scaleX(0); }
+  15% { transform: scaleX(0.35); }
+  50% { transform: scaleX(0.7); }
+  100% { transform: scaleX(0.92); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-progress--active .nav-progress__bar { animation: none; transform: scaleX(0.6); }
+}

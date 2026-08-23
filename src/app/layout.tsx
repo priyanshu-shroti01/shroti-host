@@ -13,6 +13,7 @@ import { MobileStickyCta } from "@/components/layout/mobile-sticky-cta";
 import { WelcomeOffer } from "@/components/layout/welcome-offer";
 import { LenisRoot } from "@/components/motion/lenis-root";
 import { GA_LINKER_DOMAINS, GA_MEASUREMENT_ID } from "@/lib/analytics";
+import { NavigationProgress } from "@/components/navigation-progress";
 import { organizationJsonLd, SITE_URL, websiteJsonLd } from "@/lib/seo";
 
 // Plus Jakarta Sans is the body face (globals.css `--font-sans`), so it is the
@@ -89,12 +90,12 @@ export default function RootLayout({
         <Script
           id="ga4-lib"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <Script id="ga4-optout" strategy="beforeInteractive">
           {`try{if(localStorage.getItem("ga-opt-out")==="1"){window["ga-disable-${GA_MEASUREMENT_ID}"]=true}}catch(e){}`}
         </Script>
-        <Script id="ga4-init" strategy="afterInteractive">
+        <Script id="ga4-init" strategy="lazyOnload">
           {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 window.gtag = gtag;
@@ -106,6 +107,7 @@ gtag('config', ${JSON.stringify(GA_MEASUREMENT_ID)}, ${JSON.stringify({
           })});`}
         </Script>
         <Analytics />
+        <NavigationProgress />
         {/* Scroll-reveal components server-render with inline opacity/transform
             hiding states that only JS animates away. Without JS those styles
             never clear, so force them visible — scoped to inline styles, which

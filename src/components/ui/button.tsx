@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LinkPending } from "@/components/ui/link-pending";
 import { Loader2 } from "lucide-react";
 import { useState, type AnchorHTMLAttributes, type ButtonHTMLAttributes, type MouseEvent, type ReactNode } from "react";
 
@@ -8,7 +9,7 @@ type Variant = "primary" | "secondary" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold transition-all duration-(--duration-fast) ease-out-quart focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none aria-disabled:opacity-50 aria-disabled:pointer-events-none active:duration-100";
+  "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold transition-[color,background-color,border-color,box-shadow,transform,filter,opacity] duration-(--duration-fast) ease-out-quart focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none aria-disabled:opacity-50 aria-disabled:pointer-events-none active:duration-100";
 
 const variants: Record<Variant, string> = {
   // Text-bearing gradient → the deep variant (white text stays AA on the blue end).
@@ -68,9 +69,10 @@ function Spinner() {
 }
 
 type CommonProps = {
-  /** next/link prefetch. Defaults to false (prefetch on hover) — a page full
-   *  of CTAs shouldn't fire a dozen RSC prefetches on load; pass null for
-   *  Next's default viewport prefetch on the one primary CTA that matters. */
+  /** next/link prefetch. In Next 16 `false` means NO prefetch at all (not
+   *  "on hover"), which made every CTA tap pay a full round trip. Default:
+   *  Next's viewport prefetch (`null`) for internal routes; `false` only for
+   *  in-page `#anchors`. Pass `false` explicitly on link-dense lists. */
   prefetch?: boolean | null;
   children: ReactNode;
   variant?: Variant;
@@ -94,7 +96,7 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
     variant = "primary",
     size = "md",
     className = "",
-    prefetch = false,
+    prefetch,
     loading = false,
     ...rest
   } = props;
@@ -103,10 +105,12 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
 
   if ("href" in props && props.href) {
     const { href: _href, onClick, ...anchorRest } = rest as AnchorHTMLAttributes<HTMLAnchorElement>;
+    const isInternalRoute = props.href.startsWith("/") && !props.href.startsWith("//");
+    const effectivePrefetch = prefetch !== undefined ? prefetch : isInternalRoute ? null : false;
     return (
       <Link
         href={props.href}
-        prefetch={prefetch}
+        prefetch={effectivePrefetch}
         className={classes}
         aria-busy={loading || undefined}
         aria-disabled={loading || undefined}
@@ -122,6 +126,7 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
         {...anchorRest}
       >
         {loading && <Spinner />}
+        {isInternalRoute && <LinkPending />}
         {children}
         <RippleLayer ripples={ripples} />
       </Link>

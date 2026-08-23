@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { SoonTag } from "@/components/ui/soon-tag";
-import { usePathname } from "next/navigation";
+import { LinkPending } from "@/components/ui/link-pending";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState, type FocusEvent, type KeyboardEvent } from "react";
 import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion";
 import {
@@ -37,6 +38,23 @@ const accountLinks = [
  */
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Menu destinations live inside closed dropdowns / the mobile sheet, so
+  // Next's viewport prefetch never sees them. Warm them once the page is
+  // idle: ~12 small RSC payloads now save a full India→Frankfurt round trip
+  // on every menu tap later.
+  useEffect(() => {
+    const hrefs = primaryNav.flatMap((item) => [item.href, ...(item.items ?? []).map((l) => l.href)])
+      .filter((h): h is string => typeof h === "string" && h.startsWith("/") && h !== pathname);
+    const run = () => hrefs.forEach((h) => router.prefetch(h));
+    const hasIdle = "requestIdleCallback" in window;
+    const id = hasIdle ? window.requestIdleCallback(run, { timeout: 4000 }) : window.setTimeout(run, 2500);
+    return () => {
+      if (hasIdle) window.cancelIdleCallback(id);
+      else window.clearTimeout(id);
+    };
+  }, [router, pathname]);
   const navId = useId();
   const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -44,6 +62,18 @@ export function Header() {
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
+
+  // The sheet stays open (with a pending spinner on the tapped link) until
+  // the new route is actually on screen; closing it on tap left the old page
+  // visible for the whole round trip, which read as a dead button. State is
+  // reset during render when the route changes (React's "adjusting state on
+  // prop change" pattern) rather than in an effect.
+  const [menuPath, setMenuPath] = useState(pathname);
+  if (menuPath !== pathname) {
+    setMenuPath(pathname);
+    setMobileOpen(false);
+    setOpenMenu(null);
+  }
   const mobileWasOpenRef = useRef(false);
 
   useEffect(() => {
@@ -128,7 +158,7 @@ export function Header() {
           scrolled ? "h-16" : "h-18"
         }`}
       >
-        <Logo />
+        <Logo eager />
 
         <nav aria-label="Primary" className="hidden lg:flex lg:items-center lg:gap-0.5">
           {primaryNav.map((item) => {
@@ -162,7 +192,6 @@ export function Header() {
                 ) : (
                   <Link
                     href={item.href!}
-                    prefetch={false}
                     className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
                       isActive ? "text-brand-purple" : "text-text-secondary hover:text-text-primary"
                     }`}
@@ -197,7 +226,7 @@ export function Header() {
                             }}
                           >
                             <Link
-                              href={link.href} prefetch={false}
+                              href={link.href}
                               className="group/item flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-surface"
                             >
                               {link.icon && (
@@ -315,10 +344,10 @@ export function Header() {
                       key={item.label}
                       href={item.href!}
                       className="flex items-center gap-3 border-b border-border py-3 text-base font-medium text-text-primary"
-                      onClick={() => setMobileOpen(false)}
                     >
                       <item.icon size={18} className="text-brand-purple" aria-hidden="true" />
                       {item.label}
+                      <LinkPending className="ml-auto text-brand-purple" />
                     </Link>
                   );
                 }
@@ -358,12 +387,12 @@ export function Header() {
                             {item.items.map((link) => (
                               <Link
                                 key={link.href}
-                                href={link.href} prefetch={false}
-                                className="py-2 text-sm text-text-secondary"
-                                onClick={() => setMobileOpen(false)}
+                                href={link.href}
+                                className="flex items-center py-2 text-sm text-text-secondary"
                               >
                                 {link.label}
                                 {link.comingSoon && <SoonTag className="ml-2" />}
+                                <LinkPending className="ml-auto text-brand-purple" />
                               </Link>
                             ))}
                           </div>
@@ -381,7 +410,7 @@ export function Header() {
                 {accountLinks.map((link) => (
                   <Link
                     key={link.label}
-                    href={link.href} prefetch={false}
+                    href={link.href}
                     className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:border-brand-purple hover:text-text-primary"
                     onClick={() => setMobileOpen(false)}
                   >

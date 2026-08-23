@@ -1,5 +1,3 @@
-"use client";
-
 import { Accordion } from "@/components/ui/accordion";
 
 export type FaqItem = { question: string; answer: string };

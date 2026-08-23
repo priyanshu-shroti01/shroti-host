@@ -65,6 +65,21 @@ export function Hero() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const inputRef = useRef<HTMLInputElement>(null);
   const autoTypeRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // The demo replays only while the hero is on screen, the tab is visible and
+  // for at most two automatic cycles — otherwise its state updates keep
+  // competing with route transitions long after the visitor scrolled away.
+  const sectionRef = useRef<HTMLElement>(null);
+  const inViewRef = useRef(true);
+  const autoCyclesRef = useRef(0);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => {
+      inViewRef.current = entry.isIntersecting;
+    }, { threshold: 0.2 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   const sequenceIdRef = useRef(0);
   const hasInteractedRef = useRef(false);
   const demoIndexRef = useRef(0);
@@ -100,6 +115,8 @@ export function Hero() {
     // Auto-restart with a different example domain if the visitor never engaged.
     await sleep(3200);
     if (sequenceIdRef.current !== mySeq || hasInteractedRef.current) return;
+    autoCyclesRef.current += 1;
+    if (autoCyclesRef.current >= 2 || document.hidden || !inViewRef.current) return;
     demoIndexRef.current = (demoIndexRef.current + 1) % EXAMPLE_DOMAINS.length;
     void play(EXAMPLE_DOMAINS[demoIndexRef.current], mySeq);
   }
@@ -195,7 +212,7 @@ export function Hero() {
   const showInput = !inProgress;
 
   return (
-    <section className="relative overflow-hidden py-16 sm:py-20 lg:py-28">
+    <section ref={sectionRef} className="relative overflow-hidden py-16 sm:py-20 lg:py-28">
       <HeroAtmosphere />
       <Container className="relative grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
         <div className="text-center lg:text-left">
@@ -351,9 +368,9 @@ export function Hero() {
                             <div className="h-1 w-14 shrink-0 overflow-hidden rounded-full bg-border">
                               <motion.div
                                 key={i}
-                                className="h-full rounded-full bg-gradient-to-r from-brand-purple to-brand-blue"
-                                initial={{ width: "0%" }}
-                                animate={{ width: "100%" }}
+                                className="h-full w-full origin-left rounded-full bg-gradient-to-r from-brand-purple to-brand-blue"
+                                initial={{ scaleX: 0 }}
+                                animate={{ scaleX: 1 }}
                                 transition={{ duration: step.duration / 1000, ease: "linear" }}
                               />
                             </div>
