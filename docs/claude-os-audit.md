@@ -78,16 +78,30 @@ then the findings were implemented in one pass. Full reports with evidence:
   "24/7" → "Priority support (WhatsApp + tickets)"; sales path → WhatsApp; promo wording;
   design-system skill + DESIGN.md rewritten to match the code.
 
-## Still open (needs the owner)
-1. **Legal identity** — legal entity name, registered address, GSTIN for the footer and
-   Organization schema (every competitor shows this; trust score 2/5 without it).
-2. **Legacy payment folders** — confirm `/ccavenue`, `/ccavenue_proxy`, `/pay4bit-test`
-   are unused so they can be archived out of `public_html`.
-3. **JetBackup licence** (suspended 2026-06-12) — interim cron backup is not a real DR plan.
-4. **Promo end date** (`src/lib/promo.ts` `expiresAt`) — or the "40% off" is permanent.
-5. **WHMCS "Tax @ 15%"** on checkout vs 18% GST — verify in WHMCS tax rules.
-6. **Product decisions** — 30-day money-back (competitors), free domain on annual, annual
-   discount; whether VPS/Master/Alpha "coming soon" pages stay indexable.
-7. **AI-crawler policy** in robots.txt; named blog authors; uptime monitor + error tracking
-   (point an external monitor at `/api/health`); real-GPU QA pass of the WebGL scene;
-   Cloudflare/HTTP-2 decision for India latency.
+## Owner decisions (2026-08-23) and what followed
+- **Legal identity**: Shroti Enterprises, Udyam Reg. UDYAM-UP-36-0017127, Ruheri, Hathras,
+  Uttar Pradesh 204101 — now in the footer, Organization schema (`legalName`, `address`,
+  `identifier`, `foundingDate` 2023-03-30), Terms §1 and Privacy §1. No GSTIN: the business
+  charges generic tax, so the site never says "GST".
+- **Legacy payment folders** (`/ccavenue*`, `/pay4bit-test`) stay in place — still in use.
+  Only archives, configs, logs, the dev-tools dashboard and stray scripts are denied.
+- **Cookies/analytics**: no banner; GA4 stays on with a per-browser "Turn analytics off"
+  control on `/legal/privacy` (sets the official `ga-disable` flag before gtag loads).
+- **Coming-soon lines** (`/vps`, `/master-reseller-hosting`, `/alpha-reseller-hosting`):
+  `noindex,follow` and out of the sitemap until they launch.
+- **AI crawlers**: citation/AI bots stay allowed; only Bytespider is blocked.
+- **Promo**: kept, no invented end date (no fake countdown); wording clarified.
+- **Uptime**: `/usr/local/sbin/shrotihost-watchdog.sh` (cron, 5 min) checks `/api/health`,
+  the homepage and the portal; emails support@shrotihost.in after 2 consecutive failures
+  and on recovery. WhatsApp alerts can be added once the washroti keys are provided to it.
+
+## Still open
+1. **JetBackup licence** (suspended 2026-06-12) — the nightly cron to `/root/backups` is
+   an interim, not disaster recovery.
+2. **Performance budget** — initial JS 263 KB brotli vs the 200 KB target; next step is a
+   bundle-analyzer pass on the home route (framer-motion is still in most sections).
+3. **Real-GPU QA** of the WebGL infra stack on a mid-range laptop; Firefox/WebKit visual pass.
+4. **GA4 verification** in the GA property (events `page_view`/`select_plan`, cross-domain).
+5. **CSP**: switch from report-only to enforcing after a week without violations.
+6. **Product decisions**: 30-day money-back, free domain on annual, annual discount;
+   named blog authors; Cloudflare/HTTP-2 for India latency.
