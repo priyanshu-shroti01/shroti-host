@@ -1,9 +1,9 @@
 /**
  * The four legal documents as markdown-lite strings (## headings, - lists,
  * **bold**), rendered by components/legal/legal-document.tsx. Drafted
- * in-house for an Indian hosting business — plain language, no invented
- * registration numbers or addresses; contact points are the real support
- * email, WhatsApp, and WHMCS portal.
+ * in-house for an Indian hosting business — plain language; the legal entity,
+ * address and Udyam number come from the owner's Udyam certificate; contact
+ * points are the real support email, WhatsApp, and WHMCS portal.
  */
 
 export type LegalDoc = {
@@ -16,7 +16,7 @@ export const termsOfService: LegalDoc = {
   title: "Terms of Service",
   body: `
 ## 1. Acceptance of These Terms
-These Terms of Service ("Terms") are an agreement between you and ShrotiHost ("we", "us"). By creating an account at portal.shrotihost.in or purchasing any service, you agree to these Terms, our Acceptable Use Policy, Privacy Policy, and Refund Policy. If you do not agree, please do not use our services.
+These Terms of Service ("Terms") are an agreement between you and ShrotiHost, a brand of Shroti Enterprises, a micro enterprise registered under India's MSME Udyam scheme (Udyam Registration UDYAM-UP-36-0017127) with its office at Ruheri, Hathras, Uttar Pradesh 204101, India ("we", "us"). By creating an account at portal.shrotihost.in or purchasing any service, you agree to these Terms, our Acceptable Use Policy, Privacy Policy, and Refund Policy. If you do not agree, please do not use our services.
 
 ## 2. What We Provide
 ShrotiHost has provided web hosting to customers since 2023. Our services include shared hosting, WordPress hosting, unlimited hosting, reseller hosting, master reseller hosting, alpha reseller hosting, and domain name registration. Exact features and pricing are listed on each plan page and confirmed in your order.
@@ -62,7 +62,7 @@ export const privacyPolicy: LegalDoc = {
   title: "Privacy Policy",
   body: `
 ## 1. Overview
-This policy explains what personal data ShrotiHost collects, why we collect it, and the choices you have. We keep it simple: we collect what we need to run your hosting services and nothing more, and we never sell your data. We handle personal data in line with India's Digital Personal Data Protection Act, 2023 (DPDP Act).
+This policy explains what personal data ShrotiHost (a brand of Shroti Enterprises, Ruheri, Hathras, Uttar Pradesh 204101, India — Udyam Registration UDYAM-UP-36-0017127) collects, why we collect it, and the choices you have. We keep it simple: we collect what we need to run your hosting services and nothing more, and we never sell your data. We handle personal data in line with India's Digital Personal Data Protection Act, 2023 (DPDP Act).
 
 ## 2. Information We Collect
 - **Account and billing data** — name, email address, phone number, billing address, and order/invoice history, collected through our WHMCS client portal at portal.shrotihost.in when you register or purchase. Card and payment details are processed by our payment providers; we do not store full card numbers.
@@ -77,7 +77,7 @@ We use your data to provision and operate your services, process payments and se
 We never sell or rent personal data. We share it only with parties needed to deliver your service: payment processors (to take payment), domain registrars and registries (to register your domains), infrastructure providers (where servers are hosted), and government or law-enforcement authorities when legally required. Each provider receives only what it needs.
 
 ## 5. Cookies
-Our website and client portal use cookies to keep you logged in and remember preferences such as theme and display currency. We also use Google Analytics 4 to measure site usage; it is configured for cross-domain measurement between shrotihost.in and portal.shrotihost.in, so a visit that moves from the website to the portal is counted once. Analytics data is used in aggregate to understand which pages are useful, never to identify you or to sell to anyone. You can block or delete cookies in your browser or use a content blocker; the portal may not work correctly without essential cookies.
+Our website and client portal use cookies to keep you logged in and remember preferences such as theme and display currency. We also use Google Analytics 4 to measure site usage; it is configured for cross-domain measurement between shrotihost.in and portal.shrotihost.in, so a visit that moves from the website to the portal is counted once. Analytics data is used in aggregate to understand which pages are useful, never to identify you or to sell to anyone. You can block or delete cookies in your browser or use a content blocker, and you can switch analytics off for this browser with the control at the end of this section; the portal may not work correctly without essential cookies.
 
 ## 6. Data Security
 We protect data with encrypted connections (HTTPS), access controls limiting who on our team can view customer data, and standard server hardening. No system is perfectly secure, but if we become aware of a breach affecting your personal data, we will notify you and the relevant authorities as required by law.

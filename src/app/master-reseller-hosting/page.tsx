@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   description:
     "Create your own reseller network — WHM reseller accounts, white-label branding, and free WHMCS billing software on every plan.",
   alternates: { canonical: "/master-reseller-hosting" },
+  // Coming-soon line: thin until launch — keep out of the index (remove when live).
+  robots: { index: false, follow: true },
 };
 
 

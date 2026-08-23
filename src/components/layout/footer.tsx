@@ -83,7 +83,10 @@ export function Footer() {
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
-          <p className="text-sm text-text-muted">© {year} ShrotiHost. All rights reserved.</p>
+          <p className="text-sm text-text-muted">
+            © {year} ShrotiHost · a brand of Shroti Enterprises, Ruheri, Hathras, Uttar Pradesh
+            204101, India · Udyam Reg. UDYAM-UP-36-0017127
+          </p>
           <div className="flex items-center gap-6">
             <p className="text-sm text-text-muted">Made for students, developers, and builders.</p>
             <a

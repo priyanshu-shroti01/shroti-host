@@ -91,6 +91,9 @@ export default function RootLayout({
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
         />
+        <Script id="ga4-optout" strategy="beforeInteractive">
+          {`try{if(localStorage.getItem("ga-opt-out")==="1"){window["ga-disable-${GA_MEASUREMENT_ID}"]=true}}catch(e){}`}
+        </Script>
         <Script id="ga4-init" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}

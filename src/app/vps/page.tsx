@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   description:
     "VPS hosting with dedicated vCPU, RAM, and NVMe storage is coming to ShrotiHost. Preview the resource configuration and get notified at launch.",
   alternates: { canonical: "/vps" },
+  // Coming-soon line: thin until launch — keep out of the index (remove when live).
+  robots: { index: false, follow: true },
 };
 
 export default function VpsPage() {

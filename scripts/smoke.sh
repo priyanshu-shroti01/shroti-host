@@ -55,10 +55,10 @@ expect_code GET "/api/domain-check?q=" 200
 
 # Sitemap must list the whole site (73 URLs at the time of writing).
 locs="$(curl -sS -m 20 "$BASE_URL/sitemap.xml" 2>/dev/null | grep -o '<loc>' | wc -l | tr -d ' ')"
-if [ "${locs:-0}" -ge 70 ]; then
-  record PASS "sitemap <loc> count" ">=70" "$locs"
+if [ "${locs:-0}" -ge 65 ]; then
+  record PASS "sitemap <loc> count" ">=65" "$locs"
 else
-  record FAIL "sitemap <loc> count" ">=70" "${locs:-0}"
+  record FAIL "sitemap <loc> count" ">=65" "${locs:-0}"
 fi
 
 # Health body must say ok:true.

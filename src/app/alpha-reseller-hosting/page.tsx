@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   description:
     "The elite reseller tier — a three-level cPanel, WHM reseller, and Master Reseller hierarchy with the highest resource caps we offer.",
   alternates: { canonical: "/alpha-reseller-hosting" },
+  // Coming-soon line: thin until launch — keep out of the index (remove when live).
+  robots: { index: false, follow: true },
 };
 
 

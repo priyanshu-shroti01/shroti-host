@@ -5,7 +5,8 @@ const SITE_URL = "https://shrotihost.in";
 
 /** Every indexable page route. Add new pages here when adding them to src/app.
  *  Blog posts are appended automatically from lib/blog.ts.
- *  `/status` is deliberately absent — it is a noindex pre-launch preview. */
+ *  `/status`, `/vps`, `/master-reseller-hosting` and `/alpha-reseller-hosting` are
+ *  deliberately absent — noindex until those lines launch. */
 const routes: { path: string; changeFrequency: "weekly" | "monthly" | "yearly"; priority: number }[] = [
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/blog", changeFrequency: "weekly", priority: 0.7 },
@@ -13,10 +14,7 @@ const routes: { path: string; changeFrequency: "weekly" | "monthly" | "yearly"; 
   { path: "/wordpress-hosting", changeFrequency: "weekly", priority: 0.9 },
   { path: "/unlimited-hosting", changeFrequency: "weekly", priority: 0.9 },
   { path: "/reseller-hosting", changeFrequency: "weekly", priority: 0.9 },
-  { path: "/master-reseller-hosting", changeFrequency: "monthly", priority: 0.6 },
-  { path: "/alpha-reseller-hosting", changeFrequency: "monthly", priority: 0.6 },
   { path: "/domains", changeFrequency: "weekly", priority: 0.8 },
-  { path: "/vps", changeFrequency: "monthly", priority: 0.6 },
   { path: "/whmcs-gateway-fees-allocator", changeFrequency: "monthly", priority: 0.6 },
   { path: "/whmcs-whatsapp-notification-module", changeFrequency: "monthly", priority: 0.6 },
   { path: "/web-development", changeFrequency: "weekly", priority: 0.9 },

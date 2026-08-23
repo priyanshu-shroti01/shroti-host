@@ -8,7 +8,7 @@ const OG_IMAGE = `${SITE_URL}/opengraph-image`;
 /**
  * Organization entity — emitted once from the root layout. Every field here
  * is verifiable on the site itself; legal entity name, registered address and
- * GSTIN are deliberately absent until the owner supplies them.
+ * Udyam registration are from the owner's Udyam certificate (2026-08-23).
  */
 export const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -18,8 +18,22 @@ export const organizationJsonLd = {
   description:
     "ShrotiHost is an Indian web hosting and development company offering NVMe shared, WordPress, unlimited and reseller hosting from ₹39/month, domain registration, and custom website and app builds.",
   logo: `${SITE_URL}/icon.png`,
-  foundingDate: "2023-04-13",
+  legalName: "Shroti Enterprises",
+  foundingDate: "2023-03-30",
   areaServed: "IN",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Ruheri",
+    addressLocality: "Hathras",
+    addressRegion: "Uttar Pradesh",
+    postalCode: "204101",
+    addressCountry: "IN",
+  },
+  identifier: {
+    "@type": "PropertyValue",
+    propertyID: "Udyam Registration Number",
+    value: "UDYAM-UP-36-0017127",
+  },
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",

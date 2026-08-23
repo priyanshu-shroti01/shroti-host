@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Section } from "@/components/ui/section";
 import { LegalDocument } from "@/components/legal/legal-document";
 import { privacyPolicy } from "@/lib/legal-content";
+import { AnalyticsOptOut } from "@/components/analytics-opt-out";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -13,6 +14,9 @@ export default function Page() {
   return (
     <Section className="pt-16 sm:pt-24">
       <LegalDocument doc={privacyPolicy} />
+      <div className="mx-auto max-w-2xl">
+        <AnalyticsOptOut />
+      </div>
     </Section>
   );
 }
