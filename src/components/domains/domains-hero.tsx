@@ -239,7 +239,7 @@ export function DomainsHero() {
               name="query"
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
-              placeholder="Search for your domain…"
+              placeholder="yourdomain.com"
               aria-label="Search for a domain"
               autoComplete="off"
               style={{ caretColor: "var(--color-brand-purple)" }}

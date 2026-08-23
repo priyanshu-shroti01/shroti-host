@@ -256,7 +256,7 @@ export function Header() {
         </nav>
 
         <div className="hidden lg:flex lg:items-center lg:gap-2">
-          <div className="hidden items-center gap-2 xl:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             <CurrencySwitcher />
             <ThemeToggle />
             <Link
@@ -270,6 +270,7 @@ export function Header() {
             href="https://portal.shrotihost.in/clientarea.php"
             variant="secondary"
             size="md"
+            className="hidden xl:inline-flex"
           >
             Dashboard
           </Button>
@@ -388,7 +389,7 @@ export function Header() {
                               <Link
                                 key={link.href}
                                 href={link.href}
-                                className="flex items-center py-2 text-sm text-text-secondary"
+                                className="flex min-h-11 items-center py-2 text-sm text-text-secondary"
                               >
                                 {link.label}
                                 {link.comingSoon && <SoonTag className="ml-2" />}

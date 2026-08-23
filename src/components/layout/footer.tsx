@@ -11,8 +11,8 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
       <Container className="py-16">
-        <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
-          <div className="col-span-2 sm:col-span-1 xl:col-span-2">
+        <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <div className="col-span-2 sm:col-span-3 lg:col-span-4 xl:col-span-6">
             <Logo />
             <p className="mt-4 max-w-xs text-sm text-text-muted">
               Premium hosting and software development for students, startups, and growing
@@ -51,7 +51,7 @@ export function Footer() {
                     <Link
                       href={link.href}
                       prefetch={false}
-                      className="inline-block py-1.5 text-sm leading-snug text-text-muted transition-colors hover:text-text-primary"
+                      className="inline-block py-2.5 text-sm leading-snug text-text-muted transition-colors hover:text-text-primary"
                     >
                       {link.label}
                       {"comingSoon" in link && link.comingSoon && <SoonTag className="ml-2" />}
@@ -82,7 +82,7 @@ export function Footer() {
           </span>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 pb-16 md:flex-row md:pb-0 md:pr-20">
           <p className="text-sm text-text-muted">
             © {year} ShrotiHost · a brand of Shroti Enterprises, Ruheri, Hathras, Uttar Pradesh
             204101, India · Udyam Reg. UDYAM-UP-36-0017127
@@ -91,7 +91,7 @@ export function Footer() {
             <p className="text-sm text-text-muted">Made for students, developers, and builders.</p>
             <a
               href="#top"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
+              className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap py-2 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
             >
               Back to top
               <ArrowUp size={14} aria-hidden="true" />

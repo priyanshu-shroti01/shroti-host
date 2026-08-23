@@ -77,8 +77,8 @@ export function ProductEcosystem() {
         <Reveal className="lg:col-span-2 lg:row-span-2">
           <SpotlightCard className="h-full">
             <Link href={featured.href} className="flex h-full flex-col justify-between p-8">
-              <ServerRackIllustration className="pointer-events-none absolute -bottom-6 -right-4 w-52 opacity-90 transition-transform duration-300 ease-out group-hover:-translate-y-1.5 sm:w-64" />
-              <div className="relative">
+              <ServerRackIllustration className="pointer-events-none absolute -bottom-6 -right-4 hidden w-52 opacity-90 sm:block transition-transform duration-300 ease-out group-hover:-translate-y-1.5 sm:w-64" />
+              <div className="relative sm:pr-56 lg:pr-60">
                 <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-purple/25 to-brand-blue/20 text-brand-purple transition-transform duration-200 group-hover:rotate-6 group-hover:scale-110">
                   <featured.icon size={26} aria-hidden="true" />
                 </div>
@@ -88,7 +88,7 @@ export function ProductEcosystem() {
                 <h3 className="mt-5 text-xl font-semibold text-text-primary">{featured.title}</h3>
                 <p className="mt-2 max-w-sm text-sm text-text-secondary">{featured.description}</p>
               </div>
-              <span className="relative mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple-text">
+              <span className="relative z-10 mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple-text">
                 Explore plans
                 <ArrowUpRight size={16} aria-hidden="true" />
               </span>

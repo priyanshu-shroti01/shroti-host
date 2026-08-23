@@ -92,7 +92,7 @@ export function DomainSearch({ domains = allDomains }: { domains?: DomainPrice[]
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
           variants={{ visible: { transition: { staggerChildren: reducedMotion ? 0 : 0.06 } } }}
-          className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8"
+          className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4"
         >
           {featuredDomains.map((d) => (
             <motion.a
@@ -119,7 +119,7 @@ export function DomainSearch({ domains = allDomains }: { domains?: DomainPrice[]
             View full domain pricing
             <ArrowRight size={14} className="transition-transform duration-200 group-hover/link:translate-x-1" aria-hidden="true" />
           </a>
-          <span className="mx-3 text-text-muted">·</span>
+          <span className="mx-3 hidden text-text-muted sm:inline">·</span>
           <a
             href={`${WHMCS_CART_URL}?a=add&domain=transfer`}
             className="group/link inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple-text hover:underline"

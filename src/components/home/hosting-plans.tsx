@@ -87,7 +87,7 @@ export function HostingPlans({
               type="button"
               onClick={() => setCycle(c)}
               aria-pressed={cycle === c}
-              className={`rounded-full px-2 py-2.5 text-xs font-medium transition-colors sm:px-5 sm:text-sm ${
+              className={`rounded-full px-2 py-3 text-xs font-medium transition-colors sm:px-5 sm:text-sm ${
                 cycle === c ? "bg-brand-purple text-white" : "text-text-secondary hover:text-text-primary"
               }`}
             >
@@ -99,7 +99,7 @@ export function HostingPlans({
 
       {/* Pricing cards render static on arrival — no entrance stagger on the
           thing the visitor scrolled here to read. */}
-      <div className="mt-10 grid gap-6 lg:grid-cols-4">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
         {plans.map((plan) => {
           const months = cycleMonths[cycle];
           const saleTotal = plan.monthlyPrice * months;

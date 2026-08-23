@@ -27,7 +27,7 @@ export function PostToc({ post }: { post: BlogPost }) {
           <li key={heading}>
             <a
               href={`#${headingId(heading)}`}
-              className="text-sm text-text-secondary underline-offset-2 transition-colors hover:text-brand-purple hover:underline"
+              className="block py-1.5 text-sm text-text-secondary underline-offset-2 transition-colors hover:text-brand-purple hover:underline"
             >
               {heading}
             </a>

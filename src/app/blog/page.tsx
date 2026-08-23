@@ -32,7 +32,7 @@ export default function BlogIndexPage() {
             <Link
               key={c.slug}
               href={`/blog/category/${c.slug}`}
-              className="rounded-full border-2 border-border bg-card px-3.5 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple-text"
+              className="rounded-full border-2 border-border bg-card px-3.5 py-2.5 text-xs font-semibold text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple-text"
             >
               {c.name} <span className="text-text-muted">({c.count})</span>
             </Link>
@@ -42,7 +42,7 @@ export default function BlogIndexPage() {
 
       <div className="mx-auto mt-14 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post, i) => (
-          <PostCard key={post.slug} post={post} delay={i * 0.06} />
+          <PostCard key={post.slug} post={post} delay={(i % 3) * 0.06} />
         ))}
       </div>
     </Section>

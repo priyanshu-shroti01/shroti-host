@@ -40,10 +40,13 @@ export function ComparisonTable() {
         </div>
 
         <div className="overflow-hidden overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
+          <p className="px-5 pt-3 text-xs text-text-muted sm:hidden" aria-hidden="true">
+            Swipe sideways to see all columns →
+          </p>
           <table className="w-full min-w-[480px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-border bg-surface/60">
-                <th scope="col" className="px-5 py-3 font-medium text-text-secondary">
+                <th scope="col" className="sticky left-0 z-10 bg-card px-5 py-3 font-medium text-text-secondary">
                   Feature
                 </th>
                 <th scope="col" className="border-t-2 border-brand-purple bg-brand-purple/10 px-5 py-3 text-center font-semibold text-brand-purple-text">
@@ -60,7 +63,7 @@ export function ComparisonTable() {
                   key={row.feature}
                   className={`transition-colors duration-150 hover:bg-brand-purple/5 ${i % 2 === 1 ? "bg-surface/30" : ""}`}
                 >
-                  <td className="px-5 py-3 text-text-primary">{row.feature}</td>
+                  <td className="sticky left-0 z-10 bg-card px-5 py-3 text-text-primary">{row.feature}</td>
                   <td className="bg-brand-purple/[0.06] px-5 py-3 text-center">
                     <Check size={16} className="mx-auto text-success" aria-hidden="true" />
                     <span className="sr-only">Included</span>

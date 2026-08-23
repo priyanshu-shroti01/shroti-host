@@ -29,7 +29,7 @@ export function CurrencySwitcher() {
           const next = currencies.find((c) => c.code === e.target.value);
           if (next) setCurrency(next.code);
         }}
-        className="h-9 cursor-pointer appearance-none rounded-full border border-border bg-bg pl-8 pr-7 text-sm font-medium text-text-secondary transition-colors hover:border-border-strong hover:text-text-primary"
+        className="h-10 cursor-pointer appearance-none rounded-full border border-border bg-bg pl-8 pr-7 text-sm font-medium text-text-secondary transition-colors hover:border-border-strong hover:text-text-primary"
       >
         {currencies.map((c) => (
           <option key={c.code} value={c.code}>

@@ -63,7 +63,7 @@ export function ExtensionGrid({ domains = allDomains }: { domains?: DomainPrice[
               key={c}
               type="button"
               onClick={() => setCategory(c)}
-              className={`rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+              className={`rounded-full px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors ${
                 category === c ? "bg-brand-purple text-white" : "text-text-secondary hover:text-text-primary"
               }`}
             >

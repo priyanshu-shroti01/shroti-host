@@ -23,11 +23,14 @@ export function PlanSpecTable({ plans, groups }: { plans: Plan[]; groups: SpecGr
       </div>
 
       <Reveal delay={0.1}>
-        <div className="mx-auto mt-12 max-w-4xl overflow-x-auto rounded-2xl border border-border bg-card">
+        <p className="mt-8 text-center text-xs text-text-muted md:hidden" aria-hidden="true">
+          Swipe sideways to compare plans →
+        </p>
+        <div className="mx-auto mt-4 max-w-4xl overflow-x-auto rounded-2xl border border-border bg-card md:mt-12">
           <table className="w-full min-w-[640px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-border bg-surface/60">
-                <th scope="col" className="px-5 py-3.5 font-medium text-text-secondary">
+                <th scope="col" className="sticky left-0 z-10 bg-card px-5 py-3.5 font-medium text-text-secondary">
                   Specification
                 </th>
                 {plans.map((plan) => (
@@ -68,7 +71,7 @@ export function PlanSpecTable({ plans, groups }: { plans: Plan[]; groups: SpecGr
                         i % 2 === 1 ? "bg-surface/20" : ""
                       }`}
                     >
-                      <td className="px-5 py-2.5 text-text-secondary">{row.label}</td>
+                      <td className="sticky left-0 z-10 bg-card px-5 py-2.5 text-text-secondary">{row.label}</td>
                       {values.map((value, j) => (
                         <td
                           key={j}
