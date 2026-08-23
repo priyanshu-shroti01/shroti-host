@@ -111,7 +111,8 @@ export function AnnouncementBar({ promo = homepagePromo }: { promo?: PromoBanner
     >
       {Icon && <Icon size={16} className="hidden shrink-0 sm:block" aria-hidden="true" />}
       <Link href={promo.href} className="inline-block py-1.5 underline-offset-2 hover:underline">
-        {promo.message}
+        <span className="sm:hidden">{promo.shortMessage ?? promo.message}</span>
+        <span className="hidden sm:inline">{promo.message}</span>
       </Link>
       {promo.discountLabel && (
         <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs font-semibold">

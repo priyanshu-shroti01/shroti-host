@@ -11,6 +11,8 @@ export type PromoBannerConfig = {
    *  optional countdown). "info" = the original plain single-link styling. */
   kind: "promo" | "info";
   message: string;
+  /** Optional shorter sentence for narrow screens (< sm); falls back to `message`. */
+  shortMessage?: string;
   /** Short label like "XX% OFF". Not a real number until business supplies one. */
   discountLabel?: string;
   code?: string;
@@ -28,6 +30,7 @@ export const homepagePromo: PromoBannerConfig = {
   // The bar renders the code pill next to this message — the sentence names
   // the code too so the offer reads complete when copied or read aloud.
   message: "40% off the listed price on your first month with code SHROTIHOST — new customers only.",
+  shortMessage: "40% off your first month — new customers only.",
   discountLabel: "40% OFF",
   code: "SHROTIHOST",
   href: "https://portal.shrotihost.in/cart.php?promocode=SHROTIHOST",
