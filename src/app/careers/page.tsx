@@ -162,7 +162,7 @@ export default function CareersPage() {
           </ol>
           <p className="mt-8 text-center text-sm text-text-muted">
             Questions first?{" "}
-            <a className="font-semibold text-brand-purple hover:underline" href={`mailto:${CAREERS_EMAIL}`}>
+            <a className="font-semibold text-brand-purple-text hover:underline" href={`mailto:${CAREERS_EMAIL}`}>
               {CAREERS_EMAIL}
             </a>
           </p>

@@ -22,7 +22,7 @@ export function renderInline(text: string): ReactNode[] {
         <Link
           key={`${href}-${match.index}`}
           href={href}
-          className="font-medium text-brand-purple underline-offset-2 hover:underline"
+          className="font-medium text-brand-purple-text underline-offset-2 hover:underline"
         >
           {label}
         </Link>
@@ -30,7 +30,7 @@ export function renderInline(text: string): ReactNode[] {
         <a
           key={`${href}-${match.index}`}
           href={href}
-          className="font-medium text-brand-purple underline-offset-2 hover:underline"
+          className="font-medium text-brand-purple-text underline-offset-2 hover:underline"
         >
           {label}
         </a>

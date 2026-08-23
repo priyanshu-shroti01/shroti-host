@@ -32,7 +32,7 @@ export default function BlogIndexPage() {
             <Link
               key={c.slug}
               href={`/blog/category/${c.slug}`}
-              className="rounded-full border-2 border-border bg-card px-3.5 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple"
+              className="rounded-full border-2 border-border bg-card px-3.5 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple-text"
             >
               {c.name} <span className="text-text-muted">({c.count})</span>
             </Link>

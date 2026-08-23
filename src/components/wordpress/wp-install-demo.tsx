@@ -83,7 +83,7 @@ export function WpInstallDemo() {
                 </div>
                 <p
                   className={`flex-1 text-sm font-medium transition-colors duration-300 ${
-                    done || active ? "text-text-primary" : "text-text-disabled"
+                    done || active ? "text-text-primary" : "text-text-muted"
                   }`}
                 >
                   {done ? step.done : step.pending}

@@ -18,6 +18,8 @@ export function ThemeToggle() {
     const next = theme === "light" ? "dark" : "light";
     setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
+    // Keep the browser chrome colour in step with the chosen theme.
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", next === "dark" ? "#0a0a0f" : "#ffffff");
     try {
       localStorage.setItem("theme", next);
     } catch {

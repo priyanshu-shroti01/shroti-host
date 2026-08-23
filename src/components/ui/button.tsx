@@ -5,7 +5,7 @@ import { LinkPending } from "@/components/ui/link-pending";
 import { Loader2 } from "lucide-react";
 import { useState, type AnchorHTMLAttributes, type ButtonHTMLAttributes, type MouseEvent, type ReactNode } from "react";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "inverse";
 type Size = "sm" | "md" | "lg";
 
 const base =
@@ -18,6 +18,11 @@ const variants: Record<Variant, string> = {
   secondary:
     "border-2 border-border-strong bg-card text-text-primary hover:border-brand-purple hover:text-brand-purple-text hover:-translate-y-0.5 active:scale-[0.98]",
   ghost: "text-text-secondary hover:text-text-primary hover:bg-surface active:scale-[0.98]",
+  // Solid white on a brand-gradient panel (final CTA). A dedicated variant:
+  // overriding `secondary` via className lost the cascade and rendered
+  // white-on-white in dark mode.
+  inverse:
+    "border-2 border-white bg-white text-brand-purple-active hover:bg-white/90 hover:text-brand-purple-active hover:-translate-y-0.5 active:scale-[0.98]",
 };
 
 const sizes: Record<Size, string> = {

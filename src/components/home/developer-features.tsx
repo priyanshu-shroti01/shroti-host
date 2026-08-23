@@ -51,12 +51,12 @@ export function DeveloperFeatures() {
           <div className="space-y-3 p-6 font-mono text-sm">
             {codeLines.map((line, i) => (
               <div key={i} className="flex gap-3">
-                <span className="text-brand-blue">{line.prompt}</span>
+                <span className="text-brand-blue-text">{line.prompt}</span>
                 <span className="text-text-primary">{line.text}</span>
               </div>
             ))}
             <div className="flex gap-3">
-              <span className="text-brand-blue">$</span>
+              <span className="text-brand-blue-text">$</span>
               <span className="inline-block h-4 w-2 animate-pulse bg-text-secondary" aria-hidden="true" />
             </div>
           </div>

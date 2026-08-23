@@ -22,7 +22,7 @@ export function PostCard({ post, delay = 0 }: { post: BlogPost; delay?: number }
             </span>
             <ArrowUpRight
               size={16}
-              className="text-text-muted opacity-0 transition-all duration-200 group-hover:text-brand-purple group-hover:opacity-100"
+              className="text-text-muted opacity-0 transition-all duration-200 group-hover:text-brand-purple-text group-hover:opacity-100"
               aria-hidden="true"
             />
           </div>

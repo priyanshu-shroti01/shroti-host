@@ -179,7 +179,7 @@ export function Header() {
                     type="button"
                     id={ids.trigger}
                     className={`flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium transition-colors ${
-                      isActive ? "text-brand-purple" : "text-text-secondary hover:text-text-primary"
+                      isActive ? "text-brand-purple-text" : "text-text-secondary hover:text-text-primary"
                     }`}
                     aria-haspopup="true"
                     aria-expanded={isOpen}
@@ -193,7 +193,7 @@ export function Header() {
                   <Link
                     href={item.href!}
                     className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
-                      isActive ? "text-brand-purple" : "text-text-secondary hover:text-text-primary"
+                      isActive ? "text-brand-purple-text" : "text-text-secondary hover:text-text-primary"
                     }`}
                   >
                     {item.label}
@@ -215,7 +215,7 @@ export function Header() {
                         initial="hidden"
                         animate="visible"
                         variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
-                        className="rounded-2xl border border-border bg-bg p-2 shadow-xl"
+                        className="rounded-2xl border border-border bg-bg p-2 shadow-[var(--shadow-raised)]"
                       >
                         {item.items.map((link) => (
                           <m.div

@@ -103,7 +103,7 @@ export function DomainSearch({ domains = allDomains }: { domains?: DomainPrice[]
                 hidden: reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
                 visible: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : 0.35, ease: [0.33, 1, 0.68, 1] } },
               }}
-              className="group flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card px-3 py-5 text-center transition-all duration-200 hover:-translate-y-1 hover:border-brand-purple hover:shadow-lg"
+              className="group flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card px-3 py-5 text-center transition-all duration-200 hover:-translate-y-1 hover:border-brand-purple hover:shadow-[var(--shadow-raised)]"
             >
               <span className="text-lg font-semibold text-text-primary">{d.tld}</span>
               <span className="text-xs text-text-muted">{format(d.registerInr)}/yr</span>

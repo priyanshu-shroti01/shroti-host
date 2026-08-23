@@ -243,7 +243,7 @@ export function DomainsHero() {
               aria-label="Search for a domain"
               autoComplete="off"
               style={{ caretColor: "var(--color-brand-purple)" }}
-              className="h-18 w-full rounded-full border border-border-strong bg-card pl-16 pr-36 text-lg text-text-primary shadow-lg placeholder:text-text-muted focus-visible:outline-2 focus-visible:outline-brand-purple sm:text-xl"
+              className="h-18 w-full rounded-full border border-border-strong bg-card pl-16 pr-36 text-lg text-text-primary shadow-[var(--shadow-raised)] placeholder:text-text-muted focus-visible:outline-2 focus-visible:outline-brand-purple sm:text-xl"
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2">
               <Magnetic>
@@ -322,7 +322,7 @@ export function DomainsHero() {
                 key={r}
                 type="button"
                 onClick={() => searchFor(r)}
-                className="rounded-full border border-border px-3 py-1 font-mono text-xs text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple"
+                className="rounded-full border border-border px-3 py-1 font-mono text-xs text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple-text"
               >
                 {r}
               </button>

@@ -44,7 +44,7 @@ export default function RouteError({
         </div>
         <p className="mt-8 text-sm text-text-muted">
           Still stuck?{" "}
-          <Link href="/contact" className="font-medium text-brand-purple hover:underline">
+          <Link href="/contact" className="font-medium text-brand-purple-text hover:underline">
             Contact support
           </Link>
           {error.digest && (

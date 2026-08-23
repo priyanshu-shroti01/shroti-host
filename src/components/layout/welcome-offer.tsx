@@ -159,7 +159,7 @@ export function WelcomeOffer() {
               </button>
 
               <div className="relative px-7 pb-7 pt-9 text-center sm:px-9">
-                <span className="inline-flex items-center gap-2 rounded-full border-2 border-brand-purple/30 bg-brand-purple/5 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-brand-purple">
+                <span className="inline-flex items-center gap-2 rounded-full border-2 border-brand-purple/30 bg-brand-purple/5 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-brand-purple-text">
                   <Tag size={13} aria-hidden="true" />
                   Welcome offer
                 </span>

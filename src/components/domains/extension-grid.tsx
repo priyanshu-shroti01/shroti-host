@@ -93,7 +93,7 @@ export function ExtensionGrid({ domains = allDomains }: { domains?: DomainPrice[
                 hidden: { opacity: 0, y: 12 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: [0.33, 1, 0.68, 1] } },
               }}
-              className="group relative flex flex-col items-center gap-1.5 overflow-hidden rounded-2xl border border-border bg-card px-3 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:border-brand-purple hover:shadow-lg"
+              className="group relative flex flex-col items-center gap-1.5 overflow-hidden rounded-2xl border border-border bg-card px-3 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:border-brand-purple hover:shadow-[var(--shadow-raised)]"
             >
               {d.badge && (
                 <Badge tone={badgeTone[d.badge]} className="absolute right-2 top-2 px-1.5 py-0.5 text-xs">

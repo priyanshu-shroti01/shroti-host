@@ -131,7 +131,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                 <Link
                   key={tag}
                   href={`/blog/tag/${taxonomySlug(tag)}`}
-                  className="rounded-full border border-border px-3 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple"
+                  className="rounded-full border border-border px-3 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-brand-purple hover:text-brand-purple-text"
                 >
                   #{tag}
                 </Link>
@@ -164,7 +164,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
                   <li key={r.slug}>
                     <Link
                       href={`/blog/${r.slug}`}
-                      className="group inline-flex items-start gap-2 text-sm font-medium text-text-secondary transition-colors hover:text-brand-purple"
+                      className="group inline-flex items-start gap-2 text-sm font-medium text-text-secondary transition-colors hover:text-brand-purple-text"
                     >
                       <ArrowRight size={15} className="mt-0.5 shrink-0" aria-hidden="true" />
                       {r.title}

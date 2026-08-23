@@ -357,7 +357,7 @@ export function Hero() {
                           <div className="min-w-0 flex-1">
                             <p
                               className={`text-sm font-medium transition-colors duration-300 ${
-                                status === "pending" ? "text-text-disabled" : "text-text-primary"
+                                status === "pending" ? "text-text-muted" : "text-text-primary"
                               }`}
                             >
                               {status === "done" ? step.done : step.pending}

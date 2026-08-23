@@ -215,7 +215,7 @@ export function ChatbotWidget() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
               transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}
-              className="absolute bottom-full right-0 mb-3 w-64 rounded-2xl rounded-br-sm border border-border-strong bg-bg p-4 pr-8 shadow-2xl"
+              className="absolute bottom-full right-0 mb-3 w-64 rounded-2xl rounded-br-sm border border-border-strong bg-bg p-4 pr-8 shadow-[var(--shadow-raised)]"
             >
               <button
                 type="button"
@@ -234,7 +234,7 @@ export function ChatbotWidget() {
 
         {!open && (
           <span
-            className="mr-0 max-w-0 overflow-hidden whitespace-nowrap rounded-full border border-border-strong bg-card py-2.5 text-sm font-medium text-text-primary opacity-0 shadow-lg transition-all duration-300 group-hover:mr-3 group-hover:max-w-[8rem] group-hover:px-4 group-hover:opacity-100 max-md:hidden"
+            className="mr-0 max-w-0 overflow-hidden whitespace-nowrap rounded-full border border-border-strong bg-card py-2.5 text-sm font-medium text-text-primary opacity-0 shadow-[var(--shadow-raised)] transition-all duration-300 group-hover:mr-3 group-hover:max-w-[8rem] group-hover:px-4 group-hover:opacity-100 max-md:hidden"
             aria-hidden="true"
           >
             Ask AI
@@ -260,7 +260,7 @@ export function ChatbotWidget() {
           aria-label={open ? "Close chat" : "Open chat with ShrotiHost Assistant"}
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.94 }}
-          className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white shadow-[var(--shadow-raised)]"
+          className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[image:var(--gradient-hero-deep)] text-white shadow-[var(--shadow-raised)]"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -296,7 +296,7 @@ export function ChatbotWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.96 }}
             transition={{ duration: 0.2, ease: [0.33, 1, 0.68, 1] }}
-            className="fixed bottom-24 right-5 z-[60] flex h-[32rem] max-h-[75vh] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border-strong bg-bg shadow-2xl sm:bottom-28 sm:right-6 [.has-mobile-cta_&]:bottom-[8.5rem] lg:[.has-mobile-cta_&]:bottom-28"
+            className="fixed bottom-24 right-5 z-[60] flex h-[32rem] max-h-[75vh] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border-strong bg-bg shadow-[var(--shadow-raised)] sm:bottom-28 sm:right-6 [.has-mobile-cta_&]:bottom-[8.5rem] lg:[.has-mobile-cta_&]:bottom-28"
           >
             <div className="flex items-center gap-3 border-b border-border bg-surface px-5 py-4">
               {screen !== "menu" ? (
@@ -309,7 +309,7 @@ export function ChatbotWidget() {
                   <ArrowLeft size={16} aria-hidden="true" />
                 </button>
               ) : (
-                <div className="relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white">
+                <div className="relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[image:var(--gradient-hero-deep)] text-white">
                   <Bot size={18} aria-hidden="true" />
                   <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-surface bg-success" />
                 </div>
@@ -501,7 +501,7 @@ export function ChatbotWidget() {
                     <ChatAvatar />
                     <div className="max-w-xs rounded-2xl rounded-tl-sm bg-surface px-4 py-4">
                       <p className="text-sm text-text-secondary">Based on your answers, I&apos;d recommend</p>
-                      <p className="mt-1 text-2xl font-semibold text-brand-purple">{plan.name}</p>
+                      <p className="mt-1 text-2xl font-semibold text-brand-purple-text">{plan.name}</p>
                       <p className="mt-1 text-sm text-text-secondary">{plan.tagline}</p>
                       <p className="mt-2 text-lg font-semibold text-text-primary">
                         {format(plan.monthlyPrice)}
@@ -544,7 +544,7 @@ export function ChatbotWidget() {
 
 function ChatAvatar() {
   return (
-    <div className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white">
+    <div className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[image:var(--gradient-hero-deep)] text-white">
       <Bot size={14} aria-hidden="true" />
     </div>
   );

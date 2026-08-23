@@ -36,6 +36,8 @@
      fills and decoration where contrast is not a text requirement. */
   --color-brand-purple-text: #a810c7;
   --color-brand-blue: #1f87e8;
+  /* Blue as TEXT on light surfaces needs a darker tint for 4.5:1. */
+  --color-brand-blue-text: #1a5fb4;
 
   /* Semantic */
   --color-success: #15803d;
@@ -88,6 +90,7 @@
   --color-brand-purple-active: #8b0da3;
   --color-brand-purple-text: #cf6cf2;
   --color-brand-blue: #3fa7ff;
+  --color-brand-blue-text: #3fa7ff;
 
   --color-success: #22c55e;
   --color-warning: #f5a524;
@@ -146,6 +149,7 @@
   --color-brand-purple-active: var(--color-brand-purple-active);
   --color-brand-purple-text: var(--color-brand-purple-text);
   --color-brand-blue: var(--color-brand-blue);
+  --color-brand-blue-text: var(--color-brand-blue-text);
 
   --color-success: var(--color-success);
   --color-warning: var(--color-warning);

@@ -35,9 +35,8 @@ export function FinalCta() {
             <Magnetic>
               <Button
                 href="/hosting"
-                variant="secondary"
+                variant="inverse"
                 size="lg"
-                className="border-white bg-white text-brand-purple-active hover:border-white hover:bg-white/90 hover:text-brand-purple-active"
               >
                 Get Hosting
                 <ArrowRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />

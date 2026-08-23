@@ -35,7 +35,7 @@ export function ThreeSteps() {
       <div className="mt-14 grid gap-6 sm:grid-cols-3">
         {steps.map((step) => (
           <div key={step.title} className="relative rounded-2xl border border-border bg-card p-6 text-center">
-              <span className="absolute right-5 top-4 font-mono text-3xl font-semibold text-border-strong">
+              <span aria-hidden="true" className="absolute right-5 top-4 font-mono text-3xl font-semibold text-border-strong">
                 {step.number}
               </span>
               <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-purple/10 text-brand-purple">
