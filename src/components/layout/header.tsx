@@ -270,7 +270,7 @@ export function Header() {
             href="https://portal.shrotihost.in/clientarea.php"
             variant="secondary"
             size="md"
-            className="hidden xl:inline-flex"
+            className="max-xl:hidden"
           >
             Dashboard
           </Button>

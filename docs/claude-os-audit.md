@@ -105,3 +105,10 @@ then the findings were implemented in one pass. Full reports with evidence:
 5. **CSP**: switch from report-only to enforcing after a week without violations.
 6. **Product decisions**: 30-day money-back, free domain on annual, annual discount;
    named blog authors; Cloudflare/HTTP-2 for India latency.
+
+## Re-audit round 2 (2026-08-23, afternoon)
+Four more auditors (responsive 375/768/1024/1440, dark/light theme, interaction latency + bundle, WHMCS WhatsApp module) — all findings implemented:
+- **Menu taps felt dead**: Next 16 `prefetch={false}` disables prefetch entirely; nav/CTA links now prefetch, all menu routes are warmed on idle, the mobile sheet shows a spinner on the tapped item and closes only when the new route renders, a transform-only progress bar runs under the header, Apache keep-alive 20 s on this vhost, GA loads `lazyOnload`, hero demo/3D fallback/CSS sweeps no longer burn the main thread on phones.
+- **Theme**: white-on-white final-CTA button in dark (new `inverse` Button variant); purple/blue used as text now use contrast-safe text tokens (new `--color-brand-blue-text`); pending step labels readable; token shadows; theme-color meta follows the toggle.
+- **Responsive**: header controls were hidden at 1024–1279; flagship card overlap; footer 8-col squeeze and bottom-bar wrap/FAB collision; pricing 2-up on tablets; sticky first column + swipe hint on phone tables; touch targets ≥44 px on footer/toggle/chips/menu.
+- **WHMCS WhatsApp module**: `shell_exec` fatal fixed (guarded; campaign start uses `proc_open`); the per-request bootstrap that wrote 1.4M audit rows is gated to 24 h; audit table swapped to an indexed 4.4k-row copy; the real portal-freezing walker was WHMCS's Daily Email Backup → disabled, replaced by a nightly lock-free `mysqldump`; stored-XSS escapes, connect timeouts, GET-only retries, cron logging, invoice-PDF URLs unguessable, storage dirs denied, sync-on-view off.
