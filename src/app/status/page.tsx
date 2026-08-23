@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
-import { Section } from "@/components/ui/section";
-import { Badge } from "@/components/ui/badge";
+import { Section, Eyebrow } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { Button } from "@/components/ui/button";
 import { StatusBoard } from "@/components/status/status-board";
@@ -9,22 +8,25 @@ import { StatusScene } from "@/components/scenes/status-scene";
 
 export const metadata: Metadata = {
   title: "Status",
-  description: "ShrotiHost service status — API, DNS, email, network, storage, database, and billing.",
+  description: "ShrotiHost service notices — maintenance and incidents for hosting, DNS, email, network and billing, posted by the team.",
   alternates: { canonical: "/status" },
+  // Pre-launch preview, not a real status feed — keep it out of the index
+  // until live monitoring ships.
+  robots: { index: false, follow: false },
 };
 
 export default function StatusPage() {
   return (
     <>
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20 pb-0">
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
+        <div className="grid gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
           <Reveal className="text-center lg:text-left">
-            <Badge tone="neutral">Status</Badge>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
-              All systems, one view.
+            <Eyebrow>Service notices</Eyebrow>
+            <h1 className="mt-4 text-4xl font-extrabold tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
+              Service notices, posted by the team.
             </h1>
             <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary lg:mx-0">
-              A preview of what real-time status monitoring will look like when it ships.
+              Planned maintenance and incidents for hosting, DNS, email and billing are posted here manually. Live monitoring is on the roadmap.
             </p>
           </Reveal>
           <Reveal delay={0.1} className="hidden lg:block">

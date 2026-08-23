@@ -84,6 +84,9 @@ export function ChatbotWidget() {
   const [faqHistory, setFaqHistory] = useState<HistoryItem[]>([]);
   const [showGreeting, setShowGreeting] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const fabRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
   const { format } = useCurrency();
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -103,11 +106,19 @@ export function ChatbotWidget() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [history, faqHistory, thinking, isDone, screen, open]);
 
+  // Non-modal corner panel: no aria-modal, no body scroll lock (that raced
+  // the header/welcome-offer locks). Focus moves to the panel's first
+  // control on open and back to the FAB on a real close — never on mount.
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (open) {
+      wasOpenRef.current = true;
+      panelRef.current
+        ?.querySelector<HTMLElement>('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])')
+        ?.focus();
+    } else if (wasOpenRef.current) {
+      wasOpenRef.current = false;
+      fabRef.current?.focus({ preventScroll: true });
+    }
   }, [open]);
 
   // One-time proactive nudge, like Intercom/Crisp's greeting bubble — shown
@@ -115,14 +126,24 @@ export function ChatbotWidget() {
   // welcome-offer dialog is up when the timer lands, re-arm and try again
   // later — two proactive prompts at once is one too many.
   useEffect(() => {
-    if (sessionStorage.getItem(GREETING_STORAGE_KEY)) return;
+    // Storage can throw (Safari private mode) — then skip the nudge entirely
+    // rather than greet on every page view.
+    try {
+      if (sessionStorage.getItem(GREETING_STORAGE_KEY)) return;
+    } catch {
+      return;
+    }
     let timer: ReturnType<typeof setTimeout>;
     const fire = () => {
       if (document.body.classList.contains("has-welcome-offer")) {
         timer = setTimeout(fire, 4000);
         return;
       }
-      sessionStorage.setItem(GREETING_STORAGE_KEY, "1");
+      try {
+        sessionStorage.setItem(GREETING_STORAGE_KEY, "1");
+      } catch {
+        // Write failed — still show it this once.
+      }
       setShowGreeting(true);
     };
     timer = setTimeout(fire, GREETING_DELAY_MS);
@@ -232,13 +253,14 @@ export function ChatbotWidget() {
           )}
         </AnimatePresence>
         <motion.button
+          ref={fabRef}
           type="button"
           onClick={() => (open ? setOpen(false) : openChat())}
           aria-expanded={open}
           aria-label={open ? "Close chat" : "Open chat with ShrotiHost Assistant"}
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.94 }}
-          className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white shadow-[0_8px_24px_-6px_rgb(168_16_199/0.55)]"
+          className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-white shadow-[var(--shadow-raised)]"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -264,8 +286,8 @@ export function ChatbotWidget() {
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={panelRef}
             role="dialog"
-            aria-modal="true"
             aria-label="ShrotiHost Assistant"
             onKeyDown={(e) => {
               if (e.key === "Escape") setOpen(false);

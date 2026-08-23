@@ -25,7 +25,17 @@ type CheckResponse = {
   query: string;
   exact: CheckResult[];
   suggestions: CheckResult[];
+  /** Set by the API when the query can't be checked, e.g. "unsupported_characters". */
+  error?: string;
 };
+
+const UNSUPPORTED_MESSAGE =
+  "Only letters, numbers and hyphens are supported (no accents or scripts yet).";
+
+/** Accented / non-Latin input — IDNs aren't supported yet, so say so instead of silently searching the stripped remainder. */
+function hasUnsupportedCharacters(raw: string): boolean {
+  return /[^\x00-\x7f]/.test(raw);
+}
 
 function sanitizeQuery(raw: string): string {
   return raw
@@ -93,6 +103,7 @@ export function DomainsHero() {
   const [recent, setRecent] = useState<string[]>([]);
   const [liveChecking, setLiveChecking] = useState(false);
   const [liveError, setLiveError] = useState(false);
+  const [unsupported, setUnsupported] = useState(false);
   const [results, setResults] = useState<CheckResponse | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -122,7 +133,12 @@ export function DomainsHero() {
         });
         if (!res.ok) throw new Error("check failed");
         const data: CheckResponse = await res.json();
-        if (data.query === clean) setResults(data);
+        if (data.error === "unsupported_characters") {
+          setUnsupported(true);
+          setResults(null);
+        } else if (data.query === clean) {
+          setResults(data);
+        }
       } catch (err) {
         if ((err as Error).name !== "AbortError") setLiveError(true);
       } finally {
@@ -136,6 +152,7 @@ export function DomainsHero() {
   function handleQueryChange(value: string) {
     setQuery(value);
     abortRef.current?.abort();
+    setUnsupported(hasUnsupportedCharacters(value));
 
     const clean = sanitizeQuery(value);
     if (!clean) {
@@ -247,13 +264,18 @@ export function DomainsHero() {
           <AnimatePresence>
             {showDropdown && (
               <motion.div
+                aria-live="polite"
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
-                className="absolute left-0 right-0 top-full z-10 mt-2 max-h-96 overflow-y-auto rounded-2xl border border-border-strong bg-bg p-2 text-left shadow-2xl"
+                className="absolute left-0 right-0 top-full z-10 mt-2 max-h-96 overflow-y-auto rounded-2xl border border-border-strong bg-bg p-2 text-left shadow-[var(--shadow-raised)]"
               >
-                {liveChecking && !hasResults && (
+                {unsupported && (
+                  <div className="px-4 py-3 text-sm text-text-muted">{UNSUPPORTED_MESSAGE}</div>
+                )}
+
+                {liveChecking && !hasResults && !unsupported && (
                   <div className="flex items-center gap-2.5 px-4 py-3 text-sm text-text-muted">
                     <Loader2 size={14} className="animate-spin" aria-hidden="true" />
                     Checking availability…

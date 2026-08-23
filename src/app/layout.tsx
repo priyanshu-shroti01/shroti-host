@@ -1,7 +1,9 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import Script from "next/script";
+import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeScript } from "@/components/theme-script";
+import { Analytics } from "@/components/analytics";
 import { CurrencyProvider } from "@/components/currency-provider";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Header } from "@/components/layout/header";
@@ -10,9 +12,13 @@ import { ChatbotWidgetLoader } from "@/components/chatbot/chatbot-widget-loader"
 import { MobileStickyCta } from "@/components/layout/mobile-sticky-cta";
 import { WelcomeOffer } from "@/components/layout/welcome-offer";
 import { LenisRoot } from "@/components/motion/lenis-root";
+import { GA_LINKER_DOMAINS, GA_MEASUREMENT_ID } from "@/lib/analytics";
+import { organizationJsonLd, SITE_URL, websiteJsonLd } from "@/lib/seo";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Plus Jakarta Sans is the body face (globals.css `--font-sans`), so it is the
+// one family worth preloading — it paints every H1 above the fold.
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
 });
 
@@ -23,75 +29,33 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const jakarta = Plus_Jakarta_Sans({
-  // Not above-the-fold on most pages — load on use, don't block first paint.
-  preload: false,
-  variable: "--font-jakarta",
-  subsets: ["latin"],
-});
-
-const SITE_URL = "https://shrotihost.in";
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "ShrotiHost — Premium, Developer-Friendly Hosting",
+    default: "ShrotiHost — Web Hosting & Domains in India",
     template: "%s | ShrotiHost",
   },
   description:
-    "Affordable, high-performance hosting for students, developers, startups, and businesses. Free SSL, LiteSpeed, daily backups, and free migration on every plan.",
-  keywords: [
-    "web hosting India",
-    "shared hosting",
-    "WordPress hosting",
-    "unlimited hosting",
-    "student hosting",
-    "domain registration",
-  ],
-  alternates: {
-    canonical: "/",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+    "ShrotiHost is an Indian web hosting and development company — NVMe shared, WordPress, unlimited and reseller hosting from ₹39/mo, domains, and custom builds.",
+  // Only site-wide Open Graph / Twitter fields live here. Title, description
+  // and url resolve per page, so sub-pages never inherit the homepage card.
   openGraph: {
-    title: "ShrotiHost — Premium, Developer-Friendly Hosting",
-    description:
-      "Affordable, high-performance hosting for students, developers, startups, and businesses.",
-    url: SITE_URL,
     siteName: "ShrotiHost",
     locale: "en_IN",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShrotiHost — Premium, Developer-Friendly Hosting",
-    description:
-      "Affordable, high-performance hosting for students, developers, startups, and businesses.",
   },
 };
 
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "ShrotiHost",
-  url: SITE_URL,
-  logo: `${SITE_URL}/logo-on-light.svg`,
-  foundingDate: "2023-04-13",
-  sameAs: [],
-};
-
-const websiteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "ShrotiHost",
-  url: SITE_URL,
-  potentialAction: {
-    "@type": "SearchAction",
-    target: `${SITE_URL}/domains?query={search_term_string}`,
-    "query-input": "required name=search_term_string",
-  },
+// Light/dark follow `--color-bg` in globals.css. Note the site's own theme is
+// controlled by `data-theme` (dark by default, see ThemeScript); these media
+// entries are the closest the theme-color meta can get to that.
+export const viewport: Viewport = {
+  // Theme is data-theme driven (dark is the brand default), so a single value
+  // is more accurate than prefers-color-scheme media entries.
+  themeColor: "#0a0a0f",
 };
 
 export default function RootLayout({
@@ -101,8 +65,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${jakarta.variable} h-full antialiased`}
+      lang="en-IN"
+      className={`${jakarta.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -119,6 +83,26 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-full flex-col overflow-x-hidden bg-bg text-text-primary">
+        {/* GA4 with cross-domain linking to the WHMCS portal so a session
+            survives the checkout hand-off. The initial page_view comes from
+            this config; client-side route changes are reported by <Analytics />. */}
+        <Script
+          id="ga4-lib"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+window.gtag = gtag;
+gtag('js', new Date());
+gtag('config', ${JSON.stringify(GA_MEASUREMENT_ID)}, ${JSON.stringify({
+            linker: { domains: [...GA_LINKER_DOMAINS] },
+            anonymize_ip: true,
+            send_page_view: true,
+          })});`}
+        </Script>
+        <Analytics />
         {/* Scroll-reveal components server-render with inline opacity/transform
             hiding states that only JS animates away. Without JS those styles
             never clear, so force them visible — scoped to inline styles, which

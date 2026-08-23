@@ -99,7 +99,7 @@ export const services: Service[] = [
       "Business websites, web applications, and everything between — designed, built, and deployed on the same infrastructure that serves them. One partner from first mockup to production.",
     metaTitle: "Web Development Services",
     metaDescription:
-      "Business websites, landing pages, web apps, and custom systems — designed, built, and hosted by one team. From first mockup to production on ShrotiHost infrastructure.",
+      "Business websites, landing pages, web apps, and custom systems — designed, built, and hosted by one team, from first mockup to production.",
     processIntro:
       "Every project moves through the same pipeline this website did. No hand-offs between vendors — the team that designs it builds it, and the platform that builds it hosts it.",
     process: [
@@ -169,7 +169,7 @@ export const services: Service[] = [
       "Android, iOS, and cross-platform applications with the backend, APIs, and cloud infrastructure they run on — planned, built, and shipped by one team.",
     metaTitle: "Mobile App Development Services",
     metaDescription:
-      "Android, iOS, and cross-platform app development with backend, APIs, authentication, and deployment — one team from idea to installed, backed by ShrotiHost infrastructure.",
+      "Android, iOS, and cross-platform app development with backend, APIs, authentication, and deployment — one team from idea to installed app.",
     processIntro:
       "An app is more than the screens — it's the backend, the accounts, the payments, and the infrastructure underneath. We build the whole path.",
     process: [
@@ -240,7 +240,7 @@ export const services: Service[] = [
       "WooCommerce stores and custom storefronts with payments, shipping, and catalog management — built on hosting tuned for exactly this workload.",
     metaTitle: "E-commerce Website Development",
     metaDescription:
-      "WooCommerce and custom online-store development with payments, shipping, and catalog setup — built and hosted on infrastructure tuned for WordPress and WooCommerce.",
+      "WooCommerce and custom online-store development with payments, shipping, and catalog setup — built and hosted on infrastructure tuned for WooCommerce.",
     processIntro:
       "An online store is a product catalog, a payment flow, and trust — assembled in the right order and hosted where it stays fast on sale day.",
     process: [
@@ -379,7 +379,7 @@ export const services: Service[] = [
       "Internal tools, automation, dashboards, and integrations — including the WHMCS modules we build and sell ourselves. Business outcomes first, technology second.",
     metaTitle: "Custom Software Development",
     metaDescription:
-      "Custom software for real business problems — internal tools, automation, dashboards, WHMCS modules, and integrations — from the team that builds and sells its own.",
+      "Custom software for real business problems — internal tools, automation, dashboards, WHMCS modules, and integrations — by a team that ships its own.",
     processIntro:
       "Custom software starts with the workflow, not the wishlist. We map how work happens today, find the bottleneck, and build the smallest system that removes it.",
     process: [

@@ -24,7 +24,7 @@ export function ResourceMeter({
     <div>
       <div className="flex items-baseline justify-between gap-2 text-xs">
         <span className="text-text-muted">{label}</span>
-        <span className={`font-medium tabular-nums ${emphasis ? "text-brand-purple" : "text-text-secondary"}`}>
+        <span className={`font-medium tabular-nums ${emphasis ? "text-brand-purple-text" : "text-text-secondary"}`}>
           {valueLabel}
         </span>
       </div>

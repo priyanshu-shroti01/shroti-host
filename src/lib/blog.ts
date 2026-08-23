@@ -331,7 +331,7 @@ const basePosts: BlogPost[] = [
   },
   {
     slug: "speed-up-wordpress-website",
-    title: "10 Ways to Speed Up Your WordPress Website (That Actually Work)",
+    title: "10 Ways to Speed Up WordPress (That Actually Work)",
     description:
       "Ten WordPress speed fixes ranked by impact — LiteSpeed Cache, PHP upgrades, image compression, plugin audits, and the hosting layer underneath them all.",
     date: "2026-06-24",

@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Eyebrow } from "@/components/ui/section";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { Tilt3D } from "@/components/ui/tilt-3d";
@@ -11,8 +11,8 @@ export function WpHero() {
     <div className="relative">
       <Container className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
         <Reveal>
-          <Badge>WordPress Hosting</Badge>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
+          <Eyebrow>WordPress Hosting</Eyebrow>
+          <h1 className="mt-4 text-4xl font-extrabold leading-none tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
             WordPress, tuned to run fast.
           </h1>
           <p className="mt-4 max-w-md text-lg text-text-secondary">

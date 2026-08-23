@@ -28,15 +28,15 @@ export default function NotFound() {
         </div>
         <p className="mt-8 text-sm text-text-muted">
           Looking for something specific? Try{" "}
-          <Link href="/domains" className="font-medium text-brand-purple hover:underline">
+          <Link href="/domains" className="font-medium text-brand-purple-text hover:underline">
             domains
           </Link>
           ,{" "}
-          <Link href="/blog" className="font-medium text-brand-purple hover:underline">
+          <Link href="/blog" className="font-medium text-brand-purple-text hover:underline">
             the blog
           </Link>
           , or{" "}
-          <Link href="/contact" className="font-medium text-brand-purple hover:underline">
+          <Link href="/contact" className="font-medium text-brand-purple-text hover:underline">
             contact us
           </Link>
           .

@@ -10,7 +10,7 @@ import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
  * (docs/scroll-choreography.md accessibility contract: the fallback is a
  * genuinely different render path, and SSR/first paint always gets it):
  *
- *   WebGL (infra-stack-webgl.tsx)  — desktop viewport + WebGL2 + motion OK
+ *   WebGL (infra-stack-webgl.tsx)  — desktop viewport + fine pointer + WebGL2 + motion OK
  *   CSS-3D (infra-stack-3d.tsx)    — everything else: SSR/first paint,
  *     reduced motion (statically exploded), no WebGL2, <lg viewports,
  *     a crashed scene, or a lost GL context. Never a blank hole.
@@ -54,10 +54,14 @@ export function InfraStackVisual({ hoverIndex }: { hoverIndex: number | null }) 
   const hostRef = useRef<HTMLDivElement>(null);
   const [eligible, setEligible] = useState(false);
   const [near, setNear] = useState(false);
+  // Latches on the first crash / lost context and never clears by design:
+  // a GPU that failed once is not retried within the page's lifetime.
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    const mql = window.matchMedia("(min-width: 1024px)");
+    // `pointer: fine` keeps low-power touch tablets at ≥1024px on the CSS
+    // path — viewport width alone is a poor proxy for GPU headroom.
+    const mql = window.matchMedia("(min-width: 1024px) and (pointer: fine)");
     const update = () => setEligible(mql.matches && supportsWebGL2());
     update();
     mql.addEventListener("change", update);

@@ -2,7 +2,7 @@ import type { BlogPost } from "@/lib/blog";
 
 export const post: BlogPost = {
   slug: "website-development-cost-in-india",
-  title: "Website Development Cost in India: What Actually Drives the Price",
+  title: "Website Development Cost in India: What Drives the Price",
   description:
     "No fake rate card. The real drivers of website development cost in India, the questions an honest quote has to ask, and the red flags in too-cheap offers.",
   date: "2026-08-19",

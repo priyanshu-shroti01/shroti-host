@@ -3,16 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRightLeft, BadgeCheck, Check, MessageCircle, ShieldCheck, Zap } from "lucide-react";
+import { Activity, ArrowRightLeft, BadgeCheck, Check, MessageCircle, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
 import { Tilt3D } from "@/components/ui/tilt-3d";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { sharedPlans, cycleMonths, savePercent, type Cycle, type Plan } from "@/lib/plans";
 import { formatPrice } from "@/lib/currency";
 import { productUrl, storeGroups } from "@/lib/whmcs";
+import { trackSelectPlan } from "@/lib/analytics";
 import { useCurrency } from "@/components/currency-provider";
 
 const cycleLabels: Record<Cycle, string> = {
@@ -22,11 +22,21 @@ const cycleLabels: Record<Cycle, string> = {
   annual: "Annual",
 };
 
+// Every claim here is one the plans (or the refund policy) actually make;
+// this row just puts them at the decision point.
+const ASSURANCES = [
+  { icon: BadgeCheck, label: "Same renewal price, every cycle" },
+  { icon: Activity, label: "99.9% uptime target" },
+  { icon: ArrowRightLeft, label: "Free migration, handled for you" },
+  { icon: Zap, label: "Instant activation" },
+  { icon: MessageCircle, label: "Priority support (WhatsApp + tickets)" },
+];
+
 export function HostingPlans({
   plans = sharedPlans,
   orderUrl = storeGroups.shared,
   comingSoon = false,
-  lineName = "this line",
+  lineName = "Shared Hosting",
 }: {
   plans?: Plan[];
   /** WHMCS store URL the "Choose <plan>" buttons send shoppers to. */
@@ -34,7 +44,8 @@ export function HostingPlans({
   /** Unreleased line: show the planned tiers, but replace ordering with a
    *  waitlist (WhatsApp) — nothing links into the store. */
   comingSoon?: boolean;
-  /** Human name used in the waitlist message, e.g. "Master Reseller Hosting". */
+  /** Human name of the hosting line — used in the waitlist message and as
+   *  the `hosting_line` dimension of the select_plan analytics event. */
   lineName?: string;
 }) {
   // Monthly by default — the entry price is the anchor that converts;
@@ -45,32 +56,38 @@ export function HostingPlans({
 
   return (
     <div id="compare">
-      <div className="mx-auto max-w-2xl text-center">
+      {/* Left-aligned intro: the pricing grid below is the wide element;
+          a centred intro above it reads as another template block. */}
+      <div className="max-w-2xl">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Simple,{" "}
-          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">honest</span>{" "}
-          pricing
+          Simple, honest pricing
         </h2>
         <p className="mt-4 text-text-secondary">
           Same renewal price, every cycle — no surprise increase later.
         </p>
         {comingSoon && (
-          <p className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-brand-purple/30 bg-brand-purple/10 px-4 py-1.5 text-sm font-medium text-brand-purple">
+          <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-brand-purple/30 bg-brand-purple/10 px-4 py-1.5 text-sm font-medium text-brand-purple-text">
             Coming soon — these are the tiers we&apos;re launching. Join the waitlist and we&apos;ll
             message you the day it opens.
           </p>
         )}
       </div>
 
-      <div className="mt-10 flex justify-center">
-        <div className="inline-flex flex-wrap justify-center gap-1 rounded-full border border-border p-1">
+      {/* Cycle toggle: a 4-up grid on phones so "Annual" never wraps onto a
+          second row; inline pill row from `sm` up. */}
+      <div className="mt-8">
+        <div
+          role="group"
+          aria-label="Billing cycle"
+          className="grid grid-cols-4 gap-1 rounded-full border border-border p-1 sm:inline-flex"
+        >
           {(Object.keys(cycleLabels) as Cycle[]).map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => setCycle(c)}
               aria-pressed={cycle === c}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors sm:px-5 ${
+              className={`rounded-full px-2 py-2.5 text-xs font-medium transition-colors sm:px-5 sm:text-sm ${
                 cycle === c ? "bg-brand-purple text-white" : "text-text-secondary hover:text-text-primary"
               }`}
             >
@@ -80,119 +97,141 @@ export function HostingPlans({
         </div>
       </div>
 
-      <div className="mt-12 grid gap-6 lg:grid-cols-4">
-        {plans.map((plan, i) => {
+      {/* Pricing cards render static on arrival — no entrance stagger on the
+          thing the visitor scrolled here to read. */}
+      <div className="mt-10 grid gap-6 lg:grid-cols-4">
+        {plans.map((plan) => {
           const months = cycleMonths[cycle];
           const saleTotal = plan.monthlyPrice * months;
           const regularTotal = plan.monthlyRegularPrice * months;
           const save = savePercent(plan);
 
           return (
-            <Reveal key={plan.name} delay={i * 0.08} className="h-full">
-              <div data-theme={plan.recommended ? "dark" : undefined} className="h-full">
+            <div key={plan.name} className="h-full">
               {/* One spatial hover effect only: the documented Tilt3D vocabulary.
                   No stacked lift/pop — see docs/micro-interactions.md "3D tilt". */}
               <Tilt3D maxTilt={3} className="h-full" innerClassName="h-full">
-              <Card
-                className={`flex h-full flex-col ${
-                  plan.recommended ? "border-transparent shadow-[var(--shadow-popular)]" : ""
-                }`}
-              >
-                {/* Fixed-height badge row on every card so headings, prices
-                    and feature lists share one baseline across the row. */}
-                <div className="mb-4 h-7">
+                <Card
+                  className={`flex h-full flex-col ${
+                    plan.recommended ? "border-brand-purple/40 shadow-[var(--shadow-popular)]" : ""
+                  }`}
+                >
+                  {/* Fixed-height badge row on every card so headings, prices
+                      and feature lists share one baseline across the row. */}
+                  <div className="mb-4 h-7">
+                    {comingSoon ? (
+                      <Badge tone="neutral">Coming soon</Badge>
+                    ) : (
+                      plan.recommended && (
+                        <motion.div
+                          initial={{ scale: 0, opacity: 0 }}
+                          whileInView={{ scale: 1, opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.2 }}
+                          className="w-fit"
+                        >
+                          <Badge tone="purple">Most Popular</Badge>
+                        </motion.div>
+                      )
+                    )}
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-text-primary">{plan.name}</h3>
+                  <p className="mt-1 min-h-10 text-sm text-text-muted">{plan.tagline}</p>
+
+                  <div className="mt-6 flex items-baseline gap-2">
+                    <span className="text-4xl font-semibold text-text-primary">
+                      <AnimatedCounter
+                        key={`${plan.name}-${cycle}-${currency}`}
+                        value={convertDisplay(saleTotal)}
+                        prefix={currencySymbol}
+                      />
+                    </span>
+                    <span className="text-sm text-text-muted line-through">
+                      {formatPrice(regularTotal, currency)}
+                    </span>
+                  </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <p className="text-xs text-text-muted">
+                      Billed {cycleLabels[cycle].toLowerCase()} · excl. taxes
+                    </p>
+                    {/* The discount is against the regular rate, not a prepay
+                        bonus — identical on every cycle, so say so. */}
+                    <Badge tone="success" className="text-xs">
+                      {save}% off regular price
+                    </Badge>
+                  </div>
+                  {/* The renewal number is the industry's favorite hiding place —
+                      printing it here is the whole trust play. */}
+                  <p className="mt-1.5 text-xs font-medium text-brand-purple-text">
+                    Renews at the same price — no increase later
+                  </p>
+
+                  <ul className="mt-6 flex-1 space-y-2.5">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2.5 text-sm text-text-secondary">
+                        <Check size={16} className="mt-0.5 shrink-0 text-success" aria-hidden="true" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
                   {comingSoon ? (
-                    <Badge tone="neutral">Coming soon</Badge>
-                  ) : plan.recommended && (
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.2 }}
-                      className="w-fit"
-                    >
-                      <Badge tone="purple">Most Popular</Badge>
-                    </motion.div>
+                    <>
+                      <Button
+                        href={`https://wa.me/919582129099?text=${encodeURIComponent(
+                          `Hi! Please add me to the waitlist for ${lineName} (${plan.name}).`,
+                        )}`}
+                        variant="secondary"
+                        size="lg"
+                        className="mt-8 w-full"
+                      >
+                        Join the waitlist
+                      </Button>
+                      <p className="mt-3 text-center text-xs text-text-muted">
+                        Not orderable yet · we&apos;ll message you when it opens
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        href={productUrl(orderUrl, plan.name)}
+                        variant={plan.recommended ? "primary" : "secondary"}
+                        size="lg"
+                        className="mt-8 w-full"
+                        onClick={() =>
+                          trackSelectPlan({
+                            line: lineName,
+                            plan: plan.name,
+                            cycle,
+                            priceInr: saleTotal,
+                          })
+                        }
+                      >
+                        Choose {plan.name}
+                      </Button>
+                      {/* Tell the shopper what the hand-off to the portal looks
+                          like before the brand changes under them. */}
+                      <p className="mt-3 text-center text-xs text-text-muted">
+                        Next: pick a domain and billing cycle on our secure portal.
+                        <br />
+                        UPI, cards &amp; net banking.
+                      </p>
+                    </>
                   )}
-                </div>
-
-                <h3 className="text-xl font-semibold text-text-primary">{plan.name}</h3>
-                <p className="mt-1 min-h-10 text-sm text-text-muted">{plan.tagline}</p>
-
-                <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-4xl font-semibold text-text-primary">
-                    <AnimatedCounter
-                      key={`${plan.name}-${cycle}-${currency}`}
-                      value={convertDisplay(saleTotal)}
-                      prefix={currencySymbol}
-                    />
-                  </span>
-                  <span className="text-sm text-text-muted line-through">
-                    {formatPrice(regularTotal, currency)}
-                  </span>
-                </div>
-                <div className="mt-1 flex items-center gap-2">
-                  <p className="text-xs text-text-muted">Billed {cycleLabels[cycle].toLowerCase()} · excl. taxes</p>
-                  <Badge tone="success" className="text-xs">
-                    Save {save}%
-                  </Badge>
-                </div>
-                {/* The renewal number is the industry's favorite hiding place —
-                    printing it here is the whole trust play. */}
-                <p className="mt-1.5 text-xs font-medium text-success">
-                  Renews at the same price — no increase later
-                </p>
-
-                <ul className="mt-6 flex-1 space-y-2.5">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2.5 text-sm text-text-secondary">
-                      <Check size={16} className="mt-0.5 shrink-0 text-success" aria-hidden="true" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {comingSoon ? (
-                  <>
-                    <Button
-                      href={`https://wa.me/919582129099?text=${encodeURIComponent(
-                        `Hi! Please add me to the waitlist for ${lineName} (${plan.name}).`,
-                      )}`}
-                      variant="secondary"
-                      size="lg"
-                      className="mt-8 w-full"
-                    >
-                      Join the waitlist
-                    </Button>
-                    <p className="mt-3 text-center text-xs text-text-muted">
-                      Not orderable yet · we&apos;ll message you when it opens
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      href={productUrl(orderUrl, plan.name)}
-                      variant={plan.recommended ? "primary" : "secondary"}
-                      size="lg"
-                      className="mt-8 w-full"
-                    >
-                      Choose {plan.name}
-                    </Button>
-                    <p className="mt-3 text-center text-xs text-text-muted">
-                      Secure checkout · UPI, cards &amp; net banking
-                    </p>
-                  </>
-                )}
-              </Card>
+                </Card>
               </Tilt3D>
-              </div>
-            </Reveal>
+            </div>
           );
         })}
       </div>
 
-      {/* Assurance strip — every claim here is one the plans (or the refund
-          policy) actually make; this row just puts them at the decision point. */}
+      {currency !== "INR" && (
+        <p className="mt-4 text-center text-xs text-text-muted">
+          Approx. conversion; billed in INR.
+        </p>
+      )}
+
       <div className="mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-3">
         <Link
           href="/legal/refund-policy"
@@ -201,12 +240,7 @@ export function HostingPlans({
           <ShieldCheck size={15} className="shrink-0 text-success" aria-hidden="true" />
           7-day money-back guarantee
         </Link>
-        {[
-          { icon: BadgeCheck, label: "Same renewal price, every cycle" },
-          { icon: ArrowRightLeft, label: "Free migration, handled for you" },
-          { icon: Zap, label: "Instant activation" },
-          { icon: MessageCircle, label: "24/7 priority support" },
-        ].map((item) => (
+        {ASSURANCES.map((item) => (
           <span key={item.label} className="inline-flex items-center gap-2 text-sm text-text-secondary">
             <item.icon size={15} className="shrink-0 text-success" aria-hidden="true" />
             {item.label}

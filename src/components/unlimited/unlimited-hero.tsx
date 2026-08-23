@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Eyebrow } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { UnlimitedScene } from "@/components/scenes/unlimited-scene";
 import { SitesGridDemo } from "./sites-grid-demo";
@@ -8,10 +8,10 @@ import { SitesGridDemo } from "./sites-grid-demo";
 export function UnlimitedHero() {
   return (
     <div className="relative">
-      <div className="relative mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
+      <div className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
         <Reveal className="text-center lg:text-left">
-          <Badge>Unlimited Hosting</Badge>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
+          <Eyebrow>Unlimited Hosting</Eyebrow>
+          <h1 className="mt-4 text-4xl font-extrabold leading-none tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
             One plan. As many sites as you run.
           </h1>
           <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary lg:mx-0">

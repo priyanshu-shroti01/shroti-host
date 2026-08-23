@@ -42,14 +42,16 @@ export function Footer() {
 
           {Object.entries(footerNav).map(([section, links]) => (
             <div key={section}>
-              <h3 className="text-sm font-semibold text-text-primary">{section}</h3>
-              <ul className="mt-4 space-y-3.5">
+              {/* Column labels are not document headings — the page's own
+                  h1/h2 outline must not be preceded by footer h3s. */}
+              <p className="text-sm font-semibold text-text-primary">{section}</p>
+              <ul className="mt-2.5 space-y-1">
                 {links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
                       prefetch={false}
-                      className="inline-block text-sm leading-snug text-text-muted transition-colors hover:text-text-primary"
+                      className="inline-block py-1.5 text-sm leading-snug text-text-muted transition-colors hover:text-text-primary"
                     >
                       {link.label}
                       {"comingSoon" in link && link.comingSoon && <SoonTag className="ml-2" />}

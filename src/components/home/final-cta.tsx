@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { Magnetic } from "@/components/ui/magnetic";
 
+const outline = "border-white/50 bg-transparent text-white hover:border-white hover:bg-white/10 hover:text-white";
+
 export function FinalCta() {
   return (
     <Reveal>
       <div
         className="relative overflow-hidden rounded-3xl px-8 py-16 text-center sm:px-16 sm:py-20"
-        style={{ background: "var(--gradient-hero)" }}
+        style={{ background: "var(--gradient-hero-deep)" }}
       >
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.08]"
@@ -21,32 +23,30 @@ export function FinalCta() {
         />
         <div className="relative">
           <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Build What&apos;s Next
+            Start with a domain. Stay for the infrastructure.
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-white/80">
+          <p className="mx-auto mt-4 max-w-xl text-white">
             From your first domain to production infrastructure — hosting, development, and one
             team that carries the whole thing.
           </p>
+          {/* One solid action; the other two are outlines so the panel has a
+              single obvious next step instead of three equal buttons. */}
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Magnetic>
               <Button
                 href="/hosting"
                 variant="secondary"
                 size="lg"
-                className="!border-white/40 bg-white !text-brand-purple hover:bg-white/90"
+                className="border-white bg-white text-brand-purple-active hover:border-white hover:bg-white/90 hover:text-brand-purple-active"
               >
                 Get Hosting
                 <ArrowRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
               </Button>
             </Magnetic>
-            <Button
-              href="/web-development"
-              size="lg"
-              className="bg-white/10 text-white hover:bg-white/20"
-            >
+            <Button href="/web-development" variant="secondary" size="lg" className={outline}>
               Start a Project
             </Button>
-            <Button href="/contact" size="lg" className="bg-white/10 text-white hover:bg-white/20">
+            <Button href="/contact" variant="secondary" size="lg" className={outline}>
               Talk to Us
             </Button>
           </div>

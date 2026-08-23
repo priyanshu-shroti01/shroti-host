@@ -54,6 +54,24 @@ function PromoCountdown({ target }: { target: string }) {
   );
 }
 
+/** Session dismissal lives in sessionStorage; every access is guarded
+ *  because Safari private mode / blocked storage throws on read AND write. */
+function readDismissed(key: string): boolean {
+  try {
+    return sessionStorage.getItem(key) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function writeDismissed(key: string) {
+  try {
+    sessionStorage.setItem(key, "1");
+  } catch {
+    // Storage unavailable — the bar still hides for this page view.
+  }
+}
+
 export function AnnouncementBar({ promo = homepagePromo }: { promo?: PromoBannerConfig }) {
   const [visible, setVisible] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -72,7 +90,7 @@ export function AnnouncementBar({ promo = homepagePromo }: { promo?: PromoBanner
 
   useEffect(() => {
     if (!promo.active) return;
-    if (sessionStorage.getItem(dismissKey) !== "1") {
+    if (!readDismissed(dismissKey)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
     }
@@ -85,13 +103,14 @@ export function AnnouncementBar({ promo = homepagePromo }: { promo?: PromoBanner
 
   return (
     <div
-      className={`relative flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-2.5 text-center text-sm font-medium text-white ${
-        isPromo ? "" : "bg-brand-purple"
+      className={`relative flex min-h-11 flex-wrap items-center justify-center gap-x-3 gap-y-1 py-1 pl-4 pr-14 text-center text-sm font-medium text-white ${
+        // Text sits on this gradient, so use the WCAG-safe deep variant when
+        // the token exists and fall back to the brand gradient otherwise.
+        isPromo ? "bg-[image:var(--gradient-hero-deep,var(--gradient-hero))]" : "bg-brand-purple"
       }`}
-      style={isPromo ? { background: "var(--gradient-hero)" } : undefined}
     >
       {Icon && <Icon size={16} className="hidden shrink-0 sm:block" aria-hidden="true" />}
-      <Link href={promo.href} className="underline-offset-2 hover:underline">
+      <Link href={promo.href} className="inline-block py-1.5 underline-offset-2 hover:underline">
         {promo.message}
       </Link>
       {promo.discountLabel && (
@@ -100,19 +119,22 @@ export function AnnouncementBar({ promo = homepagePromo }: { promo?: PromoBanner
         </span>
       )}
       {promo.code && (
+        /* 44px hit area (min-h-11) around a visually small pill. */
         <button
           type="button"
           onClick={copyCode}
           aria-label={copied ? "Promo code copied" : `Copy promo code ${promo.code}`}
-          className="inline-flex items-center gap-1.5 rounded-full border border-white/30 px-2.5 py-0.5 text-xs transition-colors hover:border-white/60 hover:bg-white/10"
+          className="group/code inline-flex min-h-11 min-w-11 items-center px-1"
         >
-          <span className="text-white/90">Code</span>
-          <code className="font-mono font-semibold">{promo.code}</code>
-          {copied ? (
-            <Check size={12} aria-hidden="true" />
-          ) : (
-            <Copy size={12} className="text-white/90" aria-hidden="true" />
-          )}
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 px-2.5 py-0.5 text-xs transition-colors group-hover/code:border-white/60 group-hover/code:bg-white/10">
+            <span className="text-white/90">Code</span>
+            <code className="font-mono font-semibold">{promo.code}</code>
+            {copied ? (
+              <Check size={12} aria-hidden="true" />
+            ) : (
+              <Copy size={12} className="text-white/90" aria-hidden="true" />
+            )}
+          </span>
         </button>
       )}
       {promo.expiresAt && <PromoCountdown target={promo.expiresAt} />}
@@ -120,10 +142,10 @@ export function AnnouncementBar({ promo = homepagePromo }: { promo?: PromoBanner
         type="button"
         aria-label="Dismiss announcement"
         onClick={() => {
-          sessionStorage.setItem(dismissKey, "1");
+          writeDismissed(dismissKey);
           setVisible(false);
         }}
-        className="absolute right-3 inline-flex h-6 w-6 items-center justify-center rounded-full text-white/80 hover:bg-white/15 hover:text-white"
+        className="absolute right-1 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-white/80 hover:bg-white/15 hover:text-white"
       >
         <X size={14} aria-hidden="true" />
       </button>

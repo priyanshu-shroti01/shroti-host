@@ -5,8 +5,29 @@ import { ArrowLeft } from "lucide-react";
 import { Section, Eyebrow } from "@/components/ui/section";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { PostCard } from "@/components/blog/post-card";
-import { allCategories, postsByCategory } from "@/lib/blog";
+import { allCategories, postsByCategory, type BlogCategory } from "@/lib/blog";
 import { breadcrumbJsonLd } from "@/lib/seo";
+
+// Categories come from the posts in lib/blog.ts — unknown slugs are real 404s.
+export const dynamicParams = false;
+
+/** Per-category meta descriptions — a template would produce "guides on guides". */
+const categoryDescriptions: Record<BlogCategory, string> = {
+  Guides:
+    "Step-by-step guides from the ShrotiHost team — hosting a website in India, choosing a plan, connecting a domain, and going live without surprises.",
+  WordPress:
+    "WordPress hosting and speed guides — LiteSpeed Cache, PHP versions, plugins, images, and the hosting layer underneath — from the ShrotiHost team.",
+  Business:
+    "Guides on starting and running a hosting or web business in India — reseller hosting, WHMCS billing, pricing, support, and honest margins.",
+  Performance:
+    "Hosting performance explained — NVMe storage, LiteSpeed, caching, and what actually makes a website faster for Indian visitors.",
+  Domains:
+    "Domain guides for Indian businesses — .in vs .com, DNS records, nameservers, transfers, and protecting your brand name.",
+  VPS:
+    "VPS guides — what a virtual private server is, how it compares to shared hosting, and the real signals that it's time to upgrade.",
+  Development:
+    "Web and app development guides — costs in India, MVP scope, website builders vs custom builds, and launch checklists from the ShrotiHost team.",
+};
 
 export function generateStaticParams() {
   return allCategories().map((c) => ({ category: c.slug }));
@@ -20,7 +41,7 @@ export async function generateMetadata(props: {
   if (!match) return {};
   return {
     title: `${match.name} Articles`,
-    description: `Practical, honest guides on ${match.name.toLowerCase()} from the ShrotiHost team — written for people building on the web in India.`,
+    description: categoryDescriptions[match.name],
     alternates: { canonical: `/blog/category/${match.slug}` },
   };
 }

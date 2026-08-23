@@ -16,7 +16,7 @@ export function TrustedTech() {
             {feature}
           </StatPill>
         ))}
-        <StatPill icon={Sparkles}>AI-assisted support, 24/7</StatPill>
+        <StatPill icon={Sparkles}>Support on WhatsApp + tickets</StatPill>
         <StatPill icon={Star} iconClassName="text-warning" href="https://www.trustpilot.com/review/shrotihost.in">
           Reviewed on Trustpilot
         </StatPill>

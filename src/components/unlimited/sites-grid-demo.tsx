@@ -22,7 +22,7 @@ export function SitesGridDemo() {
         <button
           type="button"
           onClick={addSite}
-          className="inline-flex items-center gap-1.5 rounded-full border border-border-strong px-3 py-1.5 text-xs font-medium text-text-primary transition-colors hover:border-brand-purple hover:text-brand-purple"
+          className="inline-flex items-center gap-1.5 rounded-full border border-border-strong px-3 py-1.5 text-xs font-medium text-text-primary transition-colors hover:border-brand-purple hover:text-brand-purple-text"
         >
           <Plus size={13} aria-hidden="true" />
           Add another site

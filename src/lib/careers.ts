@@ -13,6 +13,12 @@ export type CareerRole = {
   location: string;
   /** ISO date the role was opened — used in JobPosting structured data. */
   posted: string;
+  /**
+   * ISO date the listing expires — JobPosting `validThrough`. Convention:
+   * `posted` + 90 days. Bump it (or remove the role) when the date passes;
+   * Google drops expired postings from rich results.
+   */
+  closes: string;
   summary: string;
   responsibilities: string[];
   lookingFor: string[];
@@ -29,6 +35,7 @@ export const openRoles: CareerRole[] = [
     type: "Full-time",
     location: "Remote · India",
     posted: "2026-08-17",
+    closes: "2026-11-15",
     summary:
       "Front line for our customers — cPanel/WHM, DNS, SSL and migrations. You keep real websites online and reply like a human, not a script.",
     responsibilities: [
@@ -49,6 +56,7 @@ export const openRoles: CareerRole[] = [
     type: "Full-time",
     location: "Remote · India",
     posted: "2026-08-17",
+    closes: "2026-11-15",
     summary:
       "Build the products around the hosting — this website, WHMCS modules, internal tooling and automation that keeps the platform humming.",
     responsibilities: [
@@ -69,6 +77,7 @@ export const openRoles: CareerRole[] = [
     type: "Part-time",
     location: "Remote · India",
     posted: "2026-08-17",
+    closes: "2026-11-15",
     summary:
       "Move customer WordPress sites onto our stack — cleanly, quickly, and with the LiteSpeed cache tuned before handover.",
     responsibilities: [
@@ -89,6 +98,7 @@ export const openRoles: CareerRole[] = [
     type: "Full-time",
     location: "Remote · India",
     posted: "2026-08-19",
+    closes: "2026-11-17",
     summary:
       "Own the servers behind the product — cPanel fleets, LiteSpeed, CloudLinux, backups, monitoring and the automation that keeps uptime boring.",
     responsibilities: [
@@ -109,6 +119,7 @@ export const openRoles: CareerRole[] = [
     type: "Full-time",
     location: "Remote · India",
     posted: "2026-08-19",
+    closes: "2026-11-17",
     summary:
       "Build and maintain the WHMCS modules we run and sell — gateway fee allocation, WhatsApp notifications, licensing — plus the billing automation behind the portal.",
     responsibilities: [
@@ -129,6 +140,7 @@ export const openRoles: CareerRole[] = [
     type: "Full-time",
     location: "Remote · India",
     posted: "2026-08-19",
+    closes: "2026-11-17",
     summary:
       "Own organic growth — the blog, landing pages and search presence that bring Indian builders to ShrotiHost without a rupee of ad spend.",
     responsibilities: [
@@ -149,6 +161,7 @@ export const openRoles: CareerRole[] = [
     type: "Full-time",
     location: "Remote · India",
     posted: "2026-08-19",
+    closes: "2026-11-17",
     summary:
       "Talk to agencies, freelancers and resellers all day — help them pick the right plan, close reseller partnerships, and feed what you hear back into the product.",
     responsibilities: [
@@ -169,6 +182,7 @@ export const openRoles: CareerRole[] = [
     type: "Internship",
     location: "Remote · India",
     posted: "2026-08-19",
+    closes: "2026-11-17",
     summary:
       "Learn the whole hosting stack from the inside — shadow real tickets, then take your own with a senior engineer reviewing every reply. Strong interns get a full-time offer.",
     responsibilities: [

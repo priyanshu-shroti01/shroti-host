@@ -2,10 +2,31 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, CreditCard, Handshake, LifeBuoy, MessageCircle, ShoppingCart, Truck, Wrench } from "lucide-react";
+import {
+  ArrowRight,
+  CreditCard,
+  Handshake,
+  LifeBuoy,
+  MessageCircle,
+  ShoppingCart,
+  Truck,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const paths = [
+type ContactPath = {
+  id: string;
+  icon: LucideIcon;
+  label: string;
+  body: string;
+  cta: string;
+  href: string;
+  /** Off-site destination (WhatsApp) — opens in a new tab. */
+  external?: boolean;
+};
+
+const paths: ContactPath[] = [
   {
     id: "whatsapp",
     icon: MessageCircle,
@@ -13,14 +34,18 @@ const paths = [
     body: "The fastest way to reach a human — chat with us directly on WhatsApp.",
     cta: "Chat on WhatsApp",
     href: "https://wa.me/919582129099",
+    external: true,
   },
   {
     id: "sales",
     icon: ShoppingCart,
     label: "Sales",
     body: "Questions before you buy — plan sizing, custom needs, anything pre-sales.",
-    cta: "Ask a pre-sales question",
-    href: "https://portal.shrotihost.in/submitticket.php",
+    // Pre-sales goes straight to a human on WhatsApp — a ticket queue is the
+    // wrong first impression for someone who hasn't bought yet.
+    cta: "Chat with sales on WhatsApp",
+    href: "https://wa.me/919582129099?text=Hi%20ShrotiHost%2C%20I%27d%20like%20to%20talk%20about%20hosting",
+    external: true,
   },
   {
     id: "support",
@@ -81,7 +106,7 @@ export function ContactPaths() {
               p.id === "whatsapp" ? "col-span-2 flex-row justify-center sm:col-span-3" : ""
             } ${
               selected === p.id
-                ? "border-brand-purple bg-brand-purple/10 text-brand-purple"
+                ? "border-brand-purple bg-brand-purple/10 text-brand-purple-text"
                 : "border-border text-text-secondary hover:border-border-strong hover:text-text-primary"
             }`}
           >
@@ -102,7 +127,11 @@ export function ContactPaths() {
             className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-border-strong bg-card p-8 text-center"
           >
             <p className="max-w-sm text-text-secondary">{path.body}</p>
-            <Button href={path.href} size="lg">
+            <Button
+              href={path.href}
+              size="lg"
+              {...(path.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            >
               {path.cta}
               <ArrowRight size={16} aria-hidden="true" />
             </Button>

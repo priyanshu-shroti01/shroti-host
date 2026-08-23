@@ -3,12 +3,18 @@ import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/ui/reveal";
 
 /**
- * Real, verified reviews from https://www.trustpilot.com/review/shrotihost.in
+ * Reviews quoted from https://www.trustpilot.com/review/shrotihost.in
  * Quotes are lightly cleaned up for run-on grammar only — content, rating,
  * name, and date are unchanged from the original review. The reviewer named
  * "Priyanshu" was excluded: it's the business owner reviewing a purchase of
  * their own product, not an independent customer.
+ *
+ * The aggregate below is printed, not implied: update it by hand when the
+ * Trustpilot page changes (last checked 2026-08-23 — 4.1/5 from 12 reviews).
  */
+const TRUSTPILOT_URL = "https://www.trustpilot.com/review/shrotihost.in";
+const TRUSTPILOT_AGGREGATE = { score: "4.1", reviews: 12 };
+
 const testimonials = [
   {
     quote:
@@ -46,46 +52,51 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <div>
+    <Reveal>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Trusted by builders <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">across India</span>
+          What customers say
         </h2>
-        <p className="mt-4 text-text-secondary">Real, verified reviews from Trustpilot.</p>
+        <p className="mt-4 text-text-secondary">
+          Quoted from Trustpilot — names and dates as published there.
+        </p>
       </div>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {testimonials.map((t, i) => (
-          <Reveal key={t.name} delay={i * 0.06}>
-            <Card className="h-full">
-              <div className="flex gap-0.5 text-warning">
-                {Array.from({ length: 5 }).map((_, star) => (
-                  <Star key={star} size={14} fill="currentColor" aria-hidden="true" />
-                ))}
-                <span className="sr-only">Rated 5 out of 5 stars</span>
-              </div>
-              <p className="mt-3 text-text-secondary">&ldquo;{t.quote}&rdquo;</p>
-              <div className="mt-6">
-                <p className="text-sm font-semibold text-text-primary">{t.name}</p>
-                <p className="text-xs text-text-muted">
-                  {t.location} · {t.date}
-                </p>
-              </div>
-            </Card>
-          </Reveal>
+        {testimonials.map((t) => (
+          <Card key={t.name} className="h-full">
+            <div className="flex gap-0.5 text-warning">
+              {Array.from({ length: 5 }).map((_, star) => (
+                <Star key={star} size={14} fill="currentColor" aria-hidden="true" />
+              ))}
+              <span className="sr-only">Rated 5 out of 5 stars</span>
+            </div>
+            <p className="mt-3 text-text-secondary">&ldquo;{t.quote}&rdquo;</p>
+            <div className="mt-6">
+              <p className="text-sm font-semibold text-text-primary">{t.name}</p>
+              <p className="text-xs text-text-muted">
+                {t.location} · {t.date}
+              </p>
+            </div>
+          </Card>
         ))}
       </div>
 
-      <div className="mt-8 text-center">
+      {/* The real aggregate, stated plainly next to the link — small and
+          honest beats a five-star wall. */}
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-sm">
+        <span className="text-text-secondary">
+          {TRUSTPILOT_AGGREGATE.score}/5 from {TRUSTPILOT_AGGREGATE.reviews} reviews on Trustpilot
+        </span>
         <a
-          href="https://www.trustpilot.com/review/shrotihost.in"
+          href={TRUSTPILOT_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-medium text-brand-purple hover:underline"
+          className="font-medium text-brand-purple-text hover:underline"
         >
-          Read verified reviews on Trustpilot ↗
+          Read them on Trustpilot ↗
         </a>
       </div>
-    </div>
+    </Reveal>
   );
 }

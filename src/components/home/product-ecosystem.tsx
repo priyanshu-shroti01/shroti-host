@@ -66,7 +66,7 @@ export function ProductEcosystem() {
     <div>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          One platform, <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">everything</span> you need to launch
+          One platform, everything you need to launch
         </h2>
         <p className="mt-4 text-text-secondary">
           Designed to work together, not bolted on as afterthoughts.
@@ -88,7 +88,7 @@ export function ProductEcosystem() {
                 <h3 className="mt-5 text-xl font-semibold text-text-primary">{featured.title}</h3>
                 <p className="mt-2 max-w-sm text-sm text-text-secondary">{featured.description}</p>
               </div>
-              <span className="relative mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple">
+              <span className="relative mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple-text">
                 Explore plans
                 <ArrowUpRight size={16} aria-hidden="true" />
               </span>

@@ -1,5 +1,5 @@
 import "server-only";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { allDomains, type DomainPrice } from "@/lib/domains";
 
 /**
@@ -28,4 +28,13 @@ export async function getDomainPricing(): Promise<{ domains: DomainPrice[]; upda
     cache = { at: Date.now(), data: allDomains, updatedAt: null };
   }
   return { domains: cache.data, updatedAt: cache.updatedAt };
+}
+
+/** ISO mtime of the pricing export on disk, or null when the file is absent (health endpoint). */
+export async function getPricingFileMtime(): Promise<string | null> {
+  try {
+    return (await stat(PRICING_FILE)).mtime.toISOString();
+  } catch {
+    return null;
+  }
 }

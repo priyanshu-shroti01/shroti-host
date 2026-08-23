@@ -2,7 +2,10 @@
 
 import { Accordion } from "@/components/ui/accordion";
 
-export const faqs = [
+export type FaqItem = { question: string; answer: string };
+
+/** Site-wide default set — the homepage and any page without line-specific questions. */
+export const faqs: FaqItem[] = [
   {
     question: "Is migration really free?",
     answer:
@@ -30,34 +33,41 @@ export const faqs = [
   },
 ];
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((faq) => ({
-    "@type": "Question",
-    name: faq.question,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: faq.answer,
-    },
-  })),
-};
+function faqJsonLd(items: FaqItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+}
 
-export function Faq() {
+/**
+ * FAQ block + matching FAQPage schema. Pass `items` so each hosting line
+ * answers its own questions — identical FAQPage markup on every page is
+ * treated as boilerplate, not as help.
+ */
+export function Faq({ items = faqs }: { items?: FaqItem[] }) {
   return (
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(items)) }}
       />
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Frequently Asked <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">Questions</span>
+          Frequently Asked Questions
         </h2>
       </div>
 
       <div className="mx-auto mt-12 max-w-2xl">
-        <Accordion items={faqs.map((f) => ({ q: f.question, a: f.answer }))} />
+        <Accordion items={items.map((f) => ({ q: f.question, a: f.answer }))} />
       </div>
     </div>
   );

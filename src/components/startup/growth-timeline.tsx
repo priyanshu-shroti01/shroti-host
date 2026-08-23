@@ -75,7 +75,7 @@ export function GrowthTimeline() {
                 <s.icon size={20} aria-hidden="true" />
               </div>
               <span
-                className={`text-xs font-medium sm:text-sm ${i === active ? "text-brand-purple" : "text-text-secondary"}`}
+                className={`text-xs font-medium sm:text-sm ${i === active ? "text-brand-purple-text" : "text-text-secondary"}`}
               >
                 {s.label}
               </span>

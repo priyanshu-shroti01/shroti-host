@@ -1,24 +1,35 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Loader2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CAREERS_EMAIL, CAREERS_WHATSAPP } from "@/lib/careers";
 
+// No `outline-none`: the global :focus-visible ring (globals.css) must show.
 const inputCls =
-  "w-full rounded-xl border-2 border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted outline-none transition-colors focus:border-brand-purple";
+  "w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:border-brand-purple";
 
-type FieldErrors = Partial<Record<"name" | "email" | "phone" | "portfolio" | "resumeUrl" | "note", string>>;
+type FieldName = "name" | "email" | "phone" | "portfolio" | "resumeUrl" | "note";
+type FieldErrors = Partial<Record<FieldName, string>>;
 
 export function ApplySection({ roleSlug, roleTitle }: { roleSlug: string; roleTitle: string }) {
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [topError, setTopError] = useState<string | null>(null);
+  const fieldsRef = useRef<HTMLDivElement>(null);
+  const idBase = useId();
 
   const wa = `${CAREERS_WHATSAPP}?text=${encodeURIComponent(`Hi! I'd like to apply for the ${roleTitle} role.`)}`;
   const mailto = `mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent(`Application: ${roleTitle}`)}`;
+
+  // After a 422 the error state has rendered: move focus to the first
+  // invalid control so keyboard/screen-reader users land on what to fix.
+  useEffect(() => {
+    if (Object.keys(errors).length === 0) return;
+    fieldsRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+  }, [errors]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,6 +45,7 @@ export function ApplySection({ roleSlug, roleTitle }: { roleSlug: string; roleTi
         body: JSON.stringify({ ...data, role: roleSlug }),
       });
       const json = await res.json();
+      // `{ ok: true, duplicate: true }` (already applied) is still a success.
       if (json.ok) {
         setState("done");
         return;
@@ -49,7 +61,11 @@ export function ApplySection({ roleSlug, roleTitle }: { roleSlug: string; roleTi
 
   if (state === "done") {
     return (
-      <div className="mt-6 flex items-start gap-3 rounded-xl border-2 border-success/30 bg-success/10 p-4">
+      <div
+        role="status"
+        aria-live="polite"
+        className="mt-6 flex items-start gap-3 rounded-xl border border-success/30 bg-success/10 p-4"
+      >
         <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-success" aria-hidden="true" />
         <div>
           <p className="text-sm font-semibold text-text-primary">Application received.</p>
@@ -60,6 +76,8 @@ export function ApplySection({ roleSlug, roleTitle }: { roleSlug: string; roleTi
       </div>
     );
   }
+
+  const field = (name: FieldName) => ({ name, error: errors[name], idBase });
 
   return (
     <div className="mt-6">
@@ -82,15 +100,16 @@ export function ApplySection({ roleSlug, roleTitle }: { roleSlug: string; roleTi
           <motion.form
             key="form"
             onSubmit={onSubmit}
+            aria-busy={state === "sending"}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-5 grid gap-4 rounded-2xl border-2 border-border bg-surface/40 p-5">
+            <div ref={fieldsRef} className="mt-5 grid gap-4 rounded-2xl border border-border bg-surface/40 p-5">
               {topError && (
-                <p role="alert" className="rounded-lg border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">
+                <p role="alert" className="rounded-xl border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">
                   {topError}
                 </p>
               )}
@@ -98,24 +117,26 @@ export function ApplySection({ roleSlug, roleTitle }: { roleSlug: string; roleTi
               <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Full name" error={errors.name}>
-                  <input name="name" required minLength={2} maxLength={80} autoComplete="name" placeholder="Your name" className={inputCls} />
+                <Field label="Full name" {...field("name")}>
+                  {(c) => <input {...c} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your name" className={inputCls} />}
                 </Field>
-                <Field label="Email" error={errors.email}>
-                  <input name="email" type="email" required autoComplete="email" placeholder="you@example.com" className={inputCls} />
+                <Field label="Email" {...field("email")}>
+                  {(c) => <input {...c} type="email" required autoComplete="email" placeholder="you@example.com" className={inputCls} />}
                 </Field>
-                <Field label="Phone / WhatsApp" error={errors.phone}>
-                  <input name="phone" type="tel" required autoComplete="tel" placeholder="+91 …" className={inputCls} />
+                <Field label="Phone / WhatsApp" {...field("phone")}>
+                  {(c) => <input {...c} type="tel" required autoComplete="tel" placeholder="+91 …" className={inputCls} />}
                 </Field>
-                <Field label="Portfolio / GitHub / LinkedIn (optional)" error={errors.portfolio}>
-                  <input name="portfolio" type="url" placeholder="https://…" className={inputCls} />
+                <Field label="Portfolio / GitHub / LinkedIn (optional)" {...field("portfolio")}>
+                  {(c) => <input {...c} type="url" placeholder="https://…" className={inputCls} />}
                 </Field>
               </div>
-              <Field label="Resume link (optional — Drive, Dropbox, personal site)" error={errors.resumeUrl}>
-                <input name="resumeUrl" type="url" placeholder="https://…" className={inputCls} />
+              <Field label="Resume link (optional — Drive, Dropbox, personal site)" {...field("resumeUrl")}>
+                {(c) => <input {...c} type="url" placeholder="https://…" className={inputCls} />}
               </Field>
-              <Field label="Why you? A few lines about what you've built or fixed" error={errors.note}>
-                <textarea name="note" required minLength={20} maxLength={2000} rows={4} placeholder="Short and concrete beats formal." className={`${inputCls} resize-y`} />
+              <Field label="Why you? A few lines about what you've built or fixed" {...field("note")}>
+                {(c) => (
+                  <textarea {...c} required minLength={20} maxLength={2000} rows={4} placeholder="Short and concrete beats formal." className={`${inputCls} resize-y`} />
+                )}
               </Field>
 
               <div className="flex items-center gap-3">
@@ -138,12 +159,44 @@ export function ApplySection({ roleSlug, roleTitle }: { roleSlug: string; roleTi
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+/** Props every control receives so errors are exposed programmatically. */
+type ControlProps = {
+  id: string;
+  name: string;
+  "aria-invalid": true | undefined;
+  "aria-describedby": string | undefined;
+};
+
+function Field({
+  label,
+  name,
+  error,
+  idBase,
+  children,
+}: {
+  label: string;
+  name: FieldName;
+  error?: string;
+  idBase: string;
+  children: (control: ControlProps) => ReactNode;
+}) {
+  const id = `${idBase}-${name}`;
+  const errorId = `${id}-error`;
   return (
-    <label className="block">
+    /* data-error drives the field-level error border (see globals.css). */
+    <label htmlFor={id} className="block" data-error={error ? "" : undefined}>
       <span className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-text-muted">{label}</span>
-      {children}
-      {error && <span className="mt-1 block text-xs text-error">{error}</span>}
+      {children({
+        id,
+        name,
+        "aria-invalid": error ? true : undefined,
+        "aria-describedby": error ? errorId : undefined,
+      })}
+      {error && (
+        <span id={errorId} className="mt-1 block text-xs text-error">
+          {error}
+        </span>
+      )}
     </label>
   );
 }

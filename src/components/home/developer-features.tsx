@@ -27,7 +27,7 @@ export function DeveloperFeatures() {
       <Reveal className="min-w-0">
         <Eyebrow>For Developers</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Ship the way you <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">already work</span>.
+          Ship the way you already work.
         </h2>
         <p className="mt-4 max-w-md text-text-secondary">
           Full SSH access, Git deploys, and a real terminal — not just a file manager.
@@ -52,12 +52,12 @@ export function DeveloperFeatures() {
             {codeLines.map((line, i) => (
               <div key={i} className="flex gap-3">
                 <span className="text-brand-blue">{line.prompt}</span>
-                <span className="text-white/80">{line.text}</span>
+                <span className="text-text-primary">{line.text}</span>
               </div>
             ))}
             <div className="flex gap-3">
               <span className="text-brand-blue">$</span>
-              <span className="inline-block h-4 w-2 animate-pulse bg-white/60" aria-hidden="true" />
+              <span className="inline-block h-4 w-2 animate-pulse bg-text-secondary" aria-hidden="true" />
             </div>
           </div>
         </BrowserFrame>

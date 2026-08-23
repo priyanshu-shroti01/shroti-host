@@ -24,18 +24,17 @@ const steps = [
 
 export function ThreeSteps() {
   return (
-    <div>
+    <Reveal>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Get online in <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">3 simple steps</span>
+          Domain, plan, live — in one sitting.
         </h2>
         <p className="mt-4 text-text-secondary">No technical knowledge needed.</p>
       </div>
 
       <div className="mt-14 grid gap-6 sm:grid-cols-3">
-        {steps.map((step, i) => (
-          <Reveal key={step.title} delay={i * 0.1}>
-            <div className="relative rounded-2xl border border-border bg-card p-6 text-center">
+        {steps.map((step) => (
+          <div key={step.title} className="relative rounded-2xl border border-border bg-card p-6 text-center">
               <span className="absolute right-5 top-4 font-mono text-3xl font-semibold text-border-strong">
                 {step.number}
               </span>
@@ -43,11 +42,10 @@ export function ThreeSteps() {
                 <step.icon size={22} aria-hidden="true" />
               </div>
               <h3 className="mt-4 text-base font-semibold text-text-primary">{step.title}</h3>
-              <p className="mt-2 text-sm text-text-secondary">{step.description}</p>
-            </div>
-          </Reveal>
+            <p className="mt-2 text-sm text-text-secondary">{step.description}</p>
+          </div>
         ))}
       </div>
-    </div>
+    </Reveal>
   );
 }

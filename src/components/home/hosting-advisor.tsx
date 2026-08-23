@@ -85,7 +85,7 @@ export function HostingAdvisor() {
       <div className="mx-auto max-w-2xl text-center">
         <Eyebrow>Hosting Advisor</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Not sure <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">which plan fits</span>?
+          Not sure which plan fits?
         </h2>
         <p className="mt-4 text-text-secondary">
           Answer three quick questions and we&apos;ll recommend a plan.
@@ -128,7 +128,7 @@ export function HostingAdvisor() {
                     key={option.id}
                     type="button"
                     onClick={() => selectAnswer(questions[step].key, option.id)}
-                    className="group flex w-full items-center justify-between rounded-xl border border-border px-5 py-3.5 text-left text-sm font-medium text-text-primary transition-colors hover:border-brand-purple hover:text-brand-purple"
+                    className="group flex w-full items-center justify-between rounded-xl border border-border px-5 py-3.5 text-left text-sm font-medium text-text-primary transition-colors hover:border-brand-purple hover:text-brand-purple-text"
                   >
                     {option.label}
                     <ArrowRight
@@ -186,7 +186,7 @@ export function HostingAdvisor() {
                           <a
                             key={plan.name}
                             href="/hosting"
-                            className="text-sm font-medium text-brand-purple hover:underline"
+                            className="text-sm font-medium text-brand-purple-text hover:underline"
                           >
                             {plan.name} — {format(plan.monthlyPrice)}/mo
                           </a>

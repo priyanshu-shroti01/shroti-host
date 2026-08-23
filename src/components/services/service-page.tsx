@@ -20,7 +20,7 @@ export function ServicePage({ service }: { service: Service }) {
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <div className="mx-auto max-w-3xl text-center">
           <Eyebrow>{service.eyebrow}</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
+          <h1 className="mt-4 text-4xl font-extrabold leading-none tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
             {service.headline[0]}{" "}
             <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
               {service.headline[1]}
@@ -47,10 +47,7 @@ export function ServicePage({ service }: { service: Service }) {
       <Section className="bg-surface/30">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-            How a project{" "}
-            <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-              actually moves
-            </span>
+            How a project actually moves
           </h2>
           <p className="mt-4 text-text-secondary">{service.processIntro}</p>
         </div>
@@ -70,14 +67,12 @@ export function ServicePage({ service }: { service: Service }) {
       <Section>
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-            What we{" "}
-            <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">build</span>
+            What we build
           </h2>
         </div>
-        <div className="mx-auto mt-12 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {service.offerings.map((offering, i) => (
-            <Reveal key={offering.title} delay={i * 0.05} className="h-full">
-              <SpotlightCard className="h-full">
+        <Reveal className="mx-auto mt-12 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {service.offerings.map((offering) => (
+              <SpotlightCard key={offering.title} className="h-full">
                 <div className="p-6">
                   <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 text-brand-purple">
                     <offering.icon size={20} aria-hidden="true" />
@@ -86,37 +81,30 @@ export function ServicePage({ service }: { service: Service }) {
                   <p className="mt-2 text-sm text-text-secondary">{offering.description}</p>
                 </div>
               </SpotlightCard>
-            </Reveal>
           ))}
-        </div>
+        </Reveal>
       </Section>
 
       <Section className="bg-surface/30">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-            Why build it{" "}
-            <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-              where it&apos;s hosted
-            </span>
+            Why build it where it&apos;s hosted
           </h2>
         </div>
-        <div className="mx-auto mt-12 grid max-w-5xl gap-5 lg:grid-cols-3">
-          {service.synergy.map((item, i) => (
-            <Reveal key={item.title} delay={i * 0.07} className="h-full">
-              <div className="h-full rounded-2xl border border-border bg-card p-6">
+        <Reveal className="mx-auto mt-12 grid max-w-5xl gap-5 lg:grid-cols-3">
+          {service.synergy.map((item) => (
+              <div key={item.title} className="h-full rounded-2xl border border-border bg-card p-6">
                 <h3 className="text-base font-semibold text-text-primary">{item.title}</h3>
                 <p className="mt-2.5 text-sm leading-relaxed text-text-secondary">{item.description}</p>
               </div>
-            </Reveal>
           ))}
-        </div>
+        </Reveal>
       </Section>
 
       <Section>
         <div className="mx-auto max-w-2xl">
           <h2 className="text-center text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-            Honest{" "}
-            <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">answers</span>
+            Honest answers
           </h2>
           <div className="mt-10">
             <Accordion items={service.faqs} />

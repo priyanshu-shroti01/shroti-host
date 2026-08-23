@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { MotionConfig } from "framer-motion";
 import { type CurrencyCode, convertFromInr, formatPrice } from "@/lib/currency";
 
 type CurrencyContextValue = {
@@ -19,7 +20,13 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setCurrencyState] = useState<CurrencyCode>("INR");
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    // Storage can throw (Safari private mode, blocked cookies) — fall back to INR.
+    let stored: string | null = null;
+    try {
+      stored = localStorage.getItem(STORAGE_KEY);
+    } catch {
+      return;
+    }
     if (stored === "INR" || stored === "USD" || stored === "EUR") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrencyState(stored);
@@ -28,7 +35,11 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
   function setCurrency(code: CurrencyCode) {
     setCurrencyState(code);
-    localStorage.setItem(STORAGE_KEY, code);
+    try {
+      localStorage.setItem(STORAGE_KEY, code);
+    } catch {
+      // Storage unavailable — the choice still applies for this page view.
+    }
   }
 
   return (
@@ -40,7 +51,9 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         convertDisplay: (amountInr) => convertFromInr(amountInr, currency),
       }}
     >
-      {children}
+      {/* Client root: every framer-motion component below honours the OS
+          reduced-motion setting (transforms/layout off, opacity kept). */}
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
     </CurrencyContext.Provider>
   );
 }

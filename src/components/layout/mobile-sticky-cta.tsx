@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCurrency } from "@/components/currency-provider";
@@ -23,11 +23,24 @@ const PLAN_PAGES = new Set([
   "/domains",
 ]);
 
+/** Storage can throw (Safari private mode) — treat as "not dismissed". */
+function readDismissed(): boolean {
+  try {
+    return sessionStorage.getItem(DISMISS_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Mobile-only sticky bottom CTA — the RankHostZone pattern, appearing only
  * after real scroll intent (one viewport down) and dismissible for the
  * session. While visible it sets `has-mobile-cta` on <body> so the chatbot
- * FAB shifts up instead of being covered (see chatbot-widget.tsx).
+ * FAB shifts up instead of being covered (see chatbot-widget.tsx) and the
+ * welcome-offer dialog stays away (see welcome-offer.tsx).
+ *
+ * Layout-chunk component: uses LazyMotion + `m` (domAnimation only) so the
+ * full framer feature set stays out of every route's first load.
  */
 export function MobileStickyCta() {
   const pathname = usePathname();
@@ -38,7 +51,7 @@ export function MobileStickyCta() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDismissed(sessionStorage.getItem(DISMISS_KEY) === "1");
+    setDismissed(readDismissed());
   }, []);
 
   useEffect(() => {
@@ -57,38 +70,45 @@ export function MobileStickyCta() {
     return () => document.body.classList.remove("has-mobile-cta");
   }, [visible]);
 
+  function dismiss() {
+    try {
+      sessionStorage.setItem(DISMISS_KEY, "1");
+    } catch {
+      // Storage unavailable — still hides for this page view.
+    }
+    setDismissed(true);
+  }
 
   return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={reducedMotion ? { opacity: 0 } : { y: 72, opacity: 0 }}
-          animate={reducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
-          exit={reducedMotion ? { opacity: 0 } : { y: 72, opacity: 0 }}
-          transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
-          className="fixed inset-x-0 bottom-0 z-50 border-t border-border-strong bg-surface-raised/95 px-4 py-2.5 shadow-[var(--shadow-overhang)] backdrop-blur lg:hidden"
-        >
-          <div className="flex items-center justify-between gap-3 pr-14">
-            <p className="min-w-0 text-sm font-semibold text-text-primary">
-              Hosting from {formatPrice(sharedPlans[0].monthlyPrice, currency)}/mo
-            </p>
-            <Button href="/hosting#compare" size="sm" className="shrink-0">
-              Get Started
-            </Button>
-          </div>
-          <button
-            type="button"
-            aria-label="Dismiss"
-            onClick={() => {
-              sessionStorage.setItem(DISMISS_KEY, "1");
-              setDismissed(true);
-            }}
-            className="absolute right-2 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-text-muted hover:bg-surface hover:text-text-primary"
+    <LazyMotion features={domAnimation}>
+      <AnimatePresence>
+        {visible && (
+          <m.div
+            initial={reducedMotion ? { opacity: 0 } : { y: 72, opacity: 0 }}
+            animate={reducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+            exit={reducedMotion ? { opacity: 0 } : { y: 72, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
+            className="fixed inset-x-0 bottom-0 z-50 border-t border-border-strong bg-surface-raised/95 px-4 py-2.5 shadow-[var(--shadow-overhang)] backdrop-blur lg:hidden"
           >
-            <X size={15} aria-hidden="true" />
-          </button>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            <div className="flex items-center justify-between gap-3 pr-14">
+              <p className="min-w-0 text-sm font-semibold text-text-primary">
+                Hosting from {formatPrice(sharedPlans[0].monthlyPrice, currency)}/mo
+              </p>
+              <Button href="/hosting#compare" size="sm" className="shrink-0">
+                Get Started
+              </Button>
+            </div>
+            <button
+              type="button"
+              aria-label="Dismiss"
+              onClick={dismiss}
+              className="absolute right-1 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-text-muted hover:bg-surface hover:text-text-primary"
+            >
+              <X size={15} aria-hidden="true" />
+            </button>
+          </m.div>
+        )}
+      </AnimatePresence>
+    </LazyMotion>
   );
 }

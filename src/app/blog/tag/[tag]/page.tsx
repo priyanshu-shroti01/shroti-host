@@ -8,6 +8,9 @@ import { PostCard } from "@/components/blog/post-card";
 import { allTags, postsByTag } from "@/lib/blog";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
+// Tags come from the posts in lib/blog.ts — unknown slugs are real 404s.
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return allTags().map((t) => ({ tag: t.slug }));
 }
@@ -18,9 +21,10 @@ export async function generateMetadata(props: {
   const { tag } = await props.params;
   const match = allTags().find((t) => t.slug === tag);
   if (!match) return {};
+  const count = match.count === 1 ? "1 article" : `${match.count} articles`;
   return {
     title: `Articles tagged “${match.name}”`,
-    description: `Every ShrotiHost guide tagged ${match.name} — practical, honest, and written for people building on the web in India.`,
+    description: `${count} tagged ${match.name} on the ShrotiHost blog — practical hosting, domain, and development guides written for people building on the web in India.`,
     alternates: { canonical: `/blog/tag/${match.slug}` },
   };
 }

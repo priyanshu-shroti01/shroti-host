@@ -47,6 +47,21 @@ const PLATE_THICKNESS = 0.1;
 const ACTIVE_LIFT = 0.16;
 /** Pointer parallax, degrees — Tilt3D maxTilt parity. */
 const MAX_TILT_DEG = 4;
+/** Below this delta a material write is skipped — at rest nothing touches
+ *  the GPU uniforms, so 15 materials idle for free. */
+const REST_DELTA = 1e-3;
+
+function approach(current: number, target: number, ease: number): number {
+  return Math.abs(target - current) < REST_DELTA ? target : current + (target - current) * ease;
+}
+
+function colorAtRest(current: THREE.Color, target: THREE.Color): boolean {
+  return (
+    Math.abs(target.r - current.r) < REST_DELTA &&
+    Math.abs(target.g - current.g) < REST_DELTA &&
+    Math.abs(target.b - current.b) < REST_DELTA
+  );
+}
 
 /* ── Theme-resolved colors ─────────────────────────────────────────────── */
 
@@ -72,6 +87,12 @@ interface StackPalette {
   side: THREE.Color;
   grid: THREE.Color;
   edgeIdle: THREE.Color;
+  /** Contact-shadow ink: whichever of text/bg is darker in the active theme. */
+  shadow: THREE.Color;
+}
+
+function luminance(c: THREE.Color): number {
+  return 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
 }
 
 function readPalette(): StackPalette {
@@ -84,6 +105,7 @@ function readPalette(): StackPalette {
   const surface = readCssColor(probe, "var(--color-surface)");
   const textPrimary = readCssColor(probe, "var(--color-text-primary)");
   const borderStrong = readCssColor(probe, "var(--color-border-strong)");
+  const bg = readCssColor(probe, "var(--color-bg)");
   probe.remove();
   return {
     purple,
@@ -95,6 +117,7 @@ function readPalette(): StackPalette {
     side: surface.clone().lerp(textPrimary, 0.16),
     grid: borderStrong,
     edgeIdle: borderStrong.clone().lerp(purple, 0.28),
+    shadow: luminance(textPrimary) < luminance(bg) ? textPrimary : bg,
   };
 }
 
@@ -222,18 +245,27 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
       const active = activeIndex === i;
       const dimmed = hoverIndex !== null && hoverIndex !== i;
 
-      lifts.current[i] += ((active ? ACTIVE_LIFT : 0) - lifts.current[i]) * ease;
-      glows.current[i] += ((active ? 0.2 : 0.03) - glows.current[i]) * ease;
+      lifts.current[i] = approach(lifts.current[i], active ? ACTIVE_LIFT : 0, ease);
       group.position.y = (layer - 2) * gap + lifts.current[i];
 
-      face.color.lerp(active ? palette.faceActive : palette.faceIdle, ease);
-      face.emissive.copy(palette.purple);
-      face.emissiveIntensity = glows.current[i];
-      const targetOpacity = dimmed ? 0.4 : 0.94;
-      face.opacity += (targetOpacity - face.opacity) * ease;
-      side.opacity += ((dimmed ? 0.3 : 1) - side.opacity) * ease;
-      edge.color.lerp(active ? palette.purple : palette.edgeIdle, ease);
-      edge.opacity += ((dimmed ? 0.25 : 0.9) - edge.opacity) * ease;
+      // Every write below is skipped once within REST_DELTA of its target,
+      // so a resting stack makes zero material writes per frame. Emissive
+      // colour is set once in JSX; only its intensity animates.
+      const glow = approach(glows.current[i], active ? 0.2 : 0.03, ease);
+      if (glow !== glows.current[i]) {
+        glows.current[i] = glow;
+        face.emissiveIntensity = glow;
+      }
+      const faceTarget = active ? palette.faceActive : palette.faceIdle;
+      if (!colorAtRest(face.color, faceTarget)) face.color.lerp(faceTarget, ease);
+      const faceOpacity = approach(face.opacity, dimmed ? 0.4 : 0.94, ease);
+      if (faceOpacity !== face.opacity) face.opacity = faceOpacity;
+      const sideOpacity = approach(side.opacity, dimmed ? 0.3 : 1, ease);
+      if (sideOpacity !== side.opacity) side.opacity = sideOpacity;
+      const edgeTarget = active ? palette.purple : palette.edgeIdle;
+      if (!colorAtRest(edge.color, edgeTarget)) edge.color.lerp(edgeTarget, ease);
+      const edgeOpacity = approach(edge.opacity, dimmed ? 0.25 : 0.9, ease);
+      if (edgeOpacity !== edge.opacity) edge.opacity = edgeOpacity;
     }
 
     // Request packet riding the stack axis, top plate → base (3.6s loop,
@@ -304,7 +336,8 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
               pointerEvents="none"
               style={{ pointerEvents: "none" }}
             >
-              <Icon size={40} strokeWidth={1.7} color="#a810c7" opacity={0.7} />
+              {/* DOM glyph, so the brand token resolves live through CSS. */}
+              <Icon size={40} strokeWidth={1.7} className="text-brand-purple" opacity={0.7} />
             </Html>
           </group>
         );
@@ -328,7 +361,7 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
         blur={2.4}
         far={3}
         resolution={256}
-        color="#15111c"
+        color={palette.shadow}
       />
 
       <ambientLight intensity={0.55} />
@@ -341,7 +374,7 @@ function StackScene({ palette, getGap, stateRef, pointerRef }: SceneProps) {
         <Lightformer
           form="rect"
           intensity={1.1}
-          color="#a810c7"
+          color={palette.purple}
           position={[4, 1, 4]}
           scale={[2, 2, 1]}
         />
@@ -381,8 +414,14 @@ export function InfraStackWebGL({
       onUpdate: (self) =>
         gapMv.set(COLLAPSED_GAP + (PLATE_GAP - COLLAPSED_GAP) * self.progress),
     });
+    // The canvas usually lands mid-scrub (the CSS stack held the fort until
+    // the three.js chunk arrived). Jump both the source and the spring to
+    // the current progress so the plates don't re-explode from collapsed.
+    const current = COLLAPSED_GAP + (PLATE_GAP - COLLAPSED_GAP) * trigger.progress;
+    gapMv.jump(current);
+    gapSpring.jump(current);
     return () => trigger.kill();
-  }, [gapMv]);
+  }, [gapMv, gapSpring]);
 
   // Render only near the viewport — an offscreen canvas burns battery for
   // nobody. frameloop="never" freezes R3F's loop entirely.
@@ -455,7 +494,9 @@ export function InfraStackWebGL({
             camera={{ fov: 26, position: [5.2, 5.8, 5.7] }}
             dpr={dpr}
             frameloop={inView ? "always" : "never"}
-            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+            // No powerPreference: "high-performance" forces the discrete GPU
+            // on dual-GPU laptops for a single decorative scene.
+            gl={{ antialias: true, alpha: true }}
             onCreated={({ gl }) => {
               gl.domElement.addEventListener("webglcontextlost", (e) => {
                 e.preventDefault();

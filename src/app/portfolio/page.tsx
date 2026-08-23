@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/ui/section";
-import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Reveal } from "@/components/ui/reveal";
 import { Button } from "@/components/ui/button";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
@@ -27,10 +26,12 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
-      <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
+      {/* No atmosphere backdrop and a short bottom edge: the cards are the
+          hero's payoff and should sit right under the intro. */}
+      <Section className="pt-10 pb-4 sm:pt-20 sm:pb-4">
         <div className="mx-auto max-w-2xl text-center">
           <Eyebrow>Portfolio</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
+          <h1 className="mt-4 text-4xl font-extrabold leading-none tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
             Built by{" "}
             <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
               ShrotiHost.
@@ -44,10 +45,9 @@ export default function Page() {
       </Section>
 
       <Section className="bg-surface/30">
-        <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
-          {portfolioItems.map((item, i) => (
-            <Reveal key={item.slug} delay={i * 0.07} className="h-full">
-              <SpotlightCard className="h-full">
+        <Reveal className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-3">
+          {portfolioItems.map((item) => (
+              <SpotlightCard key={item.slug} className="h-full">
                 <div className="flex h-full flex-col p-6">
                   <div className="flex items-center gap-3">
                     <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 text-brand-purple">
@@ -64,7 +64,7 @@ export default function Page() {
                       <li key={h} className="flex items-start gap-2">
                         <span
                           aria-hidden="true"
-                          className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-brand-purple"
+                          className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-purple"
                         />
                         {h}
                       </li>
@@ -78,18 +78,14 @@ export default function Page() {
                   </div>
                 </div>
               </SpotlightCard>
-            </Reveal>
           ))}
-        </div>
+        </Reveal>
       </Section>
 
       <Section>
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-            Your project could be{" "}
-            <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-              next
-            </span>
+            Your project could be next
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-text-secondary">
             We publish client work here only with permission, and never pad this page with stock

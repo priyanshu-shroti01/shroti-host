@@ -2,7 +2,7 @@ import type { BlogPost } from "@/lib/blog";
 
 export const post: BlogPost = {
   slug: "dns-records-explained",
-  title: "DNS Records Explained: A, AAAA, CNAME, MX, and TXT in Plain English",
+  title: "DNS Records Explained: A, AAAA, CNAME, MX and TXT",
   description:
     "A plain-English reference to the five DNS records you will actually touch, with real example values and steps for pointing, verifying, and email setup.",
   date: "2026-08-19",

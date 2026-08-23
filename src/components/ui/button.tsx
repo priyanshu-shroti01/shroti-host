@@ -1,19 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 import { useState, type AnchorHTMLAttributes, type ButtonHTMLAttributes, type MouseEvent, type ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold transition-all duration-[180ms] ease-[cubic-bezier(0.33,1,0.68,1)] focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none active:duration-100";
+  "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold transition-all duration-(--duration-fast) ease-out-quart focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none aria-disabled:opacity-50 aria-disabled:pointer-events-none active:duration-100";
 
 const variants: Record<Variant, string> = {
+  // Text-bearing gradient → the deep variant (white text stays AA on the blue end).
   primary:
-    "bg-[image:var(--gradient-hero)] text-white shadow-[0_4px_20px_-4px_rgb(168_16_199/0.45)] hover:-translate-y-0.5 hover:scale-[1.02] hover:brightness-110 hover:shadow-[0_8px_28px_-6px_rgb(168_16_199/0.55)] active:translate-y-0 active:scale-[0.98] active:brightness-95",
+    "bg-[image:var(--gradient-hero-deep)] text-white shadow-[var(--shadow-cta)] hover:-translate-y-0.5 hover:scale-[1.02] hover:brightness-110 hover:shadow-[var(--shadow-cta-hover)] active:translate-y-0 active:scale-[0.98] active:brightness-95",
   secondary:
-    "border-2 border-border-strong bg-card text-text-primary hover:border-brand-purple hover:text-brand-purple hover:-translate-y-0.5 active:scale-[0.98]",
+    "border-2 border-border-strong bg-card text-text-primary hover:border-brand-purple hover:text-brand-purple-text hover:-translate-y-0.5 active:scale-[0.98]",
   ghost: "text-text-secondary hover:text-text-primary hover:bg-surface active:scale-[0.98]",
 };
 
@@ -59,6 +61,12 @@ function useRipple() {
   return { ripples, addRipple };
 }
 
+/** Spinner shown while `loading`; the label stays in the DOM so the button
+ *  keeps its width and screen readers still hear what is being submitted. */
+function Spinner() {
+  return <Loader2 size={16} className="shrink-0 animate-spin" aria-hidden="true" />;
+}
+
 type CommonProps = {
   /** next/link prefetch. Defaults to false (prefetch on hover) — a page full
    *  of CTAs shouldn't fire a dozen RSC prefetches on load; pass null for
@@ -68,6 +76,10 @@ type CommonProps = {
   variant?: Variant;
   size?: Size;
   className?: string;
+  /** Busy state: shows a spinner, sets `aria-busy`, and disables the control
+   *  (links become inert via `aria-disabled` + pointer-events). Variants and
+   *  sizes are untouched so callers never hand-roll their own spinner. */
+  loading?: boolean;
 };
 
 type ButtonAsButton = CommonProps &
@@ -77,7 +89,15 @@ type ButtonAsLink = CommonProps &
   AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
 
 export function Button(props: ButtonAsButton | ButtonAsLink) {
-  const { children, variant = "primary", size = "md", className = "", prefetch = false, ...rest } = props;
+  const {
+    children,
+    variant = "primary",
+    size = "md",
+    className = "",
+    prefetch = false,
+    loading = false,
+    ...rest
+  } = props;
   const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
   const { ripples, addRipple } = useRipple();
 
@@ -88,28 +108,39 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
         href={props.href}
         prefetch={prefetch}
         className={classes}
+        aria-busy={loading || undefined}
+        aria-disabled={loading || undefined}
+        tabIndex={loading ? -1 : undefined}
         onClick={(e) => {
+          if (loading) {
+            e.preventDefault();
+            return;
+          }
           addRipple(e);
           onClick?.(e);
         }}
         {...anchorRest}
       >
+        {loading && <Spinner />}
         {children}
         <RippleLayer ripples={ripples} />
       </Link>
     );
   }
 
-  const { onClick, ...buttonRest } = rest as ButtonHTMLAttributes<HTMLButtonElement>;
+  const { onClick, disabled, ...buttonRest } = rest as ButtonHTMLAttributes<HTMLButtonElement>;
   return (
     <button
       className={classes}
+      aria-busy={loading || undefined}
+      disabled={disabled || loading}
       onClick={(e) => {
         addRipple(e);
         onClick?.(e);
       }}
       {...buttonRest}
     >
+      {loading && <Spinner />}
       {children}
       <RippleLayer ripples={ripples} />
     </button>

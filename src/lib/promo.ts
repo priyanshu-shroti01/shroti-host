@@ -25,9 +25,16 @@ export const homepagePromo: PromoBannerConfig = {
   id: "shrotihost-40-2026",
   active: true,
   kind: "promo",
-  message: "40% off your first monthly term — new customers only.",
+  // The bar renders the code pill next to this message — the sentence names
+  // the code too so the offer reads complete when copied or read aloud.
+  message: "40% off the listed price on your first month with code SHROTIHOST — new customers only.",
   discountLabel: "40% OFF",
   code: "SHROTIHOST",
   href: "https://portal.shrotihost.in/cart.php?promocode=SHROTIHOST",
   icon: "tag",
+  // OWNER TODO: set `expiresAt` (ISO timestamp) to the real end date of this
+  // offer, or flip `active` to false. Left unset on purpose — an invented
+  // deadline is a fake countdown, and an open-ended "first month" discount
+  // stacked on the permanent strike-through price reads as two overlapping
+  // discounts with no end.
 };

@@ -4,7 +4,8 @@ import { allCategories, allTags, blogPosts } from "@/lib/blog";
 const SITE_URL = "https://shrotihost.in";
 
 /** Every indexable page route. Add new pages here when adding them to src/app.
- *  Blog posts are appended automatically from lib/blog.ts. */
+ *  Blog posts are appended automatically from lib/blog.ts.
+ *  `/status` is deliberately absent — it is a noindex pre-launch preview. */
 const routes: { path: string; changeFrequency: "weekly" | "monthly" | "yearly"; priority: number }[] = [
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/blog", changeFrequency: "weekly", priority: 0.7 },
@@ -27,19 +28,22 @@ const routes: { path: string; changeFrequency: "weekly" | "monthly" | "yearly"; 
   { path: "/about", changeFrequency: "monthly", priority: 0.5 },
   { path: "/careers", changeFrequency: "monthly", priority: 0.5 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
-  { path: "/status", changeFrequency: "monthly", priority: 0.4 },
   { path: "/legal/terms", changeFrequency: "yearly", priority: 0.2 },
   { path: "/legal/privacy", changeFrequency: "yearly", priority: 0.2 },
   { path: "/legal/refund-policy", changeFrequency: "yearly", priority: 0.2 },
   { path: "/legal/aup", changeFrequency: "yearly", priority: 0.2 },
 ];
 
+/**
+ * `lastModified` is only emitted where a real date exists (blog posts).
+ * Static routes, categories and tags used to report the build timestamp,
+ * which tells crawlers "everything changed" on every deploy — worse than
+ * saying nothing.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
   return [
     ...routes.map(({ path, changeFrequency, priority }) => ({
       url: `${SITE_URL}${path}`,
-      lastModified,
       changeFrequency,
       priority,
     })),
@@ -51,13 +55,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...allCategories().map((c) => ({
       url: `${SITE_URL}/blog/category/${c.slug}`,
-      lastModified,
       changeFrequency: "weekly" as const,
       priority: 0.4,
     })),
     ...allTags().map((t) => ({
       url: `${SITE_URL}/blog/tag/${t.slug}`,
-      lastModified,
       changeFrequency: "weekly" as const,
       priority: 0.3,
     })),

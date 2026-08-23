@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 export function Typewriter({
   text,
@@ -13,30 +14,38 @@ export function Typewriter({
   className?: string;
   onDone?: () => void;
 }) {
-  const [shown, setShown] = useState("");
+  const reducedMotion = usePrefersReducedMotion();
+  // Typed-so-far is keyed to the text it was typed for, so a new `text`
+  // resets during render (React's "adjust state on prop change" pattern)
+  // instead of flashing the previous line for one tick.
+  const [typed, setTyped] = useState({ text, count: 0 });
+  if (typed.text !== text) {
+    setTyped({ text, count: 0 });
+  }
+  // Callers pass inline arrows; read the latest through a ref so a re-render
+  // never restarts the interval.
+  const onDoneRef = useRef(onDone);
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  });
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      // One-time environment check, not a render-driven update.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setShown(text);
-      onDone?.();
+    if (reducedMotion) {
+      onDoneRef.current?.();
       return;
     }
-
-    setShown("");
     let i = 0;
     const interval = setInterval(() => {
       i += 1;
-      setShown(text.slice(0, i));
+      setTyped({ text, count: i });
       if (i >= text.length) {
         clearInterval(interval);
-        onDone?.();
+        onDoneRef.current?.();
       }
     }, speed);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text]);
+  }, [text, speed, reducedMotion]);
 
+  const shown = reducedMotion ? text : typed.text === text ? text.slice(0, typed.count) : "";
   return <span className={className}>{shown}</span>;
 }

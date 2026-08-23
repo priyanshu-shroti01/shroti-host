@@ -1,7 +1,11 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 <!-- END:nextjs-agent-rules -->
 
 # gstack
@@ -33,9 +37,11 @@ permission model are binding here; this section adds project specifics.
 - **What it is**: shrotihost.in — ShrotiHost's marketing site + careers +
   domain tools (Next.js 16, React 19, Tailwind 4, framer-motion, one gated
   three/r3f scene). Checkout lives on WHMCS at portal.shrotihost.in.
-- **Commands**: `npm run build` · `npm run dev` · `npx tsc --noEmit` · `npx eslint`
-  (no test runner yet — see PRODUCTION_READINESS.md).
-- **Deploy**: `bash /home/shrotihost/deploy-site.sh [--pull]` (server only).
+- **Commands**: `npm run build` · `npm run dev` · `npm run typecheck` · `npm run lint`
+  · `npm test` (vitest, `src/**/*.test.ts`) · `scripts/smoke.sh [BASE_URL]`.
+- **Deploy & rollback**: `bash /home/shrotihost/deploy-site.sh [--pull]` (server
+  only; blue/green — builds the idle slot, health + smoke gate, then flips Apache).
+  `deploy-site.sh --rollback` flips back to the previous slot; `--status` shows slots.
 - **Visual law**: `DESIGN.md` + `.claude/skills/design-system` +
   `.claude/skills/cinematic-product-design` (project skills win over generic
   OS design skills when they conflict).

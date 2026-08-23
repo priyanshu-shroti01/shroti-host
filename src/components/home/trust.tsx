@@ -16,7 +16,7 @@ const pillars = [
   {
     icon: RefreshCw,
     title: "Reliability",
-    points: ["Daily automatic backups", "Isolated resource allocation", "Free migration, zero data loss"],
+    points: ["99.9% uptime target", "Daily automatic backups", "Isolated resource allocation", "Free migration, zero data loss"],
   },
   {
     icon: ReceiptText,
@@ -29,7 +29,7 @@ const stack = ["Cloudflare", "LiteSpeed", "CloudLinux", "Imunify360", "Let's Enc
 
 export function Trust() {
   return (
-    <div>
+    <Reveal>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
           Why you can trust ShrotiHost
@@ -40,9 +40,8 @@ export function Trust() {
       </div>
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {pillars.map((pillar, i) => (
-          <Reveal key={pillar.title} delay={i * 0.06}>
-            <SpotlightCard className="h-full">
+        {pillars.map((pillar) => (
+          <SpotlightCard key={pillar.title} className="h-full">
               <div className="p-6">
                 <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-purple/10 text-brand-purple">
                   <pillar.icon size={20} aria-hidden="true" />
@@ -56,13 +55,11 @@ export function Trust() {
                   ))}
                 </ul>
               </div>
-            </SpotlightCard>
-          </Reveal>
+          </SpotlightCard>
         ))}
       </div>
 
-      <Reveal delay={0.2}>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-dashed border-border-strong p-5">
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-dashed border-border-strong p-5">
           <span className="text-xs font-medium uppercase tracking-wide text-text-muted">
             Verified in our stack
           </span>
@@ -74,8 +71,7 @@ export function Trust() {
               {name}
             </span>
           ))}
-        </div>
-      </Reveal>
-    </div>
+      </div>
+    </Reveal>
   );
 }

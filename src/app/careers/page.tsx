@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { Check, Rocket } from "lucide-react";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
 import { Section, Eyebrow } from "@/components/ui/section";
-import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RoleCard } from "@/components/careers/role-card";
 import { TrustedTech } from "@/components/home/trusted-tech";
 import { CAREERS_EMAIL, CAREERS_WHATSAPP, hiringSteps, openRoles, whyJoin } from "@/lib/careers";
+import { SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Careers",
@@ -25,10 +25,18 @@ function jobPostingJsonLd() {
     title: role.title,
     description: `${role.summary} Responsibilities: ${role.responsibilities.join("; ")}.`,
     datePosted: role.posted,
+    validThrough: role.closes,
+    url: `${SITE_URL}/careers`,
     employmentType: role.type === "Full-time" ? "FULL_TIME" : role.type === "Part-time" ? "PART_TIME" : "INTERN",
     jobLocationType: "TELECOMMUTE",
     applicantLocationRequirements: { "@type": "Country", name: "India" },
-    hiringOrganization: { "@type": "Organization", name: "ShrotiHost", sameAs: "https://shrotihost.in" },
+    hiringOrganization: {
+      "@type": "Organization",
+      name: "ShrotiHost",
+      url: SITE_URL,
+      sameAs: SITE_URL,
+      logo: `${SITE_URL}/icon.png`,
+    },
     directApply: true,
   }));
 }
@@ -44,8 +52,8 @@ export default function CareersPage() {
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
-            <Badge tone="neutral">Careers</Badge>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
+            <Eyebrow>Careers</Eyebrow>
+            <h1 className="mt-4 text-4xl font-extrabold tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
               Keep India&apos;s websites{" "}
               <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">online.</span>
             </h1>

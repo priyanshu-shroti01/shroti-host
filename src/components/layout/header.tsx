@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { SoonTag } from "@/components/ui/soon-tag";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useId, useRef, useState, type FocusEvent, type KeyboardEvent } from "react";
+import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion";
 import {
   ChevronDown,
   CreditCard,
@@ -29,8 +29,15 @@ const accountLinks = [
   { label: "Support", href: "https://portal.shrotihost.in/submitticket.php", icon: LifeBuoy },
 ];
 
+/**
+ * Sticky chrome. Layout-chunk component: framer is loaded through
+ * LazyMotion + `m` (domAnimation only) so the full feature bundle stays out
+ * of every route's first load. The scrolled-state backdrop-blur is the
+ * design system's one sanctioned blur ("sticky chrome may blur").
+ */
 export function Header() {
   const pathname = usePathname();
+  const navId = useId();
   const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -86,8 +93,28 @@ export function Header() {
     }
   }
 
+  /** Stable id pair per dropdown so the trigger's aria-controls can point at its panel. */
+  function dropdownIds(label: string) {
+    const slug = label.toLowerCase().replace(/\s+/g, "-");
+    return { trigger: `${navId}-${slug}-trigger`, panel: `${navId}-${slug}-panel` };
+  }
+
+  // Desktop dropdown keyboard model: Escape closes and returns focus to the
+  // trigger; focus leaving the item (Tab out, click elsewhere) closes it.
+  function onDropdownKeyDown(e: KeyboardEvent<HTMLDivElement>, label: string) {
+    if (e.key !== "Escape" || openMenu !== label) return;
+    e.stopPropagation();
+    setOpenMenu(null);
+    e.currentTarget.querySelector<HTMLElement>("button")?.focus();
+  }
+
+  function onDropdownBlur(e: FocusEvent<HTMLDivElement>, label: string) {
+    if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+    setOpenMenu((current) => (current === label ? null : current));
+  }
+
   return (
-    <>
+    <LazyMotion features={domAnimation}>
     <header
       id="top"
       className={`sticky top-0 z-50 transition-colors duration-300 ${
@@ -97,7 +124,7 @@ export function Header() {
       }`}
     >
       <div
-        className={`mx-auto flex max-w-7xl items-center justify-between px-6 transition-[height] duration-300 ease-[cubic-bezier(0.33,1,0.68,1)] lg:px-8 ${
+        className={`mx-auto flex max-w-[1200px] items-center justify-between px-6 transition-[height] duration-300 ease-[cubic-bezier(0.33,1,0.68,1)] lg:px-8 ${
           scrolled ? "h-16" : "h-18"
         }`}
       >
@@ -106,21 +133,28 @@ export function Header() {
         <nav aria-label="Primary" className="hidden lg:flex lg:items-center lg:gap-0.5">
           {primaryNav.map((item) => {
             const isActive = item.href ? pathname === item.href : false;
+            const isOpen = openMenu === item.label;
+            const ids = dropdownIds(item.label);
             return (
               <div
                 key={item.label}
                 className="relative"
                 onMouseEnter={() => item.items && setOpenMenu(item.label)}
                 onMouseLeave={() => item.items && setOpenMenu(null)}
+                onKeyDown={item.items ? (e) => onDropdownKeyDown(e, item.label) : undefined}
+                onBlur={item.items ? (e) => onDropdownBlur(e, item.label) : undefined}
               >
                 {item.items ? (
                   <button
                     type="button"
+                    id={ids.trigger}
                     className={`flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium transition-colors ${
                       isActive ? "text-brand-purple" : "text-text-secondary hover:text-text-primary"
                     }`}
-                    aria-expanded={openMenu === item.label}
-                    onClick={() => setOpenMenu(openMenu === item.label ? null : item.label)}
+                    aria-haspopup="true"
+                    aria-expanded={isOpen}
+                    aria-controls={isOpen ? ids.panel : undefined}
+                    onClick={() => setOpenMenu(isOpen ? null : item.label)}
                   >
                     {item.label}
                     <ChevronDown size={14} aria-hidden="true" />
@@ -138,22 +172,24 @@ export function Header() {
                 )}
 
                 <AnimatePresence>
-                  {item.items && openMenu === item.label && (
-                    <motion.div
+                  {item.items && isOpen && (
+                    <m.div
+                      id={ids.panel}
+                      aria-labelledby={ids.trigger}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.18, ease: [0.33, 1, 0.68, 1] }}
                       className="absolute left-0 top-full z-10 w-80 pt-2"
                     >
-                      <motion.div
+                      <m.div
                         initial="hidden"
                         animate="visible"
                         variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
                         className="rounded-2xl border border-border bg-bg p-2 shadow-xl"
                       >
                         {item.items.map((link) => (
-                          <motion.div
+                          <m.div
                             key={link.href}
                             variants={{
                               hidden: { opacity: 0, y: 6 },
@@ -179,10 +215,10 @@ export function Header() {
                                 )}
                               </span>
                             </Link>
-                          </motion.div>
+                          </m.div>
                         ))}
-                      </motion.div>
-                    </motion.div>
+                      </m.div>
+                    </m.div>
                   )}
                 </AnimatePresence>
               </div>
@@ -215,7 +251,7 @@ export function Header() {
 
         <button
           type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-text-primary lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-text-primary lg:hidden"
           aria-label="Open menu"
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen(true)}
@@ -234,7 +270,7 @@ export function Header() {
           the real viewport in every scroll state. */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
+          <m.div
             ref={mobileMenuRef}
             role="dialog"
             aria-modal="true"
@@ -250,7 +286,7 @@ export function Header() {
               <Logo />
               <button
                 type="button"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-text-primary"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-text-primary"
                 aria-label="Close menu"
                 onClick={() => setMobileOpen(false)}
               >
@@ -286,12 +322,15 @@ export function Header() {
                     </Link>
                   );
                 }
+                const mobileIds = dropdownIds(`mobile ${item.label}`);
                 return (
                   <div key={item.label} className="border-b border-border">
                     <button
                       type="button"
+                      id={mobileIds.trigger}
                       onClick={() => setMobileExpanded(isExpanded ? null : item.label)}
                       aria-expanded={isExpanded}
+                      aria-controls={isExpanded ? mobileIds.panel : undefined}
                       className="flex w-full items-center justify-between py-3"
                     >
                       <span className="flex items-center gap-3 text-base font-medium text-text-primary">
@@ -306,7 +345,9 @@ export function Header() {
                     </button>
                     <AnimatePresence initial={false}>
                       {isExpanded && (
-                        <motion.div
+                        <m.div
+                          id={mobileIds.panel}
+                          aria-labelledby={mobileIds.trigger}
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
@@ -326,7 +367,7 @@ export function Header() {
                               </Link>
                             ))}
                           </div>
-                        </motion.div>
+                        </m.div>
                       )}
                     </AnimatePresence>
                   </div>
@@ -364,9 +405,9 @@ export function Header() {
                 Launch Your Website
               </Button>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </>
+    </LazyMotion>
   );
 }

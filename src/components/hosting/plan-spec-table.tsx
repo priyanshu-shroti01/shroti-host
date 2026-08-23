@@ -14,11 +14,7 @@ export function PlanSpecTable({ plans, groups }: { plans: Plan[]; groups: SpecGr
     <div>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Every spec,{" "}
-          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-            in the open
-          </span>
-          .
+          Every spec, in the open.
         </h2>
         <p className="mt-4 text-text-secondary">
           The full resource and feature matrix — the numbers most hosts keep behind a support
@@ -40,7 +36,7 @@ export function PlanSpecTable({ plans, groups }: { plans: Plan[]; groups: SpecGr
                     scope="col"
                     className={`px-4 py-3.5 text-center font-semibold ${
                       plan.recommended
-                        ? "border-t-2 border-brand-purple bg-brand-purple/10 text-brand-purple"
+                        ? "border-t-2 border-brand-purple bg-brand-purple/10 text-brand-purple-text"
                         : "text-text-primary"
                     }`}
                   >
@@ -55,7 +51,7 @@ export function PlanSpecTable({ plans, groups }: { plans: Plan[]; groups: SpecGr
                   <th
                     scope="rowgroup"
                     colSpan={plans.length + 1}
-                    className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-brand-purple"
+                    className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-brand-purple-text"
                   >
                     {group.title}
                   </th>

@@ -1,20 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribe(onChange: () => void) {
+  const mql = window.matchMedia(QUERY);
+  mql.addEventListener("change", onChange);
+  return () => mql.removeEventListener("change", onChange);
+}
+
+function getSnapshot() {
+  return window.matchMedia(QUERY).matches;
+}
+
+/** Server (and hydration) snapshot: assume motion is fine, then re-render with the real value. */
+function getServerSnapshot() {
+  return false;
+}
 
 /** True when the user has asked the OS for reduced motion. GSAP tweens set inline styles directly, so they bypass the CSS `prefers-reduced-motion` rule in globals.css and must be gated in JS instead. */
 export function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // One-time environment check, not a render-driven update.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setReduced(query.matches);
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    query.addEventListener("change", handler);
-    return () => query.removeEventListener("change", handler);
-  }, []);
-
-  return reduced;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

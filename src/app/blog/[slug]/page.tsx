@@ -8,10 +8,13 @@ import { Button } from "@/components/ui/button";
 import { PostBody } from "@/components/blog/post-body";
 import { PostToc } from "@/components/blog/post-toc";
 import { blogPosts, getPost, relatedPosts, taxonomySlug } from "@/lib/blog";
-import { breadcrumbJsonLd } from "@/lib/seo";
+import { articleJsonLd, breadcrumbJsonLd, SITE_URL } from "@/lib/seo";
 
-const SITE_URL = "https://shrotihost.in";
 const dateFormat = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" });
+
+// Every slug comes from lib/blog.ts — anything else is a real 404, not a
+// soft-404 rendered at request time.
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -21,16 +24,28 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   const { slug } = await props.params;
   const post = getPost(slug);
   if (!post) return {};
+  const url = `${SITE_URL}/blog/${post.slug}`;
   return {
-    title: post.title,
+    // Post titles are already written as full <title>s — no "| ShrotiHost" suffix.
+    title: { absolute: post.title },
     description: post.description,
     alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
+      type: "article",
       title: post.title,
       description: post.description,
-      type: "article",
+      url,
+      siteName: "ShrotiHost",
+      locale: "en_IN",
       publishedTime: post.date,
-      url: `${SITE_URL}/blog/${post.slug}`,
+      modifiedTime: post.updated ?? post.date,
+      images: ["/opengraph-image"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: ["/opengraph-image"],
     },
   };
 }
@@ -41,18 +56,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
   if (!post) notFound();
 
   const related = relatedPosts(post);
-
-  const articleJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: post.description,
-    datePublished: post.date,
-    dateModified: post.updated ?? post.date,
-    author: { "@type": "Organization", name: "ShrotiHost", url: SITE_URL },
-    publisher: { "@type": "Organization", name: "ShrotiHost", url: SITE_URL },
-    mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
-  };
+  const article = articleJsonLd(post);
 
   const breadcrumbs = breadcrumbJsonLd([
     { name: "Home", path: "/" },
@@ -73,7 +77,7 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(article) }} />
       {faqJsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       )}
@@ -101,9 +105,15 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
             </h1>
             <p className="mt-4 flex flex-wrap items-center gap-2 text-sm text-text-muted">
               <Clock3 size={14} aria-hidden="true" />
-              {post.readMinutes} min read · {dateFormat.format(new Date(post.date))}
-              {post.updated && <> · Updated {dateFormat.format(new Date(post.updated))}</>} ·
-              ShrotiHost team
+              {post.readMinutes} min read ·{" "}
+              <time dateTime={post.date}>{dateFormat.format(new Date(post.date))}</time>
+              {post.updated && (
+                <>
+                  {" "}
+                  · Updated <time dateTime={post.updated}>{dateFormat.format(new Date(post.updated))}</time>
+                </>
+              )}{" "}
+              · ShrotiHost team
             </p>
           </header>
 

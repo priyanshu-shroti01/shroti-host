@@ -87,10 +87,7 @@ export function ProjectSelector() {
         {/* "next" also keeps this distinct from the Hosting Advisor quiz,
             which asks "What are you building?" higher on the same page. */}
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          What are you building{" "}
-          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-            next?
-          </span>
+          What are you building next?
         </h2>
         <p className="mt-4 text-text-secondary">
           Pick one — we&apos;ll point you at exactly the right place.
@@ -113,7 +110,7 @@ export function ProjectSelector() {
             onClick={() => setActive(i)}
             className={`rounded-full border-2 px-4 py-2 text-sm font-semibold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-brand-purple ${
               i === active
-                ? "border-brand-purple bg-brand-purple/10 text-brand-purple"
+                ? "border-brand-purple bg-brand-purple/10 text-brand-purple-text"
                 : "border-border bg-card text-text-secondary hover:border-border-strong hover:text-text-primary"
             }`}
           >

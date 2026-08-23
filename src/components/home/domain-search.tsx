@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
-import { Badge } from "@/components/ui/badge";
+import { Eyebrow } from "@/components/ui/section";
 import { Magnetic } from "@/components/ui/magnetic";
 import { useCurrency } from "@/components/currency-provider";
 import { allDomains, type DomainPrice } from "@/lib/domains";
@@ -36,24 +36,10 @@ export function DomainSearch({ domains = allDomains }: { domains?: DomainPrice[]
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-border-strong bg-gradient-to-b from-surface to-bg px-6 py-20 sm:px-12 sm:py-28">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, currentColor 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
-        }}
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -top-32 left-1/2 h-96 w-[36rem] -translate-x-1/2 rounded-full bg-brand-purple/20 blur-[100px]"
-        aria-hidden="true"
-      />
-
       <Reveal className="relative">
         <div className="mx-auto max-w-3xl text-center">
-          <Badge tone="purple">Domains</Badge>
-          <h2 className="mt-6 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
+          <Eyebrow>Domains</Eyebrow>
+          <h2 className="mt-5 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
             Your name. Your domain.
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-text-secondary">
@@ -128,7 +114,7 @@ export function DomainSearch({ domains = allDomains }: { domains?: DomainPrice[]
         <div className="mt-10 text-center">
           <a
             href="https://portal.shrotihost.in/index.php/domain/pricing"
-            className="group/link inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple hover:underline"
+            className="group/link inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple-text hover:underline"
           >
             View full domain pricing
             <ArrowRight size={14} className="transition-transform duration-200 group-hover/link:translate-x-1" aria-hidden="true" />
@@ -136,7 +122,7 @@ export function DomainSearch({ domains = allDomains }: { domains?: DomainPrice[]
           <span className="mx-3 text-text-muted">·</span>
           <a
             href={`${WHMCS_CART_URL}?a=add&domain=transfer`}
-            className="group/link inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple hover:underline"
+            className="group/link inline-flex items-center gap-1.5 text-sm font-medium text-brand-purple-text hover:underline"
           >
             Transfer your domain
             <ArrowRight size={14} className="transition-transform duration-200 group-hover/link:translate-x-1" aria-hidden="true" />

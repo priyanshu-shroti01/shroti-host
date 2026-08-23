@@ -52,7 +52,7 @@ export function WpInstallDemo() {
   }, [activeStep, reducedMotion]);
 
   return (
-    <div className="mx-auto max-w-lg overflow-hidden rounded-2xl border border-border-strong bg-card shadow-2xl">
+    <div className="mx-auto max-w-lg overflow-hidden rounded-2xl border border-border-strong bg-card shadow-[var(--shadow-raised)]">
       <div className="flex items-center justify-between border-b border-border bg-surface-raised px-5 py-3">
         <div className="flex items-center gap-2">
           <span className={`h-2 w-2 rounded-full ${isLive ? "bg-success" : "bg-warning"}`} />
@@ -71,7 +71,7 @@ export function WpInstallDemo() {
             <div key={step.pending} className="rounded-xl px-2 py-2.5">
               <div className="flex items-center gap-3">
                 <div
-                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-300 ${
+                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border transition-colors duration-300 ${
                     done
                       ? "border-success/40 bg-success/10 text-success"
                       : active
@@ -113,7 +113,7 @@ export function WpInstallDemo() {
                   {themes.map((theme, ti) => (
                     <div
                       key={theme.name}
-                      className={`h-10 flex-1 rounded-lg bg-gradient-to-br ${theme.from} ${theme.to} border-2 transition-all duration-200 ${
+                      className={`h-10 flex-1 rounded-xl bg-gradient-to-br ${theme.from} ${theme.to} border-2 transition-all duration-200 ${
                         ti === themeIndex ? "border-brand-purple scale-105" : "border-transparent opacity-50"
                       }`}
                     />

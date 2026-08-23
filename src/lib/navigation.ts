@@ -6,7 +6,6 @@ import {
   Building2,
   Code2,
   Globe,
-  Layers,
   Mail,
   Search,
   Server,
@@ -28,6 +27,11 @@ export type NavItem = {
   items?: NavLink[];
 };
 
+/**
+ * Primary (header) navigation carries only what a visitor can buy or use
+ * today. Pre-launch lines (VPS, Master/Alpha Reseller) stay discoverable
+ * in `footerNav` with their `comingSoon` flag — never in the money menu.
+ */
 export const primaryNav: NavItem[] = [
   {
     label: "Hosting",
@@ -37,9 +41,6 @@ export const primaryNav: NavItem[] = [
       { label: "WordPress Hosting", href: "/wordpress-hosting", description: "Optimized for WordPress & WooCommerce", icon: Globe },
       { label: "Unlimited Hosting", href: "/unlimited-hosting", description: "For agencies and multi-site owners", icon: Users },
       { label: "Reseller Hosting", href: "/reseller-hosting", description: "Start your own hosting business", icon: Share2 },
-      { label: "Master Reseller Hosting", href: "/master-reseller-hosting", description: "Coming soon — join the waitlist", icon: Building2, comingSoon: true },
-      { label: "Alpha Reseller Hosting", href: "/alpha-reseller-hosting", description: "Coming soon — join the waitlist", icon: Layers, comingSoon: true },
-      { label: "VPS Hosting", href: "/vps", description: "Coming soon — join the waitlist", icon: Server, comingSoon: true },
     ],
   },
   {

@@ -47,11 +47,7 @@ export function Infrastructure() {
       <div className="mx-auto max-w-2xl text-center">
         <Eyebrow>Infrastructure</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          What&apos;s{" "}
-          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-            actually running
-          </span>{" "}
-          under your website.
+          What&apos;s actually running under your website.
         </h2>
         <p className="mt-4 text-text-secondary">
           No vague marketing terms — here&apos;s the real path a request takes, layer by layer.
@@ -88,12 +84,15 @@ export function Infrastructure() {
           <div className="space-y-3">
             {flow.map((layer, i) => (
               <Reveal key={layer.title} delay={i * 0.1}>
-                {/* Hover linkage to the aria-hidden 3D stack is enhancement only —
-                    no information rides on it, so these rows deliberately stay
-                    non-focusable rather than adding five empty tab stops. */}
+                {/* Hover/focus linkage to the aria-hidden 3D stack is enhancement
+                    only (no information rides on it), but the rows are focusable so
+                    keyboard users get the same explosion highlight as mouse users. */}
                 <div
+                  tabIndex={0}
                   onMouseEnter={() => setActiveIndex(i)}
                   onMouseLeave={() => setActiveIndex(null)}
+                  onFocus={() => setActiveIndex(i)}
+                  onBlur={() => setActiveIndex(null)}
                   className={`relative flex gap-4 rounded-2xl border bg-card p-5 transition-colors duration-300 ${
                     activeIndex === i ? "border-brand-purple/50" : "border-border"
                   }`}

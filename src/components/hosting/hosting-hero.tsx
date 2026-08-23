@@ -2,7 +2,7 @@
 
 import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Eyebrow } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { Magnetic } from "@/components/ui/magnetic";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
@@ -17,11 +17,14 @@ export function HostingHero() {
 
   return (
     <div className="relative">
-      <div className="relative mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
+      <div className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
         <Reveal className="text-center lg:text-left">
-          <Badge>Shared Hosting</Badge>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
-            Fast shared hosting, priced honestly.
+          <Eyebrow>Shared Hosting</Eyebrow>
+          <h1 className="mt-4 text-4xl font-extrabold leading-none tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
+            Fast shared hosting,{" "}
+            <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
+              priced honestly.
+            </span>
           </h1>
           <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary lg:mx-0">
             LiteSpeed and NVMe on every tier, free SSL and migration included — and the renewal

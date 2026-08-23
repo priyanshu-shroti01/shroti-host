@@ -1,43 +1,56 @@
 import { Check, X } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
+/**
+ * The "others" column describes what is common on entry-level shared plans,
+ * not a claim about any named host — the majors differ plan by plan, so the
+ * wording stays general ("Varies by host") and the footnote dates the check.
+ */
+const COMPARED_ON = "Aug 2026";
+
 const rows = [
-  { feature: "NVMe SSD Storage", us: true, others: "Often HDD/SATA" },
-  { feature: "LiteSpeed Web Server", us: true, others: "Usually Apache" },
-  { feature: "Free SSL — All Plans", us: true, others: "Limited or paid" },
-  { feature: "DDoS + Imunify360", us: true, others: "Basic or none" },
-  { feature: "SSH Terminal Access", us: true, others: "Not on shared plans" },
-  { feature: "Python / Node.js / PHP", us: true, others: "Rarely supported" },
+  { feature: "NVMe SSD Storage", us: true, others: "Varies by host" },
+  { feature: "LiteSpeed Web Server", us: true, others: "Usually Apache/Nginx" },
+  { feature: "Free SSL — All Plans", us: true, others: "Varies by host" },
+  { feature: "DDoS + Imunify360", us: true, others: "Varies by host" },
+  { feature: "SSH Terminal Access", us: true, others: "Varies by host" },
+  { feature: "Python / Node.js / PHP", us: true, others: "Varies by host" },
   { feature: "Daily Backups — Free", us: true, others: "Often a paid add-on" },
-  { feature: "Free Website Migration", us: true, others: "DIY or paid" },
+  { feature: "Free Website Migration", us: true, others: "Varies by host" },
   { feature: "Same Renewal Price", us: true, others: "Often increases" },
 ];
 
 export function ComparisonTable() {
   return (
-    <div>
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">ShrotiHost</span> vs. typical shared hosting
-        </h2>
-        <p className="mt-4 text-text-secondary">
-          What you actually get, compared to the industry default.
-        </p>
-      </div>
+    <Reveal>
+      {/* Split composition: the statement sits left, the evidence right. */}
+      <div className="grid gap-10 lg:grid-cols-[2fr_3fr] lg:items-start lg:gap-14">
+        <div className="max-w-2xl">
+          <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
+            ShrotiHost vs. typical shared hosting
+          </h2>
+          <p className="mt-4 text-text-secondary">
+            What you actually get on every plan, compared with what entry-level shared hosting
+            usually includes.
+          </p>
+          <p className="mt-6 text-xs text-text-muted">
+            Compared against public plan pages, {COMPARED_ON}. Inclusions on other hosts change by
+            plan and over time — check the host&apos;s own page before you decide.
+          </p>
+        </div>
 
-      <Reveal delay={0.1}>
-        <div className="mx-auto mt-12 max-w-2xl overflow-hidden overflow-x-auto rounded-2xl border-2 border-border bg-card shadow-[var(--shadow-card)]">
+        <div className="overflow-hidden overflow-x-auto rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
           <table className="w-full min-w-[480px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-border bg-surface/60">
                 <th scope="col" className="px-5 py-3 font-medium text-text-secondary">
                   Feature
                 </th>
-                <th scope="col" className="border-t-2 border-brand-purple bg-brand-purple/10 px-5 py-3 text-center font-semibold text-brand-purple">
+                <th scope="col" className="border-t-2 border-brand-purple bg-brand-purple/10 px-5 py-3 text-center font-semibold text-brand-purple-text">
                   ShrotiHost
                 </th>
                 <th scope="col" className="px-5 py-3 text-center font-medium text-text-muted">
-                  Typical hosts
+                  Typical shared plans
                 </th>
               </tr>
             </thead>
@@ -63,7 +76,7 @@ export function ComparisonTable() {
             </tbody>
           </table>
         </div>
-      </Reveal>
-    </div>
+      </div>
+    </Reveal>
   );
 }

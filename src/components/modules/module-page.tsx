@@ -16,7 +16,7 @@ export function ModulePage({ module }: { module: WhmcsModule }) {
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20">
         <div className="mx-auto max-w-2xl text-center">
           <Eyebrow>WHMCS Module</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
+          <h1 className="mt-4 text-4xl font-extrabold leading-none tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
             {module.name.split(" ").slice(0, -1).join(" ")}{" "}
             <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
               {module.name.split(" ").slice(-1)}
@@ -50,14 +50,12 @@ export function ModulePage({ module }: { module: WhmcsModule }) {
       <Section className="bg-surface/30">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-            What it{" "}
-            <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">does</span>
+            What it does
           </h2>
         </div>
-        <div className="mx-auto mt-12 grid max-w-4xl gap-5 sm:grid-cols-2">
-          {module.features.map((feature, i) => (
-            <Reveal key={feature.title} delay={i * 0.06} className="h-full">
-              <SpotlightCard className="h-full">
+        <Reveal className="mx-auto mt-12 grid max-w-4xl gap-5 sm:grid-cols-2">
+          {module.features.map((feature) => (
+              <SpotlightCard key={feature.title} className="h-full">
                 <div className="p-6">
                   <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 text-brand-purple">
                     <feature.icon size={20} aria-hidden="true" />
@@ -66,19 +64,15 @@ export function ModulePage({ module }: { module: WhmcsModule }) {
                   <p className="mt-2 text-sm text-text-secondary">{feature.description}</p>
                 </div>
               </SpotlightCard>
-            </Reveal>
           ))}
-        </div>
+        </Reveal>
       </Section>
 
       {module.pricing && (
         <Section id="pricing">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-              Simple{" "}
-              <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-                pricing
-              </span>
+              Simple pricing
             </h2>
             <p className="mt-4 text-text-secondary">
               Licensed per WHMCS installation · Prices exclude applicable taxes
@@ -93,8 +87,7 @@ export function ModulePage({ module }: { module: WhmcsModule }) {
       <Section className="bg-surface/30">
         <div className="mx-auto max-w-2xl">
           <h2 className="text-center text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-            Built{" "}
-            <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">for</span>
+            Built for
           </h2>
           <ul className="mt-8 space-y-3">
             {module.audience.map((item) => (

@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+export const alt = "ShrotiHost — Web Hosting & Domains in India";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -49,7 +50,7 @@ export default function OpengraphImage() {
             Launch a website. Watch it happen.
           </div>
           <div style={{ display: "flex", gap: 12, marginTop: 36 }}>
-            {["NVMe SSD", "LiteSpeed", "Free SSL", "24/7 Support"].map((label) => (
+            {["NVMe SSD", "LiteSpeed", "Free SSL", "Priority Support"].map((label) => (
               <div
                 key={label}
                 style={{

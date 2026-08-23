@@ -1,11 +1,10 @@
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Hero } from "@/components/home/hero";
 import { HostBuildScale } from "@/components/home/host-build-scale";
 import { TrustedTech } from "@/components/home/trusted-tech";
-import { EverythingIncluded } from "@/components/home/everything-included";
 import { ThreeSteps } from "@/components/home/three-steps";
 import { ProductEcosystem } from "@/components/home/product-ecosystem";
-import { WhyChoose } from "@/components/home/why-choose";
 import { ComparisonTable } from "@/components/home/comparison-table";
 import { HostingPlans } from "@/components/home/hosting-plans";
 import { Testimonials } from "@/components/home/testimonials";
@@ -33,6 +32,19 @@ const ProjectSelector = dynamic(() =>
   import("@/components/home/project-selector").then((m) => m.ProjectSelector)
 );
 
+// Homepage-only metadata: the canonical and og:url live here (not in the
+// layout) so 404s and sub-pages never inherit the homepage's. Title and
+// description come from the layout defaults.
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    siteName: "ShrotiHost",
+    locale: "en_IN",
+    type: "website",
+  },
+};
+
 // Live TLD pricing is exported from WHMCS daily — regenerate at most once a day.
 export const revalidate = 86400;
 
@@ -49,17 +61,12 @@ export default async function Home() {
         <HostBuildScale />
       </Section>
 
-      {/* Pricing — RankHostZone's homepage puts plans directly under the hero. */}
+      {/* Pricing — plans directly under the hero. */}
       <Section id="pricing">
         <HostingPlans />
       </Section>
 
-      {/* Every-plan baseline — RankHostZone's "Every Plan Gets All This" grid. */}
-      <Section id="everything" className="bg-surface/30">
-        <EverythingIncluded />
-      </Section>
-
-      {/* Trust strip — sits right under pricing, matching RankHostZone's stats row placement. */}
+      {/* Trust strip — sits right under pricing. */}
       <TrustedTech />
 
       {/* Products — "Here's everything we offer." */}
@@ -81,33 +88,30 @@ export default async function Home() {
         <ThreeSteps />
       </Section>
 
-      <Section id="why">
-        <WhyChoose />
-      </Section>
-
-      <Section id="comparison" className="bg-surface/30">
+      {/* The single feature statement on the page — no restated feature grids. */}
+      <Section id="comparison">
         <ComparisonTable />
       </Section>
 
       {/* Infrastructure — the honest version of a "live server monitor" section: a real request-path diagram instead of invented uptime numbers. */}
-      <Section id="infrastructure">
+      <Section id="infrastructure" className="bg-surface/30">
         <Infrastructure />
       </Section>
 
-      <Section id="developers" className="bg-surface/30">
+      <Section id="developers">
         <DeveloperFeatures />
       </Section>
 
-      <Section id="testimonials">
+      <Section id="testimonials" compact className="bg-surface/30">
         <Testimonials />
       </Section>
 
       {/* Conversion router — one question, straight to the right funnel. */}
-      <Section id="project-selector" className="bg-surface/30">
+      <Section id="project-selector" compact>
         <ProjectSelector />
       </Section>
 
-      <Section id="faq">
+      <Section id="faq" compact className="bg-surface/30">
         <Faq />
       </Section>
 

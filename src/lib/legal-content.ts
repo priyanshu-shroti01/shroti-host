@@ -77,7 +77,7 @@ We use your data to provision and operate your services, process payments and se
 We never sell or rent personal data. We share it only with parties needed to deliver your service: payment processors (to take payment), domain registrars and registries (to register your domains), infrastructure providers (where servers are hosted), and government or law-enforcement authorities when legally required. Each provider receives only what it needs.
 
 ## 5. Cookies
-Our website and client portal use cookies to keep you logged in, remember preferences, and (via analytics cookies) measure site usage. You can block or delete cookies in your browser; the portal may not work correctly without essential cookies.
+Our website and client portal use cookies to keep you logged in and remember preferences such as theme and display currency. We also use Google Analytics 4 to measure site usage; it is configured for cross-domain measurement between shrotihost.in and portal.shrotihost.in, so a visit that moves from the website to the portal is counted once. Analytics data is used in aggregate to understand which pages are useful, never to identify you or to sell to anyone. You can block or delete cookies in your browser or use a content blocker; the portal may not work correctly without essential cookies.
 
 ## 6. Data Security
 We protect data with encrypted connections (HTTPS), access controls limiting who on our team can view customer data, and standard server hardening. No system is perfectly secure, but if we become aware of a breach affecting your personal data, we will notify you and the relevant authorities as required by law.
@@ -86,7 +86,7 @@ We protect data with encrypted connections (HTTPS), access controls limiting who
 Under the DPDP Act 2023 you have the right to access a summary of the personal data we hold about you, correct or update inaccurate data, request erasure of data we no longer need to retain, nominate a person to exercise your rights on your behalf, and raise a grievance about how your data is handled. To exercise any of these rights, email support@shrotihost.in or open a ticket at portal.shrotihost.in. We respond to requests within a reasonable time, and you may escalate unresolved grievances to the Data Protection Board of India.
 
 ## 8. Data Retention
-We keep account and billing records while your account is active and afterwards as required for tax and legal purposes. Server logs are rotated on a short cycle. Support conversations are retained so we can reference past issues. When data is no longer needed, it is deleted or anonymised.
+We keep account and billing records while your account is active and afterwards as required for tax and legal purposes. Server logs are rotated on a short cycle. Support conversations are retained so we can reference past issues. Job applications and project enquiries submitted through this website are kept for 12 months after submission and then deleted; you can ask for earlier deletion at any time by emailing support@shrotihost.in. When data is no longer needed, it is deleted or anonymised.
 
 ## 9. Children
 Our services are not directed at children, and we do not knowingly collect personal data from anyone under 18 without verifiable parental consent.

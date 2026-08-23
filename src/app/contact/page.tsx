@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
-import { Section } from "@/components/ui/section";
-import { Badge } from "@/components/ui/badge";
+import { Section, Eyebrow } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { SupportScene } from "@/components/scenes/support-scene";
 import { ContactPaths } from "@/components/contact/contact-paths";
@@ -17,12 +16,17 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20 pb-0">
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
+      {/* Tight hero padding: the contact paths are the page, not a second
+          section 300px further down. */}
+      <Section backdrop={<HeroAtmosphere />} className="pt-10 pb-6 sm:pt-16 sm:pb-8">
+        <div className="grid gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
           <Reveal className="text-center lg:text-left">
-            <Badge tone="neutral">Contact</Badge>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
-              Talk to a real person.
+            <Eyebrow>Contact</Eyebrow>
+            <h1 className="mt-4 text-4xl font-extrabold leading-none tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
+              Talk to a{" "}
+              <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
+                real person.
+              </span>
             </h1>
             <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary lg:mx-0">
               Tell us what it&apos;s about — we&apos;ll route you straight to the right
@@ -35,7 +39,7 @@ export default function ContactPage() {
         </div>
       </Section>
 
-      <Section className="pb-14 sm:pb-16">
+      <Section className="pt-6 pb-14 sm:pt-8 sm:pb-16">
         <ContactPaths />
       </Section>
 

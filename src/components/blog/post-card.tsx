@@ -32,7 +32,8 @@ export function PostCard({ post, delay = 0 }: { post: BlogPost; delay?: number }
           <p className="mt-2 flex-1 text-sm text-text-secondary">{post.description}</p>
           <p className="mt-4 flex items-center gap-2 text-xs text-text-muted">
             <Clock3 size={12} aria-hidden="true" />
-            {post.readMinutes} min read · {dateFormat.format(new Date(post.date))}
+            {post.readMinutes} min read ·{" "}
+            <time dateTime={post.date}>{dateFormat.format(new Date(post.date))}</time>
           </p>
         </Link>
       </SpotlightCard>

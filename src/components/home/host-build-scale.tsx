@@ -61,19 +61,17 @@ export function HostBuildScale() {
   const inView = useInView(trackRef, { once: false, margin: "-100px" });
 
   return (
-    <div>
-      <Reveal className="mx-auto max-w-2xl text-center">
+    // One reveal for the whole section; the three pillars arrive together.
+    <Reveal>
+      <div className="max-w-2xl">
         <h2 className="text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          One partner, from first domain{" "}
-          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-            to production
-          </span>
+          One partner, from first domain to production
         </h2>
         <p className="mt-4 text-text-secondary">
           Buy a domain today, launch a site tomorrow, hire us to build the product, and scale it on
           the same infrastructure — without ever switching vendors.
         </p>
-      </Reveal>
+      </div>
 
       {/* Journey connector — decorative; the pillar order carries the meaning. */}
       <div ref={trackRef} aria-hidden="true" className="relative mx-auto mt-14 hidden h-0.5 max-w-4xl bg-border lg:block">
@@ -88,15 +86,14 @@ export function HostBuildScale() {
             animate={inView ? { x: ["0%", "100%"] } : {}}
             transition={{ duration: 4.5, ease: "easeInOut", repeat: Infinity, repeatDelay: 0.8 }}
           >
-            <span className="absolute left-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-brand-purple shadow-[0_0_12px_var(--color-brand-purple)]" />
+            <span className="absolute left-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-brand-purple shadow-[var(--glow-dot)]" />
           </motion.div>
         )}
       </div>
 
-      <div className="mx-auto mt-6 grid max-w-6xl gap-6 lg:mt-8 lg:grid-cols-3">
-        {PILLARS.map((pillar, i) => (
-          <Reveal key={pillar.key} delay={i * 0.08} className="h-full">
-            <SpotlightCard className="h-full">
+      <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-3">
+        {PILLARS.map((pillar) => (
+          <SpotlightCard key={pillar.key} className="h-full">
               <div className="flex h-full flex-col p-7">
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-bold tracking-tight text-text-primary">
@@ -114,7 +111,7 @@ export function HostBuildScale() {
                       <Link
                         href={link.href}
                         prefetch={false}
-                        className="group inline-flex items-center gap-1.5 text-sm font-medium text-text-secondary transition-colors hover:text-brand-purple"
+                        className="group inline-flex items-center gap-1.5 text-sm font-medium text-text-secondary transition-colors hover:text-brand-purple-text"
                       >
                         <span
                           aria-hidden="true"
@@ -128,7 +125,7 @@ export function HostBuildScale() {
                 <div className="mt-auto pt-6">
                   <Link
                     href={pillar.cta.href}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-purple hover:underline"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-purple-text hover:underline"
                   >
                     {pillar.cta.label}
                     <ArrowRight size={14} aria-hidden="true" />
@@ -136,9 +133,8 @@ export function HostBuildScale() {
                 </div>
               </div>
             </SpotlightCard>
-          </Reveal>
         ))}
       </div>
-    </div>
+    </Reveal>
   );
 }

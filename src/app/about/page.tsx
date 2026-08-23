@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { HeroAtmosphere } from "@/components/ui/hero-atmosphere";
-import { Clock3, Sparkles, Star } from "lucide-react";
+import { Clock3, MessageCircle, Star } from "lucide-react";
 import { Section, Eyebrow } from "@/components/ui/section";
-import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/ui/reveal";
 import { BrandScene } from "@/components/scenes/brand-scene";
 import { StatPill } from "@/components/ui/stat-pill";
@@ -22,11 +21,15 @@ export default function AboutPage() {
   return (
     <>
       <Section backdrop={<HeroAtmosphere />} className="pt-10 sm:pt-20 pb-0">
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
+        <div className="grid gap-8 lg:grid-cols-[3fr_2fr] lg:items-center">
           <Reveal className="text-center lg:text-left">
-            <Badge tone="neutral">About</Badge>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
-              To build India&apos;s most loved hosting platform.
+            <Eyebrow>About</Eyebrow>
+            <h1 className="mt-4 text-4xl font-extrabold leading-none tracking-tighter text-text-primary sm:text-5xl lg:text-6xl">
+              To build India&apos;s{" "}
+              <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
+                most loved
+              </span>{" "}
+              hosting platform.
             </h1>
             <p className="mx-auto mt-4 max-w-lg text-lg text-text-secondary lg:mx-0">
               Premium infrastructure, real customer experience, and honest pricing — for students,
@@ -34,7 +37,7 @@ export default function AboutPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
               <StatPill icon={Clock3}>Serving customers since 2023</StatPill>
-              <StatPill icon={Sparkles}>AI-assisted support, 24/7</StatPill>
+              <StatPill icon={MessageCircle}>Support on WhatsApp + tickets</StatPill>
               <StatPill icon={Star} iconClassName="text-warning" href="https://www.trustpilot.com/review/shrotihost.in">
                 Reviewed on Trustpilot
               </StatPill>
@@ -60,7 +63,7 @@ export default function AboutPage() {
         <MissionValues />
       </Section>
 
-      <Section className="bg-surface/30">
+      <Section compact className="bg-surface/30">
         <Testimonials />
       </Section>
 

@@ -36,20 +36,16 @@ const included = [
   { icon: Mail, label: "Email on Your Domain" },
   { icon: Database, label: "Unlimited MySQL Databases" },
   { icon: ArrowRightLeft, label: "Free Website Migration" },
-  { icon: LifeBuoy, label: "24/7 Priority Support" },
+  { icon: LifeBuoy, label: "Priority support (WhatsApp + tickets)" },
 ];
 
 export function EverythingIncluded() {
   return (
-    <div>
+    <Reveal>
       <div className="mx-auto max-w-2xl text-center">
         <Eyebrow>All plans</Eyebrow>
         <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-          Every plan gets{" "}
-          <span className="bg-[image:var(--gradient-hero)] bg-clip-text text-transparent">
-            all of this
-          </span>
-          .
+          Every plan gets all of this.
         </h2>
         <p className="mt-4 text-text-secondary">
           The baseline, not the upsell — nothing here is gated behind a higher tier.
@@ -57,15 +53,16 @@ export function EverythingIncluded() {
       </div>
 
       <div className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {included.map((item, i) => (
-          <Reveal key={item.label} delay={Math.min(i * 0.03, 0.3)}>
-            <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors duration-200 hover:border-brand-purple/40">
-              <item.icon size={18} className="shrink-0 text-brand-purple" aria-hidden="true" />
-              <span className="text-sm font-medium text-text-secondary">{item.label}</span>
-            </div>
-          </Reveal>
+        {included.map((item) => (
+          <div
+            key={item.label}
+            className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4"
+          >
+            <item.icon size={18} className="shrink-0 text-brand-purple" aria-hidden="true" />
+            <span className="text-sm font-medium text-text-secondary">{item.label}</span>
+          </div>
         ))}
       </div>
-    </div>
+    </Reveal>
   );
 }

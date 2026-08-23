@@ -18,7 +18,11 @@ export function ThemeToggle() {
     const next = theme === "light" ? "dark" : "light";
     setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
+    try {
+      localStorage.setItem("theme", next);
+    } catch {
+      // Storage unavailable (private mode) — the theme still flips for this page view.
+    }
   }
 
   return (
