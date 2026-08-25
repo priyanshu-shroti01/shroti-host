@@ -26,6 +26,10 @@ export const storeGroups = {
   reseller: `${WHMCS_STORE}/reseller-hosting`,
   masterReseller: `${WHMCS_STORE}/master-reseller`,
   alphaReseller: `${WHMCS_STORE}/alpha-reseller-hosting`,
+  // WHMCS addon modules. Deep links to individual module products do not
+  // resolve (the products have no slug set in WHMCS, so the friendly-URL
+  // rewrite falls through to shared hosting) — link the group, not the product.
+  modules: `${WHMCS_STORE}/modules`,
 } as const;
 
 const slugify = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-");

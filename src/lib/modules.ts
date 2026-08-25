@@ -1,14 +1,10 @@
 import {
   BarChart3,
   Bell,
-  CreditCard,
   FileText,
-  Globe2,
   MessageCircle,
   Send,
   ShieldCheck,
-  Sliders,
-  Users,
   Zap,
   type LucideIcon,
 } from "lucide-react";
@@ -37,45 +33,11 @@ export type WhmcsModule = {
 };
 
 export const modules: WhmcsModule[] = [
-  {
-    slug: "gateway-fees-allocator",
-    name: "Gateway Fees & Allocator",
-    tagline: "Recover payment processing costs and control gateway visibility.",
-    icon: CreditCard,
-    description:
-      "Set fees or discounts per payment gateway and control which methods appear based on buyer context — all from the WHMCS admin panel, no custom checkout code required.",
-    features: [
-      {
-        icon: Sliders,
-        title: "Fee & discount management",
-        description: "Apply gateway charges for cost recovery, or discounts to nudge preferred payment methods.",
-      },
-      {
-        icon: Globe2,
-        title: "Contextual gateway routing",
-        description: "Show payment options based on country, currency, client type, order value, and products.",
-      },
-      {
-        icon: Users,
-        title: "Client exceptions",
-        description: "Override rules for specific accounts without touching your baseline logic.",
-      },
-      {
-        icon: FileText,
-        title: "Checkout transparency",
-        description: "Show the fee impact before payment confirmation, and keep it consistent on invoices.",
-      },
-    ],
-    audience: [
-      "Hosting providers managing multiple gateways",
-      "Resellers operating across mixed currencies",
-      "WHMCS operators protecting margins",
-      "Billing teams handling repeated checkout exceptions",
-    ],
-    trial: "7-day free trial",
-    setup: "Configured in minutes from the WHMCS admin panel",
-    purchaseUrl: "https://portal.shrotihost.in/submitticket.php",
-  },
+  // Gateway Fees & Allocator is no longer described here: its page at
+  // /whmcs-gateway-fees-allocator is bespoke and reads from
+  // lib/gateway-fees-module.ts, where every capability carries the module
+  // file:line it was verified against. Keeping a second, drifting copy of the
+  // same claims here is how a page ends up advertising a trial nobody offers.
   {
     slug: "whatsapp-notification",
     name: "WhatsApp Notification Module",

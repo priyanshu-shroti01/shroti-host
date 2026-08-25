@@ -15,7 +15,7 @@ const routes: { path: string; changeFrequency: "weekly" | "monthly" | "yearly"; 
   { path: "/unlimited-hosting", changeFrequency: "weekly", priority: 0.9 },
   { path: "/reseller-hosting", changeFrequency: "weekly", priority: 0.9 },
   { path: "/domains", changeFrequency: "weekly", priority: 0.8 },
-  { path: "/whmcs-gateway-fees-allocator", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/whmcs-gateway-fees-allocator", changeFrequency: "monthly", priority: 0.8 },
   { path: "/whmcs-whatsapp-notification-module", changeFrequency: "monthly", priority: 0.6 },
   { path: "/web-development", changeFrequency: "weekly", priority: 0.9 },
   { path: "/app-development", changeFrequency: "weekly", priority: 0.9 },

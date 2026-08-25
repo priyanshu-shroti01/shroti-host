@@ -45,10 +45,10 @@ export const portfolioItems: PortfolioItem[] = [
     summary:
       "A WHMCS module we build, sell, and support — it recovers payment-gateway costs and controls which payment methods appear at checkout.",
     highlights: [
-      "Per-gateway fee and discount management",
-      "Contextual routing — show the right payment methods per country, currency, and order",
-      "Client-level exceptions and transparent checkout math",
-      "7-day free trial, configured from the WHMCS admin panel",
+      "Per-gateway charges and discounts, with tier steps and caps",
+      "Gateway allocation by country, currency, client group, order value and product",
+      "Client and line-item exceptions, so the fee base is never the whole invoice",
+      "Configured entirely from the WHMCS admin area",
     ],
     href: "/whmcs-gateway-fees-allocator",
     linkLabel: "See the product",
